@@ -1,4 +1,4 @@
-import { Plugin, Notice, WorkspaceLeaf } from "obsidian";
+import { Plugin, Notice, WorkspaceLeaf, normalizePath, debounce } from "obsidian";
 import {
 	ChorographiaSettings,
 	DEFAULT_SETTINGS,
@@ -6,7 +6,7 @@ import {
 	clampEmbedBatchSize,
 } from "./settings";
 import { PluginCache, NoteCache } from "./cache";
-import { indexVault } from "./indexer";
+import { indexVault, IndexerConfig } from "./indexer";
 import { embedTexts } from "./openai";
 import { embedTextsOllama } from "./ollama";
 import { embedTextsOpenRouter } from "./openrouter";
@@ -32,8 +32,24 @@ function lerpHex(c1: string, c2: string, t: number): string {
 	return "#" + ((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1);
 }
 
-function noteColor(note: NoteCache, folderColors: Map<string, string>, theme: MapTheme): string {
+function noteColor(
+	note: NoteCache,
+	folderColors: Map<string, string>,
+	propertyColorMap: Map<string, string>,
+	colorMode: string,
+	colorPropertyField: string,
+	theme: MapTheme,
+): string {
 	const pal = theme.palette;
+	if (colorMode === "property") {
+		const val = note.frontmatter?.[colorPropertyField] ?? "";
+		if (val && propertyColorMap.has(val)) return propertyColorMap.get(val)!;
+		return pal.folder[0];
+	}
+	if (colorMode === "folder") {
+		return folderColors.get(note.folder) || pal.folder[0];
+	}
+	// semantic (default)
 	const semA = note.semA ?? -1;
 	const semB = note.semB ?? -1;
 	const semW = note.semW ?? 3;
@@ -49,7 +65,9 @@ function noteColor(note: NoteCache, folderColors: Map<string, string>, theme: Ma
 export default class ChorographiaPlugin extends Plugin {
 	settings: ChorographiaSettings = DEFAULT_SETTINGS;
 	cache: PluginCache = { notes: {} };
-	private explorerStyleEl: HTMLStyleElement | null = null;
+	private dotColorMap: Map<string, string> = new Map();
+	private explorerObserver: MutationObserver | null = null;
+	private applyDotsDebounced = debounce(() => this.applyDotsToVisibleNodes(), 50, true);
 
 	getActiveTheme(): MapTheme {
 		return getThemeById(this.settings.activeTheme);
@@ -67,13 +85,13 @@ export default class ChorographiaPlugin extends Plugin {
 
 		this.registerView(VIEW_TYPE, (leaf) => new ChorographiaView(leaf, this));
 
-		this.addRibbonIcon("map", "Open Chorographia Map", () => {
+		this.addRibbonIcon("map", "Open Chorographia map", () => {
 			this.activateView();
 		});
 
 		this.addCommand({
 			id: "open-chorographia-map",
-			name: "Open Chorographia Map",
+			name: "Open Chorographia map",
 			callback: () => this.activateView(),
 		});
 
@@ -115,6 +133,15 @@ export default class ChorographiaPlugin extends Plugin {
 		const data = await this.loadData();
 		if (data?.settings) {
 			this.settings = { ...DEFAULT_SETTINGS, ...data.settings };
+			// Migrate old "type"/"cat" color modes to "property"
+			const mode = this.settings.colorMode as string;
+			if (mode === "type") {
+				this.settings.colorMode = "property";
+				this.settings.colorPropertyField = "type";
+			} else if (mode === "cat") {
+				this.settings.colorMode = "property";
+				this.settings.colorPropertyField = "cat";
+			}
 		}
 		const normalizedOllamaBatchSize = clampEmbedBatchSize(
 			this.settings.ollamaEmbedBatchSize,
@@ -179,11 +206,7 @@ export default class ChorographiaPlugin extends Plugin {
 			: provider === "openai"
 				? this.settings.embeddingModel
 				: this.settings.openrouterEmbedModel;
-		if (provider === "ollama") {
-			console.log(`[Chorographia] Pipeline started | provider: ${provider} | model: ${modelName} | url: ${this.settings.ollamaUrl}`);
-		} else {
-			console.log(`[Chorographia] Pipeline started | provider: ${provider} | model: ${modelName}`);
-		}
+		console.debug(`[Chorographia] Pipeline started | provider: ${provider} | model: ${modelName}`);
 
 		// Validate per-provider requirements
 		if (provider === "openai" && !this.settings.openaiApiKey) {
@@ -195,27 +218,23 @@ export default class ChorographiaPlugin extends Plugin {
 			return;
 		}
 
-		const globs = this.settings.includeGlobs
-			.split(",")
-			.map((g) => g.trim())
-			.filter(Boolean);
-		const excludeGlobs = this.settings.excludeGlobs
-			.split(",")
-			.map((g) => g.trim())
-			.filter(Boolean);
+		const splitTrim = (s: string) => s.split(",").map(x => x.trim()).filter(Boolean);
+		const indexerConfig: IndexerConfig = {
+			globs: splitTrim(this.settings.includeGlobs),
+			excludeGlobs: splitTrim(this.settings.excludeGlobs),
+			maxNotes: this.settings.maxNotes,
+			embedFields: splitTrim(this.settings.embedFields),
+			embedIncludeTags: this.settings.embedIncludeTags,
+			filterIncludeTags: splitTrim(this.settings.filterIncludeTags),
+			filterExcludeTags: splitTrim(this.settings.filterExcludeTags),
+			filterIncludeFolders: splitTrim(this.settings.filterIncludeFolders),
+			filterExcludeFolders: splitTrim(this.settings.filterExcludeFolders),
+			filterRequireProperty: this.settings.filterRequireProperty,
+		};
 
-		console.log(`[Chorographia] Indexing vault | include: ${globs.join(", ")} | exclude: ${excludeGlobs.join(", ")} | maxNotes: ${this.settings.maxNotes}`);
 		new Notice("Chorographia: Indexing vault...");
-		const indexStart = performance.now();
-		const notes = await indexVault(
-			this.app.vault,
-			globs,
-			excludeGlobs,
-			this.settings.maxNotes
-		);
-		const indexElapsed = ((performance.now() - indexStart) / 1000).toFixed(1);
+		const notes = await indexVault(this.app, indexerConfig);
 		new Notice(`Chorographia: Found ${notes.length} notes.`);
-		console.log(`[Chorographia] Indexing complete in ${indexElapsed}s | ${notes.length} notes found | modelString: ${this.embeddingModelString}`);
 
 		// Determine which notes need (re-)embedding
 		const modelStr = this.embeddingModelString;
@@ -235,6 +254,7 @@ export default class ChorographiaPlugin extends Plugin {
 				cached.cat = note.cat;
 				cached.tags = note.tags;
 				cached.links = note.links;
+				cached.frontmatter = note.frontmatter;
 				continue;
 			}
 			toEmbed.push({ path: note.path, text: note.embedText });
@@ -249,7 +269,6 @@ export default class ChorographiaPlugin extends Plugin {
 		}
 
 		if (toEmbed.length === 0) {
-			console.log(`[Chorographia] All ${notes.length} notes up to date (fully cached)`);
 			new Notice("Chorographia: All notes up to date.");
 			await this.saveCache();
 			this.refreshMapViews();
@@ -257,7 +276,6 @@ export default class ChorographiaPlugin extends Plugin {
 			return;
 		}
 
-		console.log(`[Chorographia] ${toEmbed.length} notes need embedding, ${notes.length - toEmbed.length} cached`);
 		new Notice(
 			`Chorographia: Embedding ${toEmbed.length} notes...`
 		);
@@ -266,7 +284,6 @@ export default class ChorographiaPlugin extends Plugin {
 			: provider === "openai"
 				? clampEmbedBatchSize(this.settings.openaiEmbedBatchSize, DEFAULT_SETTINGS.openaiEmbedBatchSize)
 				: clampEmbedBatchSize(this.settings.openrouterEmbedBatchSize, DEFAULT_SETTINGS.openrouterEmbedBatchSize);
-		console.log(`[Chorographia] [${modelName}] Using batch size ${batchSize}`);
 
 		const onProgress = (done: number, total: number) => {
 			const pct = Math.round((done / total) * 100);
@@ -275,9 +292,6 @@ export default class ChorographiaPlugin extends Plugin {
 			const rate = done / safeElapsed;
 			const rateStr = rate < 0.1 ? rate.toFixed(2) : rate.toFixed(1);
 			const eta = done > 0 && rate > 0 ? Math.round((total - done) / rate) : "?";
-			console.log(
-				`[Chorographia] [${modelName}] Progress: ${done}/${total} (${pct}%) | ${elapsedSec.toFixed(1)}s elapsed | ~${rateStr} notes/s | ETA ~${eta}s`
-			);
 			new Notice(`Chorographia: Embedded ${done}/${total} (${pct}%)`);
 		};
 
@@ -294,7 +308,6 @@ export default class ChorographiaPlugin extends Plugin {
 					results = await embedTextsOpenRouter(toEmbed, this.settings.openrouterApiKey, this.settings.openrouterEmbedModel, onProgress, batchSize);
 					break;
 			}
-			console.log(`[Chorographia] [${modelName}] Embedding phase complete | ${results.length} results`);
 		} catch (err) {
 			const elapsed = ((performance.now() - pipelineStart) / 1000).toFixed(1);
 			const message = err instanceof Error ? err.message : String(err);
@@ -305,7 +318,6 @@ export default class ChorographiaPlugin extends Plugin {
 		}
 
 		// Update cache with new embeddings
-		console.log(`[Chorographia] Caching ${results.length} embedding results...`);
 		for (const r of results) {
 			const note = notes.find((n) => n.path === r.path)!;
 			this.cache.notes[r.path] = {
@@ -320,6 +332,7 @@ export default class ChorographiaPlugin extends Plugin {
 				cat: note.cat,
 				tags: note.tags,
 				links: note.links,
+				frontmatter: note.frontmatter,
 			};
 		}
 
@@ -332,11 +345,11 @@ export default class ChorographiaPlugin extends Plugin {
 				this.cache.notes[note.path].cat = note.cat;
 				this.cache.notes[note.path].tags = note.tags;
 				this.cache.notes[note.path].links = note.links;
+				this.cache.notes[note.path].frontmatter = note.frontmatter;
 			}
 		}
 
 		// Invalidate zone cache when embeddings change
-		console.log("[Chorographia] Computing zones...");
 		if (this.settings.mapLocked) {
 			this.preserveAndInvalidateZones();
 		} else {
@@ -344,19 +357,13 @@ export default class ChorographiaPlugin extends Plugin {
 		}
 
 		// Compute semantic colors from k-means clustering
-		console.log(`[Chorographia] Computing semantic colors (locked: ${this.settings.mapLocked})...`);
-		const colorStart = performance.now();
 		if (this.settings.mapLocked) {
 			this.computeSemanticColorsLocked();
 		} else {
 			await this.computeSemanticColors();
 		}
-		console.log(`[Chorographia] Semantic colors computed in ${((performance.now() - colorStart) / 1000).toFixed(1)}s`);
 
-		console.log("[Chorographia] Saving cache...");
-		const saveStart = performance.now();
 		await this.saveCache();
-		console.log(`[Chorographia] Cache saved in ${((performance.now() - saveStart) / 1000).toFixed(1)}s`);
 		this.refreshMapViews();
 		this.updateExplorerDots();
 		new Notice(`Chorographia: Embedding complete (${results.length} new).`);
@@ -368,21 +375,13 @@ export default class ChorographiaPlugin extends Plugin {
 		const hasNewWithoutCoords = this.settings.mapLocked &&
 			Object.values(this.cache.notes).some((n) => n.embedding && n.x == null);
 		if (!hasLayout || hasNewWithoutCoords) {
-			console.log(`[Chorographia] Running UMAP layout compute (hasLayout: ${hasLayout}, newWithoutCoords: ${hasNewWithoutCoords})...`);
-			const layoutStart = performance.now();
 			await this.runLayoutCompute();
-			console.log(`[Chorographia] Layout compute complete in ${((performance.now() - layoutStart) / 1000).toFixed(1)}s`);
 			// Auto-enable lock after first successful layout
 			if (!hasLayout && !this.settings.mapLocked) {
 				this.settings.mapLocked = true;
 				await this.saveSettings();
 			}
-		} else {
-			console.log("[Chorographia] Skipping layout compute (existing layout found)");
 		}
-
-		const totalElapsed = ((performance.now() - pipelineStart) / 1000).toFixed(1);
-		console.log(`[Chorographia] Pipeline complete in ${totalElapsed}s | ${results.length} embedded, ${notes.length - results.length} cached`);
 	}
 
 	async runZoneNaming(): Promise<void> {
@@ -415,7 +414,7 @@ export default class ChorographiaPlugin extends Plugin {
 		if (!await this.app.vault.adapter.exists(dir)) {
 			await this.app.vault.adapter.mkdir(dir);
 		}
-		const filename = `${dir}/${name.replace(/[^a-zA-Z0-9_-]/g, "_")}.json`;
+		const filename = normalizePath(`${dir}/${name.replace(/[^a-zA-Z0-9_-]/g, "_")}.json`);
 		await this.app.vault.adapter.write(filename, JSON.stringify(snapshot));
 	}
 
@@ -472,56 +471,66 @@ export default class ChorographiaPlugin extends Plugin {
 			folderColors.set(f, folderPal[i % folderPal.length]);
 		});
 
-		// Build CSS rules — render dot as background-image on .nav-file-title-content
-		// positioned after the TYPE + CAT badges (104px), matching the old snippet layout
-		const dotSize = 9;
-		const dotLeft = 104 + 6; // after badges + gap
-		const totalPad = dotLeft + dotSize + 6; // dot + gap before title text
+		// Build property color map
+		const propertyColorMap = new Map<string, string>();
+		const propField = this.settings.colorPropertyField;
+		if (propField) {
+			const vals = new Set<string>();
+			for (const n of Object.values(notes)) {
+				const v = n.frontmatter?.[propField];
+				if (v) vals.add(v);
+			}
+			[...vals].sort().forEach((v, i) => {
+				propertyColorMap.set(v, folderPal[i % folderPal.length]);
+			});
+		}
 
-		const rules: string[] = [];
-
-		// Base rule: expand padding to make room for dot after badges
-		rules.push(
-			`.chorographia-dots .nav-file-title[data-path] .nav-file-title-content { ` +
-			`padding-left: ${totalPad}px !important; }`
-		);
-
+		// Pre-compute color for every note
+		this.dotColorMap.clear();
 		for (const [path, note] of Object.entries(notes)) {
-			const color = noteColor(note, folderColors, this.getActiveTheme());
-			const escaped = CSS.escape(path);
-			rules.push(
-				`.nav-file-title[data-path="${escaped}"] .nav-file-title-content { ` +
-				`background-image: ` +
-				`radial-gradient(circle, transparent 0 58%, var(--background-primary) 60% 100%), ` +
-				`radial-gradient(circle at 40% 35%, rgba(255,255,255,0.15) 0 45%, transparent 78%), ` +
-				`radial-gradient(circle, ${color} 50%, transparent 51%); ` +
-				`background-size: ${dotSize}px ${dotSize}px; ` +
-				`background-position: ${dotLeft}px 50%; ` +
-				`background-repeat: no-repeat; }`
+			this.dotColorMap.set(
+				path,
+				noteColor(note, folderColors, propertyColorMap, this.settings.colorMode, this.settings.colorPropertyField, this.getActiveTheme()),
 			);
 		}
 
-		const el = document.createElement("style");
-		el.id = "chorographia-explorer-dots";
-		el.textContent = rules.join("\n");
-		document.head.appendChild(el);
-		this.explorerStyleEl = el;
+		this.applyDotsToVisibleNodes();
+		this.ensureExplorerObserver();
+	}
 
-		// Add marker class for the padding rule
-		document.querySelectorAll(".nav-files-container").forEach((c) => {
-			c.classList.add("chorographia-dots");
+	private applyDotsToVisibleNodes(): void {
+		const dotLeft = this.settings.explorerDotOffset;
+		for (const titleEl of document.querySelectorAll(".nav-file-title-content")) {
+			if (titleEl.querySelector(".chorographia-explorer-dot")) continue;
+			const navTitle = titleEl.closest(".nav-file-title") as HTMLElement | null;
+			const path = navTitle?.dataset.path;
+			if (!path) continue;
+			const color = this.dotColorMap.get(path);
+			if (!color) continue;
+			const dot = createDiv({ cls: "chorographia-explorer-dot" });
+			dot.style.setProperty("--dot-color", color);
+			dot.style.setProperty("--dot-left", `${dotLeft}px`);
+			titleEl.prepend(dot);
+		}
+	}
+
+	private ensureExplorerObserver(): void {
+		if (this.explorerObserver) return;
+		const container = document.querySelector(".nav-files-container");
+		if (!container) return;
+		this.explorerObserver = new MutationObserver(() => {
+			this.applyDotsDebounced();
 		});
+		this.explorerObserver.observe(container, { childList: true, subtree: true });
 	}
 
 	private removeExplorerDots(): void {
-		if (this.explorerStyleEl) {
-			this.explorerStyleEl.remove();
-			this.explorerStyleEl = null;
+		if (this.explorerObserver) {
+			this.explorerObserver.disconnect();
+			this.explorerObserver = null;
 		}
-		document.getElementById("chorographia-explorer-dots")?.remove();
-		document.querySelectorAll(".chorographia-dots").forEach((c) => {
-			c.classList.remove("chorographia-dots");
-		});
+		this.dotColorMap.clear();
+		document.querySelectorAll(".chorographia-explorer-dot").forEach((el) => el.remove());
 	}
 
 	async runLayoutCompute(): Promise<void> {

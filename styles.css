@@ -588,3 +588,254 @@
 	background: rgba(255, 255, 255, 0.9);
 	border-color: rgba(90, 198, 206, 0.25);
 }
+
+/* ========== Settings accordion ========== */
+
+.chorographia-settings-section {
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 6px;
+	margin-bottom: 4px;
+}
+
+.chorographia-settings-summary {
+	padding: 10px 14px;
+	cursor: pointer;
+	font-weight: 600;
+	background: var(--background-secondary);
+	border-radius: 6px;
+	list-style: none;
+}
+
+.chorographia-settings-summary::-webkit-details-marker {
+	display: none;
+}
+
+.chorographia-settings-summary::before {
+	content: "\25b8 ";
+}
+
+details[open] > .chorographia-settings-summary {
+	border-radius: 6px 6px 0 0;
+}
+
+details[open] > .chorographia-settings-summary::before {
+	content: "\25be ";
+}
+
+.chorographia-settings-desc {
+	padding: 4px 14px 0;
+	margin: 0;
+}
+
+.chorographia-settings-section .setting-item {
+	padding-left: 14px;
+	padding-right: 14px;
+}
+
+/* ========== Explorer dots ========== */
+
+.chorographia-explorer-dot {
+	display: inline-block;
+	width: 9px;
+	height: 9px;
+	border-radius: 50%;
+	background: var(--dot-color, transparent);
+	position: relative;
+	top: 0px;
+	margin-right: 4px;
+	flex-shrink: 0;
+	left: var(--dot-left, 0px);
+}
+
+/* ========== Input width utilities ========== */
+
+.chorographia-input-xs { width: 80px; }
+.chorographia-input-sm { width: 150px; }
+.chorographia-input-md { width: 200px; }
+.chorographia-input-lg { width: 250px; }
+.chorographia-input-xl { width: 300px; }
+
+/* ========== Canvas cursor utilities ========== */
+
+.chorographia-canvas.cursor-grab { cursor: grab; }
+.chorographia-canvas.cursor-grabbing { cursor: grabbing; }
+.chorographia-canvas.cursor-pointer { cursor: pointer; }
+.chorographia-canvas.cursor-crosshair { cursor: crosshair; }
+
+/* ========== Onboarding wizard ========== */
+
+.chorographia-onboarding {
+	max-width: 520px;
+}
+
+.chorographia-onboarding .modal-content {
+	padding: 16px 20px;
+}
+
+.chorographia-onboarding h2 {
+	margin: 0 0 8px;
+}
+
+.chorographia-onboarding-desc {
+	color: var(--text-muted);
+	font-size: var(--font-ui-small);
+	margin: 0 0 12px;
+	line-height: 1.5;
+}
+
+.chorographia-onboarding-hint {
+	color: var(--text-faint);
+	font-size: var(--font-ui-smaller);
+	margin: 4px 0 0;
+}
+
+.chorographia-onboarding-summary {
+	background: var(--background-secondary);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 6px;
+	padding: 10px 14px;
+	margin-top: 8px;
+}
+
+.chorographia-onboarding-summary-row {
+	display: flex;
+	justify-content: space-between;
+	padding: 3px 0;
+	font-size: var(--font-ui-small);
+}
+
+.chorographia-onboarding-summary-label {
+	color: var(--text-muted);
+}
+
+.chorographia-onboarding-summary-value {
+	font-weight: 500;
+}
+
+.chorographia-onboarding-footer {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-top: 16px;
+	padding-top: 12px;
+	border-top: 1px solid var(--background-modifier-border);
+}
+
+.chorographia-onboarding-dots {
+	display: flex;
+	gap: 6px;
+}
+
+.chorographia-onboarding-dot {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: var(--background-modifier-border);
+}
+
+.chorographia-onboarding-dot.active {
+	background: var(--interactive-accent);
+}
+
+.chorographia-onboarding-dot.done {
+	background: var(--interactive-accent);
+	opacity: 0.5;
+}
+
+.chorographia-onboarding-nav {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+}
+
+.chorographia-onboarding-btn {
+	padding: 6px 14px;
+	font-size: var(--font-ui-small);
+	border-radius: 4px;
+	cursor: pointer;
+	border: 1px solid var(--background-modifier-border);
+	background: var(--background-secondary);
+	color: var(--text-normal);
+}
+
+.chorographia-onboarding-btn:hover {
+	background: var(--background-modifier-hover);
+}
+
+.chorographia-onboarding-btn-skip {
+	border: none;
+	background: transparent;
+	color: var(--text-faint);
+	font-size: var(--font-ui-smaller);
+}
+
+.chorographia-onboarding-btn-skip:hover {
+	color: var(--text-muted);
+	background: transparent;
+}
+
+.chorographia-onboarding-btn-primary {
+	background: var(--interactive-accent);
+	color: var(--text-on-accent);
+	border-color: var(--interactive-accent);
+	font-weight: 500;
+}
+
+.chorographia-onboarding-btn-primary:hover {
+	opacity: 0.9;
+	background: var(--interactive-accent);
+}
+
+/* Zone style picker cards */
+
+.chorographia-onboarding-style-picker {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 10px;
+	margin: 8px 0 12px;
+}
+
+.chorographia-onboarding-style-card {
+	border: 2px solid var(--background-modifier-border);
+	border-radius: 8px;
+	padding: 10px;
+	cursor: pointer;
+	transition: border-color 0.15s, background 0.15s;
+	text-align: center;
+}
+
+.chorographia-onboarding-style-card:hover {
+	border-color: var(--text-faint);
+	background: var(--background-secondary);
+}
+
+.chorographia-onboarding-style-card.is-selected {
+	border-color: var(--interactive-accent);
+	background: var(--background-secondary);
+}
+
+.chorographia-onboarding-style-preview {
+	font-family: var(--font-monospace);
+	font-size: 9px;
+	line-height: 1.3;
+	color: var(--text-muted);
+	margin: 0 0 8px;
+	white-space: pre;
+	overflow: hidden;
+	pointer-events: none;
+}
+
+.chorographia-onboarding-style-card.is-selected .chorographia-onboarding-style-preview {
+	color: var(--interactive-accent);
+}
+
+.chorographia-onboarding-style-label {
+	font-weight: 600;
+	font-size: var(--font-ui-small);
+	margin-bottom: 2px;
+}
+
+.chorographia-onboarding-style-desc {
+	font-size: var(--font-ui-smaller);
+	color: var(--text-faint);
+}

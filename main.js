@@ -5,6 +5,9 @@ var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __esm = (fn, res) => function __init() {
+  return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
+};
 var __commonJS = (cb, mod) => function __require() {
   return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
 };
@@ -55,6 +58,527 @@ var __privateMethod = (obj, member, method) => {
   __accessCheck(obj, member, "access private method");
   return method;
 };
+
+// src/theme.ts
+function getThemeById(id) {
+  return BUILTIN_THEMES.find((t) => t.id === id) || DEFAULT_THEME;
+}
+var DEFAULT_THEME, CARTOGRAPHY_THEME, BUILTIN_THEMES;
+var init_theme = __esm({
+  "src/theme.ts"() {
+    DEFAULT_THEME = {
+      id: "default",
+      name: "Default",
+      readonly: true,
+      palette: {
+        semantic: [
+          "#00D6FF",
+          "#B9FF00",
+          "#FF7A00",
+          "#A855F7",
+          "#00FFB3",
+          "#FF3DB8",
+          "#00FFA3",
+          "#FFD400",
+          "#00F5D4",
+          "#FF9A3D",
+          "#7CFFCB",
+          "#B8C0FF"
+        ],
+        folder: [
+          "#8E9AAF",
+          "#C9963B",
+          "#B28DFF",
+          "#5AC6CE",
+          "#B8541A",
+          "#9AB2AF",
+          "#BCDC2B",
+          "#FF7A00",
+          "#A855F7",
+          "#00D6FF",
+          "#00FFB3",
+          "#FF3DB8"
+        ],
+        semSplit: { 1: 0.8, 2: 0.65, 3: 0.5, 4: 0.35, 5: 0.2 }
+      },
+      background: {
+        dark: {
+          container: "linear-gradient(135deg, #07070f 0%, #0f0f1a 50%, #1a1a2e 100%)",
+          ocean: "#0a0e1a"
+        },
+        light: {
+          container: "linear-gradient(135deg, #e8e8f0 0%, #f0f0f8 50%, #f8f8ff 100%)",
+          ocean: "#e8eef5"
+        }
+      },
+      fonts: {
+        zoneLabel: "var(--font-interface)",
+        zoneLabelWeight: "600",
+        subZoneLabel: "var(--font-interface)",
+        noteTitle: "var(--font-interface)",
+        continentLabel: "var(--font-interface)",
+        continentLabelWeight: "bold"
+      },
+      ui: {
+        dark: {
+          panelBg: "rgba(15,15,26,0.92)",
+          panelBorder: "rgba(44,44,58,0.6)",
+          text: "#D6D6E0",
+          textMuted: "#8E9AAF",
+          linkStroke: "rgba(214,214,224,0.18)"
+        },
+        light: {
+          panelBg: "rgba(255,255,255,0.92)",
+          panelBorder: "rgba(160,160,180,0.4)",
+          text: "#1e1e2e",
+          textMuted: "#6e6e80",
+          linkStroke: "rgba(60,60,80,0.22)"
+        }
+      },
+      borders: {
+        coast: { dark: "rgba(200,220,255,0.35)", light: "rgba(40,60,100,0.35)" },
+        coastWidth: 2,
+        coastGlow: 10,
+        border: { dark: "rgba(200,220,255,0.2)", light: "rgba(40,60,100,0.2)" },
+        borderWidth: 1,
+        province: { dark: "rgba(200,220,255,0.2)", light: "rgba(40,60,100,0.2)" },
+        provinceWidth: 0.8,
+        provinceDash: [3, 4]
+      },
+      decorative: {
+        compassRose: false,
+        compassCorner: "bottom-right",
+        compassStyle: "modern",
+        gridLines: false,
+        gridStyle: "subtle",
+        gridColor: { dark: "rgba(200,220,255,0.08)", light: "rgba(40,60,100,0.08)" },
+        gridOpacity: 0.3,
+        gridSpacing: 0.25,
+        inkWobble: false,
+        inkWobbleAmplitude: 0,
+        stippleOcean: false,
+        stippleDensity: 0,
+        coastHatch: false,
+        neatline: false,
+        routeNetwork: false
+      },
+      noteStyle: {
+        shape: "dot",
+        dotGlow: true,
+        selectionRing: "#C9963B",
+        highlightEdge: "#BCDC2B"
+      }
+    };
+    CARTOGRAPHY_THEME = {
+      id: "cartography-17c",
+      name: "17th-Century Cartography",
+      readonly: true,
+      palette: {
+        // Sepia/brown monochrome — like ink on parchment
+        semantic: [
+          "#5C4833",
+          "#4A3C2A",
+          "#6B5540",
+          "#3D3028",
+          "#7A6350",
+          "#524335",
+          "#695343",
+          "#4F4030",
+          "#635040",
+          "#584838",
+          "#6E5A48",
+          "#4D3E30"
+        ],
+        folder: [
+          "#5C4833",
+          "#4A3C2A",
+          "#6B5540",
+          "#3D3028",
+          "#7A6350",
+          "#524335",
+          "#695343",
+          "#4F4030",
+          "#635040",
+          "#584838",
+          "#6E5A48",
+          "#4D3E30"
+        ],
+        semSplit: { 1: 0.8, 2: 0.65, 3: 0.5, 4: 0.35, 5: 0.2 }
+      },
+      background: {
+        dark: {
+          container: "linear-gradient(135deg, #1a150e 0%, #2a1f14 50%, #1e1810 100%)",
+          ocean: "#1a2030"
+        },
+        light: {
+          container: "linear-gradient(135deg, #f5e6c8 0%, #ede0c0 50%, #e8d5b0 100%)",
+          ocean: "#c8d8e8"
+        }
+      },
+      fonts: {
+        zoneLabel: "'Garamond', 'EB Garamond', 'Cormorant Garamond', 'Palatino Linotype', 'Book Antiqua', Georgia, serif",
+        zoneLabelWeight: "italic",
+        subZoneLabel: "'Garamond', 'EB Garamond', 'Cormorant Garamond', 'Palatino Linotype', 'Book Antiqua', Georgia, serif",
+        noteTitle: "'Garamond', 'EB Garamond', 'Cormorant Garamond', 'Palatino Linotype', 'Book Antiqua', Georgia, serif",
+        continentLabel: "'Garamond', 'EB Garamond', 'Cormorant Garamond', 'Palatino Linotype', 'Book Antiqua', Georgia, serif",
+        continentLabelWeight: "italic bold"
+      },
+      ui: {
+        dark: {
+          panelBg: "rgba(26,21,14,0.94)",
+          panelBorder: "rgba(139,115,85,0.4)",
+          text: "#D4C5A9",
+          textMuted: "#8B7355",
+          linkStroke: "rgba(180,160,130,0.55)"
+        },
+        light: {
+          panelBg: "rgba(245,230,200,0.94)",
+          panelBorder: "rgba(139,115,85,0.35)",
+          text: "#3a2a1a",
+          textMuted: "#8B7355",
+          linkStroke: "rgba(80,60,40,0.50)"
+        }
+      },
+      borders: {
+        coast: { dark: "rgba(180,160,120,0.45)", light: "rgba(100,80,50,0.4)" },
+        coastWidth: 2.5,
+        coastGlow: 8,
+        border: { dark: "rgba(180,160,120,0.25)", light: "rgba(100,80,50,0.25)" },
+        borderWidth: 1.2,
+        province: { dark: "rgba(180,160,120,0.15)", light: "rgba(100,80,50,0.15)" },
+        provinceWidth: 0.6,
+        provinceDash: [4, 5]
+      },
+      decorative: {
+        compassRose: true,
+        compassCorner: "bottom-right",
+        compassStyle: "cartographic",
+        gridLines: true,
+        gridStyle: "cartographic",
+        gridColor: { dark: "rgba(139,115,85,0.12)", light: "rgba(139,115,85,0.08)" },
+        gridOpacity: 0.4,
+        gridSpacing: 0.2,
+        inkWobble: true,
+        inkWobbleAmplitude: 1,
+        stippleOcean: true,
+        stippleDensity: 3e-4,
+        coastHatch: true,
+        neatline: true,
+        routeNetwork: true
+      },
+      noteStyle: {
+        shape: "terrain",
+        dotGlow: false,
+        selectionRing: "#8B7355",
+        highlightEdge: "#A0916B"
+      }
+    };
+    BUILTIN_THEMES = [DEFAULT_THEME, CARTOGRAPHY_THEME];
+  }
+});
+
+// src/onboarding.ts
+var onboarding_exports = {};
+__export(onboarding_exports, {
+  OnboardingModal: () => OnboardingModal
+});
+var import_obsidian, TOTAL_STEPS, STARMAP_PREVIEW, WORLDMAP_PREVIEW, OnboardingModal;
+var init_onboarding = __esm({
+  "src/onboarding.ts"() {
+    import_obsidian = require("obsidian");
+    init_theme();
+    TOTAL_STEPS = 4;
+    STARMAP_PREVIEW = [
+      "        . *   .  *    .   ",
+      "   *  .    (~~~)    *     ",
+      " .   (~~~~~~~)  .    *  . ",
+      "    (~~~) .  (~~~~)       ",
+      "  *   .  *  (~~~~~~~~)  . ",
+      "   .    *     (~~~) .   * ",
+      "      .   .  *    .   .   "
+    ].join("\n");
+    WORLDMAP_PREVIEW = [
+      "  ~~~  ._,-''-.   ~~~  ~~ ",
+      "  ~ ,-'  /     '-.  ~~~~  ",
+      "  ,'   ./ ,---.   '.  ~~  ",
+      " /   __/ /     \\    \\ ~~~ ",
+      " |  /  |  ___  |    | ~~  ",
+      "  \\ \\   \\/   \\/   ,'  ~~ ",
+      "   '-._       _.-' ~~~~   ",
+      "  ~~~~  ''---''  ~~~~~~~~ "
+    ].join("\n");
+    OnboardingModal = class extends import_obsidian.Modal {
+      constructor(app, plugin) {
+        super(app);
+        this.currentStep = 0;
+        this.plugin = plugin;
+      }
+      onOpen() {
+        this.modalEl.addClass("chorographia-onboarding");
+        this.renderStep();
+      }
+      onClose() {
+        this.contentEl.empty();
+      }
+      renderStep() {
+        this.contentEl.empty();
+        switch (this.currentStep) {
+          case 0:
+            this.renderProviderStep();
+            break;
+          case 1:
+            this.renderNoteSelectionStep();
+            break;
+          case 2:
+            this.renderMapStyleStep();
+            break;
+          case 3:
+            this.renderConfirmStep();
+            break;
+        }
+        this.renderFooter();
+      }
+      // ===================== Step 0: Provider =====================
+      renderProviderStep() {
+        this.contentEl.createEl("h2", { text: "Welcome to Chorographia" });
+        this.contentEl.createEl("p", {
+          text: "Chorographia builds a semantic map of your vault by embedding your notes into vectors and projecting them onto a 2D canvas. Let's configure your embedding provider.",
+          cls: "chorographia-onboarding-desc"
+        });
+        const s = this.plugin.settings;
+        new import_obsidian.Setting(this.contentEl).setName("Embedding provider").addDropdown(
+          (dd) => dd.addOption("ollama", "Ollama (local)").addOption("openai", "OpenAI").addOption("openrouter", "OpenRouter").setValue(s.embeddingProvider).onChange(async (value) => {
+            s.embeddingProvider = value;
+            await this.plugin.saveSettings();
+            this.renderStep();
+          })
+        );
+        if (s.embeddingProvider === "ollama") {
+          new import_obsidian.Setting(this.contentEl).setName("Server URL").addText(
+            (text) => text.setPlaceholder("http://localhost:11434").setValue(s.ollamaUrl).onChange(async (value) => {
+              s.ollamaUrl = value;
+              await this.plugin.saveSettings();
+            }).then((t) => {
+              t.inputEl.addClass("chorographia-input-lg");
+            })
+          );
+          new import_obsidian.Setting(this.contentEl).setName("Embedding model").addText(
+            (text) => text.setPlaceholder("qwen3-embedding").setValue(s.ollamaEmbedModel).onChange(async (value) => {
+              s.ollamaEmbedModel = value;
+              await this.plugin.saveSettings();
+            })
+          );
+          this.contentEl.createEl("p", {
+            text: "No API key needed \u2014 Ollama runs locally on your machine.",
+            cls: "chorographia-onboarding-hint"
+          });
+        } else if (s.embeddingProvider === "openai") {
+          new import_obsidian.Setting(this.contentEl).setName("API key").addText(
+            (text) => text.setPlaceholder("sk-...").setValue(s.openaiApiKey).onChange(async (value) => {
+              s.openaiApiKey = value;
+              await this.plugin.saveSettings();
+            }).then((t) => {
+              t.inputEl.type = "password";
+              t.inputEl.addClass("chorographia-input-xl");
+            })
+          );
+          new import_obsidian.Setting(this.contentEl).setName("Embedding model").addText(
+            (text) => text.setPlaceholder("text-embedding-3-large").setValue(s.embeddingModel).onChange(async (value) => {
+              s.embeddingModel = value;
+              await this.plugin.saveSettings();
+            })
+          );
+        } else if (s.embeddingProvider === "openrouter") {
+          new import_obsidian.Setting(this.contentEl).setName("API key").addText(
+            (text) => text.setPlaceholder("sk-or-...").setValue(s.openrouterApiKey).onChange(async (value) => {
+              s.openrouterApiKey = value;
+              await this.plugin.saveSettings();
+            }).then((t) => {
+              t.inputEl.type = "password";
+              t.inputEl.addClass("chorographia-input-xl");
+            })
+          );
+          new import_obsidian.Setting(this.contentEl).setName("Embedding model").addText(
+            (text) => text.setPlaceholder("openai/text-embedding-3-small").setValue(s.openrouterEmbedModel).onChange(async (value) => {
+              s.openrouterEmbedModel = value;
+              await this.plugin.saveSettings();
+            })
+          );
+        }
+      }
+      // ===================== Step 1: Note Selection =====================
+      renderNoteSelectionStep() {
+        this.contentEl.createEl("h2", { text: "Choose which notes to map" });
+        const s = this.plugin.settings;
+        new import_obsidian.Setting(this.contentEl).setName("Include globs").setDesc("Comma-separated glob patterns for notes to index.").addText(
+          (text) => text.setPlaceholder("**/*.md").setValue(s.includeGlobs).onChange(async (value) => {
+            s.includeGlobs = value;
+            await this.plugin.saveSettings();
+          }).then((t) => {
+            t.inputEl.addClass("chorographia-input-xl");
+          })
+        );
+        new import_obsidian.Setting(this.contentEl).setName("Exclude globs").setDesc("Comma-separated glob patterns for notes to skip.").addText(
+          (text) => text.setPlaceholder("templates/**,daily/**").setValue(s.excludeGlobs).onChange(async (value) => {
+            s.excludeGlobs = value;
+            await this.plugin.saveSettings();
+          }).then((t) => {
+            t.inputEl.addClass("chorographia-input-xl");
+          })
+        );
+        new import_obsidian.Setting(this.contentEl).setName("Max notes").setDesc("Safety cap on number of notes to index.").addText(
+          (text) => text.setValue(String(s.maxNotes)).onChange(async (value) => {
+            const n = parseInt(value, 10);
+            if (!isNaN(n) && n > 0) {
+              s.maxNotes = n;
+              await this.plugin.saveSettings();
+            }
+          }).then((t) => {
+            t.inputEl.addClass("chorographia-input-xs");
+          })
+        );
+      }
+      // ===================== Step 2: Map Style =====================
+      renderMapStyleStep() {
+        this.contentEl.createEl("h2", { text: "Choose your map style" });
+        this.contentEl.createEl("p", {
+          text: "Semantic zones group nearby notes into labeled regions. Pick a visual style and theme for your map.",
+          cls: "chorographia-onboarding-desc"
+        });
+        const s = this.plugin.settings;
+        new import_obsidian.Setting(this.contentEl).setName("Show semantic zones").setDesc("Display thematic cluster regions behind notes on the map.").addToggle(
+          (toggle) => toggle.setValue(s.showZones).onChange(async (value) => {
+            s.showZones = value;
+            await this.plugin.saveSettings();
+            this.renderStep();
+          })
+        );
+        if (s.showZones) {
+          const picker = this.contentEl.createEl("div", { cls: "chorographia-onboarding-style-picker" });
+          const styles = [
+            {
+              id: "starmap",
+              label: "Star map",
+              desc: "Overlapping smooth nebula blobs",
+              preview: STARMAP_PREVIEW
+            },
+            {
+              id: "worldmap",
+              label: "World map",
+              desc: "Non-overlapping countries with coastlines",
+              preview: WORLDMAP_PREVIEW
+            }
+          ];
+          for (const style of styles) {
+            const card = picker.createEl("div", {
+              cls: `chorographia-onboarding-style-card${s.zoneStyle === style.id ? " is-selected" : ""}`
+            });
+            card.addEventListener("click", async () => {
+              s.zoneStyle = style.id;
+              await this.plugin.saveSettings();
+              this.renderStep();
+            });
+            const preview = card.createEl("pre", {
+              cls: "chorographia-onboarding-style-preview",
+              text: style.preview
+            });
+            card.createEl("div", { text: style.label, cls: "chorographia-onboarding-style-label" });
+            card.createEl("div", { text: style.desc, cls: "chorographia-onboarding-style-desc" });
+          }
+        }
+        new import_obsidian.Setting(this.contentEl).setName("Theme").setDesc("Visual palette, fonts, and decorative elements.").addDropdown((dd) => {
+          for (const t of BUILTIN_THEMES)
+            dd.addOption(t.id, t.name);
+          dd.setValue(s.activeTheme);
+          dd.onChange(async (value) => {
+            s.activeTheme = value;
+            await this.plugin.saveSettings();
+          });
+        });
+        new import_obsidian.Setting(this.contentEl).setName("Color mode").setDesc("How to color note points on the map.").addDropdown(
+          (dd) => dd.addOption("semantic", "Semantic \u2014 by topic cluster").addOption("folder", "Folder \u2014 by vault folder").addOption("property", "Property \u2014 by frontmatter field").setValue(s.colorMode).onChange(async (value) => {
+            s.colorMode = value;
+            await this.plugin.saveSettings();
+          })
+        );
+      }
+      // ===================== Step 3: Confirm =====================
+      renderConfirmStep() {
+        this.contentEl.createEl("h2", { text: "Ready to build your map" });
+        const s = this.plugin.settings;
+        const card = this.contentEl.createEl("div", { cls: "chorographia-onboarding-summary" });
+        const providerLabel = s.embeddingProvider === "ollama" ? "Ollama (local)" : s.embeddingProvider === "openai" ? "OpenAI" : "OpenRouter";
+        const modelLabel = s.embeddingProvider === "ollama" ? s.ollamaEmbedModel : s.embeddingProvider === "openai" ? s.embeddingModel : s.openrouterEmbedModel;
+        const styleLabel = s.showZones ? s.zoneStyle === "worldmap" ? "World map" : "Star map" : "Off";
+        const themeObj = BUILTIN_THEMES.find((t) => t.id === s.activeTheme);
+        const colorModeLabel = s.colorMode === "semantic" ? "Semantic" : s.colorMode === "folder" ? "Folder" : "Property";
+        const rows = [
+          ["Provider", providerLabel],
+          ["Model", modelLabel || "(default)"],
+          ["Include", s.includeGlobs || "**/*.md"],
+          ["Exclude", s.excludeGlobs || "(none)"],
+          ["Max notes", String(s.maxNotes)],
+          ["Zones", styleLabel],
+          ["Theme", themeObj?.name ?? s.activeTheme],
+          ["Colors", colorModeLabel]
+        ];
+        for (const [label, value] of rows) {
+          const row = card.createEl("div", { cls: "chorographia-onboarding-summary-row" });
+          row.createEl("span", { text: label, cls: "chorographia-onboarding-summary-label" });
+          row.createEl("span", { text: value, cls: "chorographia-onboarding-summary-value" });
+        }
+      }
+      // ===================== Footer =====================
+      renderFooter() {
+        const footer = this.contentEl.createEl("div", { cls: "chorographia-onboarding-footer" });
+        const dots = footer.createEl("div", { cls: "chorographia-onboarding-dots" });
+        for (let i = 0; i < TOTAL_STEPS; i++) {
+          const cls = i < this.currentStep ? "done" : i === this.currentStep ? "active" : "pending";
+          dots.createEl("span", { cls: `chorographia-onboarding-dot ${cls}` });
+        }
+        const nav = footer.createEl("div", { cls: "chorographia-onboarding-nav" });
+        if (this.currentStep > 0) {
+          nav.createEl("button", { text: "Back", cls: "chorographia-onboarding-btn" }).addEventListener("click", () => {
+            this.currentStep--;
+            this.renderStep();
+          });
+        }
+        nav.createEl("button", { text: "Skip setup", cls: "chorographia-onboarding-btn chorographia-onboarding-btn-skip" }).addEventListener("click", () => {
+          this.close();
+        });
+        if (this.currentStep < TOTAL_STEPS - 1) {
+          const nextBtn = nav.createEl("button", { text: "Next", cls: "chorographia-onboarding-btn chorographia-onboarding-btn-primary" });
+          nextBtn.addEventListener("click", () => {
+            if (!this.validateStep())
+              return;
+            this.currentStep++;
+            this.renderStep();
+          });
+        } else {
+          const startBtn = nav.createEl("button", { text: "Start embedding", cls: "chorographia-onboarding-btn chorographia-onboarding-btn-primary" });
+          startBtn.addEventListener("click", () => {
+            this.close();
+            this.plugin.runEmbedPipeline();
+          });
+        }
+      }
+      validateStep() {
+        const s = this.plugin.settings;
+        if (this.currentStep === 0) {
+          if (s.embeddingProvider === "openai" && !s.openaiApiKey.trim()) {
+            new import_obsidian.Notice("Please enter your OpenAI API key.");
+            return false;
+          }
+          if (s.embeddingProvider === "openrouter" && !s.openrouterApiKey.trim()) {
+            new import_obsidian.Notice("Please enter your OpenRouter API key.");
+            return false;
+          }
+        }
+        return true;
+      }
+    };
+  }
+});
 
 // node_modules/umap-js/dist/utils.js
 var require_utils = __commonJS({
@@ -7444,251 +7968,56 @@ __export(main_exports, {
   default: () => ChorographiaPlugin
 });
 module.exports = __toCommonJS(main_exports);
-var import_obsidian7 = require("obsidian");
+var import_obsidian8 = require("obsidian");
 
 // src/settings.ts
-var import_obsidian = require("obsidian");
-
-// src/theme.ts
-var DEFAULT_THEME = {
-  id: "default",
-  name: "Default",
-  readonly: true,
-  palette: {
-    semantic: [
-      "#00D6FF",
-      "#B9FF00",
-      "#FF7A00",
-      "#A855F7",
-      "#00FFB3",
-      "#FF3DB8",
-      "#00FFA3",
-      "#FFD400",
-      "#00F5D4",
-      "#FF9A3D",
-      "#7CFFCB",
-      "#B8C0FF"
-    ],
-    folder: [
-      "#8E9AAF",
-      "#C9963B",
-      "#B28DFF",
-      "#5AC6CE",
-      "#B8541A",
-      "#9AB2AF",
-      "#BCDC2B",
-      "#FF7A00",
-      "#A855F7",
-      "#00D6FF",
-      "#00FFB3",
-      "#FF3DB8"
-    ],
-    type: {
-      SRC: "#8E9AAF",
-      LIT: "#C9963B",
-      SEED: "#B8541A",
-      EVE: "#B28DFF",
-      REV: "#9AB2AF",
-      NOTE: "#5AC6CE"
-    },
-    semSplit: { 1: 0.8, 2: 0.65, 3: 0.5, 4: 0.35, 5: 0.2 }
-  },
-  background: {
-    dark: {
-      container: "linear-gradient(135deg, #07070f 0%, #0f0f1a 50%, #1a1a2e 100%)",
-      ocean: "#0a0e1a"
-    },
-    light: {
-      container: "linear-gradient(135deg, #e8e8f0 0%, #f0f0f8 50%, #f8f8ff 100%)",
-      ocean: "#e8eef5"
-    }
-  },
-  fonts: {
-    zoneLabel: "var(--font-interface)",
-    zoneLabelWeight: "600",
-    subZoneLabel: "var(--font-interface)",
-    noteTitle: "var(--font-interface)",
-    continentLabel: "var(--font-interface)",
-    continentLabelWeight: "bold"
-  },
-  ui: {
-    dark: {
-      panelBg: "rgba(15,15,26,0.92)",
-      panelBorder: "rgba(44,44,58,0.6)",
-      text: "#D6D6E0",
-      textMuted: "#8E9AAF",
-      linkStroke: "rgba(214,214,224,0.18)"
-    },
-    light: {
-      panelBg: "rgba(255,255,255,0.92)",
-      panelBorder: "rgba(160,160,180,0.4)",
-      text: "#1e1e2e",
-      textMuted: "#6e6e80",
-      linkStroke: "rgba(60,60,80,0.22)"
-    }
-  },
-  borders: {
-    coast: { dark: "rgba(200,220,255,0.35)", light: "rgba(40,60,100,0.35)" },
-    coastWidth: 2,
-    coastGlow: 10,
-    border: { dark: "rgba(200,220,255,0.2)", light: "rgba(40,60,100,0.2)" },
-    borderWidth: 1,
-    province: { dark: "rgba(200,220,255,0.2)", light: "rgba(40,60,100,0.2)" },
-    provinceWidth: 0.8,
-    provinceDash: [3, 4]
-  },
-  decorative: {
-    compassRose: false,
-    compassCorner: "bottom-right",
-    compassStyle: "modern",
-    gridLines: false,
-    gridStyle: "subtle",
-    gridColor: { dark: "rgba(200,220,255,0.08)", light: "rgba(40,60,100,0.08)" },
-    gridOpacity: 0.3,
-    gridSpacing: 0.25,
-    inkWobble: false,
-    inkWobbleAmplitude: 0,
-    stippleOcean: false,
-    stippleDensity: 0,
-    coastHatch: false,
-    neatline: false,
-    routeNetwork: false
-  },
-  noteStyle: {
-    shape: "dot",
-    dotGlow: true,
-    selectionRing: "#C9963B",
-    highlightEdge: "#BCDC2B"
+var import_obsidian2 = require("obsidian");
+init_theme();
+init_onboarding();
+var ConfirmModal = class extends import_obsidian2.Modal {
+  constructor(app, message, onConfirm) {
+    super(app);
+    this.message = message;
+    this.onConfirm = onConfirm;
+  }
+  onOpen() {
+    this.contentEl.createEl("p", { text: this.message });
+    new import_obsidian2.Setting(this.contentEl).addButton(
+      (btn) => btn.setButtonText("Cancel").onClick(() => this.close())
+    ).addButton(
+      (btn) => btn.setButtonText("Confirm").setWarning().onClick(() => {
+        this.close();
+        this.onConfirm();
+      })
+    );
+  }
+  onClose() {
+    this.contentEl.empty();
   }
 };
-var CARTOGRAPHY_THEME = {
-  id: "cartography-17c",
-  name: "17th-Century Cartography",
-  readonly: true,
-  palette: {
-    // Sepia/brown monochrome — like ink on parchment
-    semantic: [
-      "#5C4833",
-      "#4A3C2A",
-      "#6B5540",
-      "#3D3028",
-      "#7A6350",
-      "#524335",
-      "#695343",
-      "#4F4030",
-      "#635040",
-      "#584838",
-      "#6E5A48",
-      "#4D3E30"
-    ],
-    folder: [
-      "#5C4833",
-      "#4A3C2A",
-      "#6B5540",
-      "#3D3028",
-      "#7A6350",
-      "#524335",
-      "#695343",
-      "#4F4030",
-      "#635040",
-      "#584838",
-      "#6E5A48",
-      "#4D3E30"
-    ],
-    type: {
-      SRC: "#5C4833",
-      LIT: "#4A3C2A",
-      SEED: "#6B5540",
-      EVE: "#3D3028",
-      REV: "#524335",
-      NOTE: "#7A6350"
-    },
-    semSplit: { 1: 0.8, 2: 0.65, 3: 0.5, 4: 0.35, 5: 0.2 }
-  },
-  background: {
-    dark: {
-      container: "linear-gradient(135deg, #1a150e 0%, #2a1f14 50%, #1e1810 100%)",
-      ocean: "#1a2030"
-    },
-    light: {
-      container: "linear-gradient(135deg, #f5e6c8 0%, #ede0c0 50%, #e8d5b0 100%)",
-      ocean: "#c8d8e8"
-    }
-  },
-  fonts: {
-    zoneLabel: "'Garamond', 'EB Garamond', 'Cormorant Garamond', 'Palatino Linotype', 'Book Antiqua', Georgia, serif",
-    zoneLabelWeight: "italic",
-    subZoneLabel: "'Garamond', 'EB Garamond', 'Cormorant Garamond', 'Palatino Linotype', 'Book Antiqua', Georgia, serif",
-    noteTitle: "'Garamond', 'EB Garamond', 'Cormorant Garamond', 'Palatino Linotype', 'Book Antiqua', Georgia, serif",
-    continentLabel: "'Garamond', 'EB Garamond', 'Cormorant Garamond', 'Palatino Linotype', 'Book Antiqua', Georgia, serif",
-    continentLabelWeight: "italic bold"
-  },
-  ui: {
-    dark: {
-      panelBg: "rgba(26,21,14,0.94)",
-      panelBorder: "rgba(139,115,85,0.4)",
-      text: "#D4C5A9",
-      textMuted: "#8B7355",
-      linkStroke: "rgba(180,160,130,0.55)"
-    },
-    light: {
-      panelBg: "rgba(245,230,200,0.94)",
-      panelBorder: "rgba(139,115,85,0.35)",
-      text: "#3a2a1a",
-      textMuted: "#8B7355",
-      linkStroke: "rgba(80,60,40,0.50)"
-    }
-  },
-  borders: {
-    coast: { dark: "rgba(180,160,120,0.45)", light: "rgba(100,80,50,0.4)" },
-    coastWidth: 2.5,
-    coastGlow: 8,
-    border: { dark: "rgba(180,160,120,0.25)", light: "rgba(100,80,50,0.25)" },
-    borderWidth: 1.2,
-    province: { dark: "rgba(180,160,120,0.15)", light: "rgba(100,80,50,0.15)" },
-    provinceWidth: 0.6,
-    provinceDash: [4, 5]
-  },
-  decorative: {
-    compassRose: true,
-    compassCorner: "bottom-right",
-    compassStyle: "cartographic",
-    gridLines: true,
-    gridStyle: "cartographic",
-    gridColor: { dark: "rgba(139,115,85,0.12)", light: "rgba(139,115,85,0.08)" },
-    gridOpacity: 0.4,
-    gridSpacing: 0.2,
-    inkWobble: true,
-    inkWobbleAmplitude: 1,
-    stippleOcean: true,
-    stippleDensity: 3e-4,
-    coastHatch: true,
-    neatline: true,
-    routeNetwork: true
-  },
-  noteStyle: {
-    shape: "terrain",
-    dotGlow: false,
-    selectionRing: "#8B7355",
-    highlightEdge: "#A0916B"
-  }
-};
-var BUILTIN_THEMES = [DEFAULT_THEME, CARTOGRAPHY_THEME];
-function getThemeById(id) {
-  return BUILTIN_THEMES.find((t) => t.id === id) || DEFAULT_THEME;
+var EMBED_BATCH_SIZE_MIN = 1;
+var EMBED_BATCH_SIZE_MAX = 100;
+var DEFAULT_EMBED_BATCH_SIZE = 50;
+function clampEmbedBatchSize(value, fallback = DEFAULT_EMBED_BATCH_SIZE) {
+  const n = Number(value);
+  if (!Number.isFinite(n))
+    return fallback;
+  return Math.min(EMBED_BATCH_SIZE_MAX, Math.max(EMBED_BATCH_SIZE_MIN, Math.round(n)));
 }
-
-// src/settings.ts
 var DEFAULT_SETTINGS = {
   embeddingProvider: "ollama",
   ollamaUrl: "http://localhost:11434",
   ollamaEmbedModel: "qwen3-embedding",
+  ollamaEmbedBatchSize: DEFAULT_EMBED_BATCH_SIZE,
   ollamaLlmModel: "qwen3:8b",
   llmProvider: "ollama",
   openaiApiKey: "",
+  openaiLlmModel: "gpt-5-mini",
   embeddingModel: "text-embedding-3-large",
+  openaiEmbedBatchSize: DEFAULT_EMBED_BATCH_SIZE,
   openrouterApiKey: "",
   openrouterEmbedModel: "openai/text-embedding-3-small",
+  openrouterEmbedBatchSize: DEFAULT_EMBED_BATCH_SIZE,
   openrouterLlmModel: "google/gemini-2.0-flash-001",
   includeGlobs: "**/*.md",
   excludeGlobs: "templates/**",
@@ -7696,7 +8025,16 @@ var DEFAULT_SETTINGS = {
   showLinks: false,
   colorMode: "semantic",
   showExplorerDots: true,
+  explorerDotOffset: 20,
   minimapCorner: "bottom-left",
+  embedFields: "title, type, cat, topics",
+  embedIncludeTags: false,
+  filterIncludeTags: "",
+  filterExcludeTags: "",
+  filterIncludeFolders: "",
+  filterExcludeFolders: "",
+  filterRequireProperty: "",
+  colorPropertyField: "type",
   showZones: false,
   zoneGranularity: 6,
   enableLLMZoneNaming: false,
@@ -7717,384 +8055,550 @@ var DEFAULT_SETTINGS = {
   labelOutlineWidth: 2,
   activeTheme: "default"
 };
-var ChorographiaSettingTab = class extends import_obsidian.PluginSettingTab {
+var ChorographiaSettingTab = class extends import_obsidian2.PluginSettingTab {
   constructor(app, plugin) {
     super(app, plugin);
     this.plugin = plugin;
   }
+  addEmbedBatchSizeSetting(containerEl, description, getValue, fallback, setValue) {
+    let saveTimer = null;
+    const scheduleSave = () => {
+      if (saveTimer != null) {
+        window.clearTimeout(saveTimer);
+      }
+      saveTimer = window.setTimeout(() => {
+        saveTimer = null;
+        void this.plugin.saveSettings();
+      }, 200);
+    };
+    const flushSave = () => {
+      if (saveTimer == null)
+        return;
+      window.clearTimeout(saveTimer);
+      saveTimer = null;
+      void this.plugin.saveSettings();
+    };
+    new import_obsidian2.Setting(containerEl).setName("Batch size").setDesc(description).addText(
+      (text) => text.setPlaceholder(String(fallback)).setValue(String(getValue())).onChange(async (raw) => {
+        if (raw.trim() === "")
+          return;
+        const parsed = Number(raw);
+        if (!Number.isFinite(parsed))
+          return;
+        const current = getValue();
+        const normalized = clampEmbedBatchSize(parsed, fallback);
+        if (normalized !== current) {
+          setValue(normalized);
+          scheduleSave();
+        }
+        const normalizedStr = String(normalized);
+        if (text.inputEl.value !== normalizedStr) {
+          text.inputEl.value = normalizedStr;
+        }
+      }).then((t) => {
+        t.inputEl.type = "number";
+        t.inputEl.min = String(EMBED_BATCH_SIZE_MIN);
+        t.inputEl.max = String(EMBED_BATCH_SIZE_MAX);
+        t.inputEl.step = "1";
+        t.inputEl.addClass("chorographia-input-xs");
+        t.inputEl.addEventListener("blur", () => {
+          t.inputEl.value = String(getValue());
+          flushSave();
+        });
+      })
+    );
+  }
+  createSection(container, title, desc, open = false) {
+    const details = container.createEl("details", { cls: "chorographia-settings-section" });
+    if (open)
+      details.setAttribute("open", "");
+    const summary = details.createEl("summary", { cls: "chorographia-settings-summary", text: title });
+    if (desc) {
+      details.createEl("p", { text: desc, cls: "setting-item-description chorographia-settings-desc" });
+    }
+    return details;
+  }
   display() {
     const { containerEl } = this;
     containerEl.empty();
-    const needsOllama = this.plugin.settings.embeddingProvider === "ollama" || this.plugin.settings.llmProvider === "ollama";
-    const needsOpenAI = this.plugin.settings.embeddingProvider === "openai" || this.plugin.settings.llmProvider === "openai";
-    const needsOpenRouter = this.plugin.settings.embeddingProvider === "openrouter" || this.plugin.settings.llmProvider === "openrouter";
-    if (needsOllama || needsOpenAI || needsOpenRouter) {
-      containerEl.createEl("h3", { text: "Providers" });
-      containerEl.createEl("p", {
-        text: "Connection details for services used by embedding or zone naming below.",
-        cls: "setting-item-description"
-      });
-      if (needsOllama) {
-        new import_obsidian.Setting(containerEl).setName("Ollama URL").setDesc("Base URL for the local Ollama server.").addText(
-          (text) => text.setPlaceholder("http://localhost:11434").setValue(this.plugin.settings.ollamaUrl).onChange(async (value) => {
-            this.plugin.settings.ollamaUrl = value;
-            await this.plugin.saveSettings();
-          }).then((t) => {
-            t.inputEl.style.width = "250px";
-          })
-        );
-      }
-      if (needsOpenAI) {
-        new import_obsidian.Setting(containerEl).setName("OpenAI API key").addText(
-          (text) => text.setPlaceholder("sk-...").setValue(this.plugin.settings.openaiApiKey).onChange(async (value) => {
-            this.plugin.settings.openaiApiKey = value;
-            await this.plugin.saveSettings();
-          }).then((t) => {
-            t.inputEl.type = "password";
-            t.inputEl.style.width = "300px";
-          })
-        );
-      }
-      if (needsOpenRouter) {
-        new import_obsidian.Setting(containerEl).setName("OpenRouter API key").setDesc("Get one at openrouter.ai/keys.").addText(
-          (text) => text.setPlaceholder("sk-or-...").setValue(this.plugin.settings.openrouterApiKey).onChange(async (value) => {
-            this.plugin.settings.openrouterApiKey = value;
-            await this.plugin.saveSettings();
-          }).then((t) => {
-            t.inputEl.type = "password";
-            t.inputEl.style.width = "300px";
-          })
-        );
-      }
-    }
-    containerEl.createEl("h3", { text: "Embedding" });
-    containerEl.createEl("p", {
-      text: "Choose how note content is converted into vectors for the map layout.",
-      cls: "setting-item-description"
-    });
-    new import_obsidian.Setting(containerEl).setName("Provider").addDropdown(
-      (dd) => dd.addOption("ollama", "Ollama (local)").addOption("openai", "OpenAI").addOption("openrouter", "OpenRouter").setValue(this.plugin.settings.embeddingProvider).onChange(async (value) => {
-        this.plugin.settings.embeddingProvider = value;
-        await this.plugin.saveSettings();
-        this.display();
-      })
-    );
-    if (this.plugin.settings.embeddingProvider === "ollama") {
-      new import_obsidian.Setting(containerEl).setName("Embedding model").setDesc("Ollama model name (e.g. qwen3-embedding).").addText(
-        (text) => text.setValue(this.plugin.settings.ollamaEmbedModel).onChange(async (value) => {
-          this.plugin.settings.ollamaEmbedModel = value;
+    containerEl.addClass("chorographia-settings");
+    {
+      const sec = this.createSection(containerEl, "Providers", "Connection details for services used by embedding or zone naming.");
+      new import_obsidian2.Setting(sec).setName("Ollama URL").setDesc("Base URL for the local Ollama server.").addText(
+        (text) => text.setPlaceholder("http://localhost:11434").setValue(this.plugin.settings.ollamaUrl).onChange(async (value) => {
+          this.plugin.settings.ollamaUrl = value;
           await this.plugin.saveSettings();
+        }).then((t) => {
+          t.inputEl.addClass("chorographia-input-lg");
         })
       );
-    } else if (this.plugin.settings.embeddingProvider === "openai") {
-      new import_obsidian.Setting(containerEl).setName("Embedding model").setDesc("OpenAI model name (e.g. text-embedding-3-large).").addText(
-        (text) => text.setValue(this.plugin.settings.embeddingModel).onChange(async (value) => {
-          this.plugin.settings.embeddingModel = value;
+      new import_obsidian2.Setting(sec).setName("OpenAI API key").addText(
+        (text) => text.setPlaceholder("sk-...").setValue(this.plugin.settings.openaiApiKey).onChange(async (value) => {
+          this.plugin.settings.openaiApiKey = value;
           await this.plugin.saveSettings();
+        }).then((t) => {
+          t.inputEl.type = "password";
+          t.inputEl.addClass("chorographia-input-xl");
         })
       );
-    } else if (this.plugin.settings.embeddingProvider === "openrouter") {
-      new import_obsidian.Setting(containerEl).setName("Embedding model").setDesc("OpenRouter model ID (e.g. openai/text-embedding-3-small).").addText(
-        (text) => text.setValue(this.plugin.settings.openrouterEmbedModel).onChange(async (value) => {
-          this.plugin.settings.openrouterEmbedModel = value;
+      new import_obsidian2.Setting(sec).setName("OpenRouter API key").setDesc("Get one at openrouter.ai/keys.").addText(
+        (text) => text.setPlaceholder("sk-or-...").setValue(this.plugin.settings.openrouterApiKey).onChange(async (value) => {
+          this.plugin.settings.openrouterApiKey = value;
           await this.plugin.saveSettings();
+        }).then((t) => {
+          t.inputEl.type = "password";
+          t.inputEl.addClass("chorographia-input-xl");
         })
       );
     }
-    new import_obsidian.Setting(containerEl).setName("Include globs").setDesc("Comma-separated glob patterns for notes to index.").addText(
-      (text) => text.setPlaceholder("**/*.md").setValue(this.plugin.settings.includeGlobs).onChange(async (value) => {
-        this.plugin.settings.includeGlobs = value;
-        await this.plugin.saveSettings();
-      }).then((t) => {
-        t.inputEl.style.width = "400px";
-      })
-    );
-    new import_obsidian.Setting(containerEl).setName("Exclude globs").setDesc("Comma-separated glob patterns for notes to skip.").addText(
-      (text) => text.setPlaceholder("templates/**,daily/**").setValue(this.plugin.settings.excludeGlobs).onChange(async (value) => {
-        this.plugin.settings.excludeGlobs = value;
-        await this.plugin.saveSettings();
-      }).then((t) => {
-        t.inputEl.style.width = "400px";
-      })
-    );
-    new import_obsidian.Setting(containerEl).setName("Max notes").setDesc("Safety cap on number of notes to index.").addText(
-      (text) => text.setValue(String(this.plugin.settings.maxNotes)).onChange(async (value) => {
-        const n = parseInt(value, 10);
-        if (!isNaN(n) && n > 0) {
-          this.plugin.settings.maxNotes = n;
+    {
+      const sec = this.createSection(containerEl, "Embedding model", "Choose how note content is converted into vectors for the map layout.");
+      new import_obsidian2.Setting(sec).setName("Provider").addDropdown(
+        (dd) => dd.addOption("ollama", "Ollama (local)").addOption("openai", "OpenAI").addOption("openrouter", "OpenRouter").setValue(this.plugin.settings.embeddingProvider).onChange(async (value) => {
+          this.plugin.settings.embeddingProvider = value;
           await this.plugin.saveSettings();
+          this.display();
+        })
+      );
+      if (this.plugin.settings.embeddingProvider === "ollama") {
+        new import_obsidian2.Setting(sec).setName("Embedding model").setDesc("Ollama model name (e.g. qwen3-embedding).").addText(
+          (text) => text.setValue(this.plugin.settings.ollamaEmbedModel).onChange(async (value) => {
+            this.plugin.settings.ollamaEmbedModel = value;
+            await this.plugin.saveSettings();
+          })
+        );
+        this.addEmbedBatchSizeSetting(
+          sec,
+          "Notes per Ollama embedding request (1\u2013100).",
+          () => this.plugin.settings.ollamaEmbedBatchSize,
+          DEFAULT_SETTINGS.ollamaEmbedBatchSize,
+          (next) => {
+            this.plugin.settings.ollamaEmbedBatchSize = next;
+          }
+        );
+      } else if (this.plugin.settings.embeddingProvider === "openai") {
+        new import_obsidian2.Setting(sec).setName("Embedding model").setDesc("OpenAI model name (e.g. text-embedding-3-large).").addText(
+          (text) => text.setValue(this.plugin.settings.embeddingModel).onChange(async (value) => {
+            this.plugin.settings.embeddingModel = value;
+            await this.plugin.saveSettings();
+          })
+        );
+        this.addEmbedBatchSizeSetting(
+          sec,
+          "Notes per OpenAI embedding request (1\u2013100).",
+          () => this.plugin.settings.openaiEmbedBatchSize,
+          DEFAULT_SETTINGS.openaiEmbedBatchSize,
+          (next) => {
+            this.plugin.settings.openaiEmbedBatchSize = next;
+          }
+        );
+      } else if (this.plugin.settings.embeddingProvider === "openrouter") {
+        new import_obsidian2.Setting(sec).setName("Embedding model").setDesc("OpenRouter model ID (e.g. openai/text-embedding-3-small).").addText(
+          (text) => text.setValue(this.plugin.settings.openrouterEmbedModel).onChange(async (value) => {
+            this.plugin.settings.openrouterEmbedModel = value;
+            await this.plugin.saveSettings();
+          })
+        );
+        this.addEmbedBatchSizeSetting(
+          sec,
+          "Notes per OpenRouter embedding request (1\u2013100).",
+          () => this.plugin.settings.openrouterEmbedBatchSize,
+          DEFAULT_SETTINGS.openrouterEmbedBatchSize,
+          (next) => {
+            this.plugin.settings.openrouterEmbedBatchSize = next;
+          }
+        );
+      }
+    }
+    {
+      const sec = this.createSection(containerEl, "Note selection", "Control which notes are included in the map.");
+      new import_obsidian2.Setting(sec).setName("Include globs").setDesc("Comma-separated glob patterns for notes to index.").addText(
+        (text) => text.setPlaceholder("**/*.md").setValue(this.plugin.settings.includeGlobs).onChange(async (value) => {
+          this.plugin.settings.includeGlobs = value;
+          await this.plugin.saveSettings();
+        }).then((t) => {
+          t.inputEl.addClass("chorographia-input-xl");
+        })
+      );
+      new import_obsidian2.Setting(sec).setName("Exclude globs").setDesc("Comma-separated glob patterns for notes to skip.").addText(
+        (text) => text.setPlaceholder("templates/**,daily/**").setValue(this.plugin.settings.excludeGlobs).onChange(async (value) => {
+          this.plugin.settings.excludeGlobs = value;
+          await this.plugin.saveSettings();
+        }).then((t) => {
+          t.inputEl.addClass("chorographia-input-xl");
+        })
+      );
+      new import_obsidian2.Setting(sec).setName("Include folders").setDesc("Only include notes from these top-level folders (comma-separated). Leave empty for all.").addText(
+        (text) => text.setPlaceholder("projects, references").setValue(this.plugin.settings.filterIncludeFolders).onChange(async (value) => {
+          this.plugin.settings.filterIncludeFolders = value;
+          await this.plugin.saveSettings();
+        }).then((t) => {
+          t.inputEl.addClass("chorographia-input-xl");
+        })
+      );
+      new import_obsidian2.Setting(sec).setName("Exclude folders").setDesc("Skip notes from these top-level folders (comma-separated).").addText(
+        (text) => text.setPlaceholder("archive, drafts").setValue(this.plugin.settings.filterExcludeFolders).onChange(async (value) => {
+          this.plugin.settings.filterExcludeFolders = value;
+          await this.plugin.saveSettings();
+        }).then((t) => {
+          t.inputEl.addClass("chorographia-input-xl");
+        })
+      );
+      new import_obsidian2.Setting(sec).setName("Include tags").setDesc("Only include notes with at least one of these tags (comma-separated). Leave empty for all.").addText(
+        (text) => text.setPlaceholder("project, evergreen").setValue(this.plugin.settings.filterIncludeTags).onChange(async (value) => {
+          this.plugin.settings.filterIncludeTags = value;
+          await this.plugin.saveSettings();
+        }).then((t) => {
+          t.inputEl.addClass("chorographia-input-xl");
+        })
+      );
+      new import_obsidian2.Setting(sec).setName("Exclude tags").setDesc("Skip notes with any of these tags (comma-separated).").addText(
+        (text) => text.setPlaceholder("draft, private").setValue(this.plugin.settings.filterExcludeTags).onChange(async (value) => {
+          this.plugin.settings.filterExcludeTags = value;
+          await this.plugin.saveSettings();
+        }).then((t) => {
+          t.inputEl.addClass("chorographia-input-xl");
+        })
+      );
+      new import_obsidian2.Setting(sec).setName("Require property").setDesc('Only include notes that have this frontmatter property. Use "key" or "key:value".').addText(
+        (text) => text.setPlaceholder("status:published").setValue(this.plugin.settings.filterRequireProperty).onChange(async (value) => {
+          this.plugin.settings.filterRequireProperty = value;
+          await this.plugin.saveSettings();
+        }).then((t) => {
+          t.inputEl.addClass("chorographia-input-md");
+        })
+      );
+      new import_obsidian2.Setting(sec).setName("Max notes").setDesc("Safety cap on number of notes to index.").addText(
+        (text) => text.setValue(String(this.plugin.settings.maxNotes)).onChange(async (value) => {
+          const n = parseInt(value, 10);
+          if (!isNaN(n) && n > 0) {
+            this.plugin.settings.maxNotes = n;
+            await this.plugin.saveSettings();
+          }
+        }).then((t) => {
+          t.inputEl.addClass("chorographia-input-xs");
+        })
+      );
+    }
+    {
+      const sec = this.createSection(containerEl, "Embedding content", "What information from each note is sent to the embedding model.");
+      new import_obsidian2.Setting(sec).setName("Frontmatter fields").setDesc("Comma-separated list of frontmatter fields to include in the embedding text. The note body is always appended.").addText(
+        (text) => text.setPlaceholder("title, type, cat, topics").setValue(this.plugin.settings.embedFields).onChange(async (value) => {
+          this.plugin.settings.embedFields = value;
+          await this.plugin.saveSettings();
+        }).then((t) => {
+          t.inputEl.addClass("chorographia-input-xl");
+        })
+      );
+      new import_obsidian2.Setting(sec).setName("Include tags in embedding").setDesc("Append the note's tags to the embedding text.").addToggle(
+        (toggle) => toggle.setValue(this.plugin.settings.embedIncludeTags).onChange(async (value) => {
+          this.plugin.settings.embedIncludeTags = value;
+          await this.plugin.saveSettings();
+        })
+      );
+    }
+    {
+      const sec = this.createSection(containerEl, "Semantic zones", "Group nearby notes into labeled regions on the map using k-means clustering.");
+      new import_obsidian2.Setting(sec).setName("Show semantic zones").setDesc("Display thematic cluster regions behind points on the map.").addToggle(
+        (toggle) => toggle.setValue(this.plugin.settings.showZones).onChange(async (value) => {
+          this.plugin.settings.showZones = value;
+          await this.plugin.saveSettings();
+          this.display();
+          this.plugin.refreshMapViews();
+        })
+      );
+      if (this.plugin.settings.showZones) {
+        new import_obsidian2.Setting(sec).setName("Zone granularity").setDesc("Number of zone clusters (3\u201324). Higher = more, smaller zones.").addDropdown((dd) => {
+          for (let n = 3; n <= 24; n++)
+            dd.addOption(String(n), String(n));
+          dd.setValue(String(this.plugin.settings.zoneGranularity));
+          dd.onChange(async (value) => {
+            this.plugin.settings.zoneGranularity = parseInt(value, 10);
+            await this.plugin.saveSettings();
+            this.plugin.refreshMapViews();
+          });
+        });
+        new import_obsidian2.Setting(sec).setName("Zone style").setDesc("Star map: overlapping smooth blobs. World map: non-overlapping country shapes with fractal borders.").addDropdown((dd) => {
+          dd.addOption("starmap", "Star map");
+          dd.addOption("worldmap", "World map");
+          dd.setValue(this.plugin.settings.zoneStyle);
+          dd.onChange(async (value) => {
+            this.plugin.settings.zoneStyle = value;
+            await this.plugin.saveSettings();
+            this.plugin.refreshMapViews();
+            this.display();
+          });
+        });
+        if (this.plugin.settings.zoneStyle === "worldmap") {
+          new import_obsidian2.Setting(sec).setName("Land density").setDesc("% of peak height that becomes land. High = sparse thin countries, low = thick flooded land.").addSlider(
+            (sl) => sl.setLimits(0.05, 0.5, 0.01).setValue(this.plugin.settings.worldmapSeaLevel).setDynamicTooltip().onChange(async (value) => {
+              this.plugin.settings.worldmapSeaLevel = value;
+              await this.plugin.saveSettings();
+              this.plugin.refreshMapViews();
+            })
+          );
+          new import_obsidian2.Setting(sec).setName("Continental unity").setDesc("How far clusters reach to merge. Low = archipelago, high = pangea.").addSlider(
+            (sl) => sl.setLimits(0.03, 0.12, 5e-3).setValue(this.plugin.settings.worldmapUnity).setDynamicTooltip().onChange(async (value) => {
+              this.plugin.settings.worldmapUnity = value;
+              await this.plugin.saveSettings();
+              this.plugin.refreshMapViews();
+            })
+          );
+          new import_obsidian2.Setting(sec).setName("Coast ruggedness").setDesc("Higher = jagged fjords, lower = smooth beaches.").addSlider(
+            (sl) => sl.setLimits(0.1, 1, 0.05).setValue(this.plugin.settings.worldmapRuggedness).setDynamicTooltip().onChange(async (value) => {
+              this.plugin.settings.worldmapRuggedness = value;
+              await this.plugin.saveSettings();
+              this.plugin.refreshMapViews();
+            })
+          );
         }
-      })
-    );
-    containerEl.createEl("h3", { text: "Semantic Zones" });
-    containerEl.createEl("p", {
-      text: "Group nearby notes into labeled regions on the map using k-means clustering.",
-      cls: "setting-item-description"
-    });
-    new import_obsidian.Setting(containerEl).setName("Show semantic zones").setDesc("Display thematic cluster regions behind points on the map.").addToggle(
-      (toggle) => toggle.setValue(this.plugin.settings.showZones).onChange(async (value) => {
-        this.plugin.settings.showZones = value;
-        await this.plugin.saveSettings();
-        this.display();
-        this.plugin.refreshMapViews();
-      })
-    );
-    if (this.plugin.settings.showZones) {
-      new import_obsidian.Setting(containerEl).setName("Zone granularity").setDesc("Number of zone clusters (3\u201324). Higher = more, smaller zones.").addDropdown((dd) => {
-        for (let n = 3; n <= 24; n++)
-          dd.addOption(String(n), String(n));
-        dd.setValue(String(this.plugin.settings.zoneGranularity));
-        dd.onChange(async (value) => {
-          this.plugin.settings.zoneGranularity = parseInt(value, 10);
-          await this.plugin.saveSettings();
-          this.plugin.refreshMapViews();
-        });
-      });
-      new import_obsidian.Setting(containerEl).setName("Zone style").setDesc("Star map: overlapping smooth blobs. World map: non-overlapping country shapes with fractal borders.").addDropdown((dd) => {
-        dd.addOption("starmap", "Star map");
-        dd.addOption("worldmap", "World map");
-        dd.setValue(this.plugin.settings.zoneStyle);
-        dd.onChange(async (value) => {
-          this.plugin.settings.zoneStyle = value;
-          await this.plugin.saveSettings();
-          this.plugin.refreshMapViews();
-          this.display();
-        });
-      });
-      if (this.plugin.settings.zoneStyle === "worldmap") {
-        new import_obsidian.Setting(containerEl).setName("Land density").setDesc("% of peak height that becomes land. High = sparse thin countries, low = thick flooded land.").addSlider(
-          (sl) => sl.setLimits(0.05, 0.5, 0.01).setValue(this.plugin.settings.worldmapSeaLevel).setDynamicTooltip().onChange(async (value) => {
-            this.plugin.settings.worldmapSeaLevel = value;
-            await this.plugin.saveSettings();
-            this.plugin.refreshMapViews();
-          })
-        );
-        new import_obsidian.Setting(containerEl).setName("Continental unity").setDesc("How far clusters reach to merge. Low = archipelago, high = pangea.").addSlider(
-          (sl) => sl.setLimits(0.03, 0.12, 5e-3).setValue(this.plugin.settings.worldmapUnity).setDynamicTooltip().onChange(async (value) => {
-            this.plugin.settings.worldmapUnity = value;
-            await this.plugin.saveSettings();
-            this.plugin.refreshMapViews();
-          })
-        );
-        new import_obsidian.Setting(containerEl).setName("Coast ruggedness").setDesc("Higher = jagged fjords, lower = smooth beaches.").addSlider(
-          (sl) => sl.setLimits(0.1, 1, 0.05).setValue(this.plugin.settings.worldmapRuggedness).setDynamicTooltip().onChange(async (value) => {
-            this.plugin.settings.worldmapRuggedness = value;
-            await this.plugin.saveSettings();
-            this.plugin.refreshMapViews();
-          })
-        );
-      }
-      new import_obsidian.Setting(containerEl).setName("LLM zone naming").setDesc("Use an LLM to generate evocative names for each zone.").addToggle(
-        (toggle) => toggle.setValue(this.plugin.settings.enableLLMZoneNaming).onChange(async (value) => {
-          this.plugin.settings.enableLLMZoneNaming = value;
-          await this.plugin.saveSettings();
-          this.display();
-          this.plugin.refreshMapViews();
-        })
-      );
-      if (this.plugin.settings.enableLLMZoneNaming) {
-        new import_obsidian.Setting(containerEl).setName("Zone naming provider").addDropdown(
-          (dd) => dd.addOption("ollama", "Ollama (local)").addOption("openai", "OpenAI").addOption("openrouter", "OpenRouter").setValue(this.plugin.settings.llmProvider).onChange(async (value) => {
-            this.plugin.settings.llmProvider = value;
+        new import_obsidian2.Setting(sec).setName("LLM zone naming").setDesc("Use an LLM to generate evocative names for each zone.").addToggle(
+          (toggle) => toggle.setValue(this.plugin.settings.enableLLMZoneNaming).onChange(async (value) => {
+            this.plugin.settings.enableLLMZoneNaming = value;
             await this.plugin.saveSettings();
             this.display();
+            this.plugin.refreshMapViews();
           })
         );
-        if (this.plugin.settings.llmProvider === "ollama") {
-          new import_obsidian.Setting(containerEl).setName("LLM model").setDesc("Ollama model for zone naming (e.g. qwen3:8b).").addText(
-            (text) => text.setValue(this.plugin.settings.ollamaLlmModel).onChange(async (value) => {
-              this.plugin.settings.ollamaLlmModel = value;
+        if (this.plugin.settings.enableLLMZoneNaming) {
+          new import_obsidian2.Setting(sec).setName("Zone naming provider").addDropdown(
+            (dd) => dd.addOption("ollama", "Ollama (local)").addOption("openai", "OpenAI").addOption("openrouter", "OpenRouter").setValue(this.plugin.settings.llmProvider).onChange(async (value) => {
+              this.plugin.settings.llmProvider = value;
               await this.plugin.saveSettings();
+              this.display();
             })
           );
-        } else if (this.plugin.settings.llmProvider === "openrouter") {
-          new import_obsidian.Setting(containerEl).setName("LLM model").setDesc("OpenRouter model ID (e.g. google/gemini-2.0-flash-001).").addText(
-            (text) => text.setValue(this.plugin.settings.openrouterLlmModel).onChange(async (value) => {
-              this.plugin.settings.openrouterLlmModel = value;
-              await this.plugin.saveSettings();
-            })
-          );
-        }
-      }
-      new import_obsidian.Setting(containerEl).setName("Lock map").setDesc("Preserve note positions, cluster assignments, and zone names across re-embeds.").addToggle(
-        (toggle) => toggle.setValue(this.plugin.settings.mapLocked).onChange(async (value) => {
-          this.plugin.settings.mapLocked = value;
-          await this.plugin.saveSettings();
-          this.plugin.refreshMapViews();
-        })
-      );
-    }
-    containerEl.createEl("h3", { text: "Map Display" });
-    containerEl.createEl("p", {
-      text: "Visual appearance of the map canvas and file explorer integration.",
-      cls: "setting-item-description"
-    });
-    new import_obsidian.Setting(containerEl).setName("Theme").setDesc("Visual theme for palette, fonts, and decorative elements.").addDropdown((dd) => {
-      for (const t of BUILTIN_THEMES)
-        dd.addOption(t.id, t.name);
-      dd.setValue(this.plugin.settings.activeTheme);
-      dd.onChange(async (value) => {
-        this.plugin.settings.activeTheme = value;
-        await this.plugin.saveSettings();
-        this.plugin.refreshMapViews();
-      });
-    });
-    new import_obsidian.Setting(containerEl).setName("Color mode").setDesc("How to color points on the map.").addDropdown(
-      (dd) => dd.addOption("semantic", "Semantic").addOption("folder", "Folder").addOption("type", "Type (frontmatter)").addOption("cat", "Category (frontmatter)").setValue(this.plugin.settings.colorMode).onChange(async (value) => {
-        this.plugin.settings.colorMode = value;
-        await this.plugin.saveSettings();
-        this.plugin.refreshMapViews();
-      })
-    );
-    new import_obsidian.Setting(containerEl).setName("Show link overlay").setDesc("Draw wikilink edges between notes on the map.").addToggle(
-      (toggle) => toggle.setValue(this.plugin.settings.showLinks).onChange(async (value) => {
-        this.plugin.settings.showLinks = value;
-        await this.plugin.saveSettings();
-      })
-    );
-    new import_obsidian.Setting(containerEl).setName("File explorer dots").setDesc("Show colored semantic circles next to notes in the file explorer.").addToggle(
-      (toggle) => toggle.setValue(this.plugin.settings.showExplorerDots).onChange(async (value) => {
-        this.plugin.settings.showExplorerDots = value;
-        await this.plugin.saveSettings();
-        this.plugin.updateExplorerDots();
-      })
-    );
-    new import_obsidian.Setting(containerEl).setName("Minimap corner").setDesc("Corner for the global minimap shown in local view.").addDropdown(
-      (dd) => dd.addOption("off", "Off").addOption("top-left", "Top-left").addOption("top-right", "Top-right").addOption("bottom-left", "Bottom-left").addOption("bottom-right", "Bottom-right").setValue(this.plugin.settings.minimapCorner).onChange(async (value) => {
-        this.plugin.settings.minimapCorner = value;
-        await this.plugin.saveSettings();
-        this.plugin.refreshMapViews();
-      })
-    );
-    containerEl.createEl("h3", { text: "Label Appearance" });
-    containerEl.createEl("p", {
-      text: "Control the size, opacity, and contrast of zone and note labels on the map.",
-      cls: "setting-item-description"
-    });
-    new import_obsidian.Setting(containerEl).setName("Zone label size").setDesc("Font size for zone name labels (px).").addSlider(
-      (sl) => sl.setLimits(6, 18, 1).setValue(this.plugin.settings.zoneLabelSize).setDynamicTooltip().onChange(async (value) => {
-        this.plugin.settings.zoneLabelSize = value;
-        await this.plugin.saveSettings();
-        this.plugin.refreshMapViews();
-      })
-    );
-    new import_obsidian.Setting(containerEl).setName("Zone label opacity").setDesc("Opacity of zone name labels.").addSlider(
-      (sl) => sl.setLimits(0.1, 1, 0.05).setValue(this.plugin.settings.zoneLabelOpacity).setDynamicTooltip().onChange(async (value) => {
-        this.plugin.settings.zoneLabelOpacity = value;
-        await this.plugin.saveSettings();
-        this.plugin.refreshMapViews();
-      })
-    );
-    new import_obsidian.Setting(containerEl).setName("Sub-zone label size").setDesc("Font size for sub-zone (province) labels (px).").addSlider(
-      (sl) => sl.setLimits(4, 14, 1).setValue(this.plugin.settings.subZoneLabelSize).setDynamicTooltip().onChange(async (value) => {
-        this.plugin.settings.subZoneLabelSize = value;
-        await this.plugin.saveSettings();
-        this.plugin.refreshMapViews();
-      })
-    );
-    new import_obsidian.Setting(containerEl).setName("Sub-zone label opacity").setDesc("Opacity of sub-zone (province) labels.").addSlider(
-      (sl) => sl.setLimits(0.1, 1, 0.05).setValue(this.plugin.settings.subZoneLabelOpacity).setDynamicTooltip().onChange(async (value) => {
-        this.plugin.settings.subZoneLabelOpacity = value;
-        await this.plugin.saveSettings();
-        this.plugin.refreshMapViews();
-      })
-    );
-    new import_obsidian.Setting(containerEl).setName("Note title size").setDesc("Font size for note title labels (px).").addSlider(
-      (sl) => sl.setLimits(3, 12, 1).setValue(this.plugin.settings.noteTitleSize).setDynamicTooltip().onChange(async (value) => {
-        this.plugin.settings.noteTitleSize = value;
-        await this.plugin.saveSettings();
-        this.plugin.refreshMapViews();
-      })
-    );
-    new import_obsidian.Setting(containerEl).setName("Note title opacity").setDesc("Opacity of note title labels when zoomed in.").addSlider(
-      (sl) => sl.setLimits(0.1, 1, 0.05).setValue(this.plugin.settings.noteTitleOpacity).setDynamicTooltip().onChange(async (value) => {
-        this.plugin.settings.noteTitleOpacity = value;
-        await this.plugin.saveSettings();
-        this.plugin.refreshMapViews();
-      })
-    );
-    new import_obsidian.Setting(containerEl).setName("Label outline").setDesc("Add a contrasting outline behind labels for readability.").addToggle(
-      (toggle) => toggle.setValue(this.plugin.settings.labelOutline).onChange(async (value) => {
-        this.plugin.settings.labelOutline = value;
-        await this.plugin.saveSettings();
-        this.display();
-        this.plugin.refreshMapViews();
-      })
-    );
-    if (this.plugin.settings.labelOutline) {
-      new import_obsidian.Setting(containerEl).setName("Outline width").setDesc("Thickness of the label outline (px).").addSlider(
-        (sl) => sl.setLimits(1, 4, 0.5).setValue(this.plugin.settings.labelOutlineWidth).setDynamicTooltip().onChange(async (value) => {
-          this.plugin.settings.labelOutlineWidth = value;
-          await this.plugin.saveSettings();
-          this.plugin.refreshMapViews();
-        })
-      );
-    }
-    containerEl.createEl("h3", { text: "Actions" });
-    new import_obsidian.Setting(containerEl).setName("Re-embed changed notes").setDesc("Index notes and compute embeddings for new/changed notes.").addButton(
-      (btn) => btn.setButtonText("Run").onClick(async () => {
-        btn.setDisabled(true);
-        btn.setButtonText("Running...");
-        try {
-          await this.plugin.runEmbedPipeline();
-          new import_obsidian.Notice("Chorographia: Embedding complete.");
-        } catch (e) {
-          new import_obsidian.Notice("Chorographia: " + e.message);
-        }
-        btn.setDisabled(false);
-        btn.setButtonText("Run");
-      })
-    );
-    new import_obsidian.Setting(containerEl).setName("Recompute layout").setDesc("Run UMAP on cached embeddings to produce a new 2D layout.").addButton(
-      (btn) => btn.setButtonText("Run").onClick(async () => {
-        btn.setDisabled(true);
-        btn.setButtonText("Running...");
-        try {
-          await this.plugin.runLayoutCompute();
-          new import_obsidian.Notice("Chorographia: Layout complete.");
-        } catch (e) {
-          new import_obsidian.Notice("Chorographia: " + e.message);
-        }
-        btn.setDisabled(false);
-        btn.setButtonText("Run");
-      })
-    );
-    if (this.plugin.settings.enableLLMZoneNaming) {
-      new import_obsidian.Setting(containerEl).setName("Re-run zone naming").setDesc("Regenerate LLM names for all zones and sub-zones.").addButton(
-        (btn) => btn.setButtonText("Run").onClick(async () => {
-          if (this.plugin.settings.mapLocked) {
-            if (!confirm("Map is locked. This will regenerate all zone names. Continue?"))
-              return;
+          if (this.plugin.settings.llmProvider === "ollama") {
+            new import_obsidian2.Setting(sec).setName("LLM model").setDesc("Ollama model for zone naming (e.g. qwen3:8b).").addText(
+              (text) => text.setValue(this.plugin.settings.ollamaLlmModel).onChange(async (value) => {
+                this.plugin.settings.ollamaLlmModel = value;
+                await this.plugin.saveSettings();
+              })
+            );
+          } else if (this.plugin.settings.llmProvider === "openai") {
+            new import_obsidian2.Setting(sec).setName("LLM model").setDesc("OpenAI model for zone naming (e.g. gpt-5-mini).").addText(
+              (text) => text.setValue(this.plugin.settings.openaiLlmModel).onChange(async (value) => {
+                this.plugin.settings.openaiLlmModel = value;
+                await this.plugin.saveSettings();
+              })
+            );
+          } else if (this.plugin.settings.llmProvider === "openrouter") {
+            new import_obsidian2.Setting(sec).setName("LLM model").setDesc("OpenRouter model ID (e.g. google/gemini-2.0-flash-001).").addText(
+              (text) => text.setValue(this.plugin.settings.openrouterLlmModel).onChange(async (value) => {
+                this.plugin.settings.openrouterLlmModel = value;
+                await this.plugin.saveSettings();
+              })
+            );
           }
+        }
+        new import_obsidian2.Setting(sec).setName("Lock map").setDesc("Preserve note positions, cluster assignments, and zone names across re-embeds.").addToggle(
+          (toggle) => toggle.setValue(this.plugin.settings.mapLocked).onChange(async (value) => {
+            this.plugin.settings.mapLocked = value;
+            await this.plugin.saveSettings();
+            this.plugin.refreshMapViews();
+          })
+        );
+      }
+    }
+    {
+      const sec = this.createSection(containerEl, "Map display", "Visual appearance of the map canvas and file explorer integration.", true);
+      new import_obsidian2.Setting(sec).setName("Theme").setDesc("Visual theme for palette, fonts, and decorative elements.").addDropdown((dd) => {
+        for (const t of BUILTIN_THEMES)
+          dd.addOption(t.id, t.name);
+        dd.setValue(this.plugin.settings.activeTheme);
+        dd.onChange(async (value) => {
+          this.plugin.settings.activeTheme = value;
+          await this.plugin.saveSettings();
+          this.plugin.refreshMapViews();
+        });
+      });
+      new import_obsidian2.Setting(sec).setName("Color mode").setDesc("How to color points on the map.").addDropdown(
+        (dd) => dd.addOption("semantic", "Semantic").addOption("folder", "Folder").addOption("property", "Property").setValue(this.plugin.settings.colorMode).onChange(async (value) => {
+          this.plugin.settings.colorMode = value;
+          await this.plugin.saveSettings();
+          this.display();
+          this.plugin.refreshMapViews();
+        })
+      );
+      if (this.plugin.settings.colorMode === "property") {
+        new import_obsidian2.Setting(sec).setName("Color property field").setDesc("Frontmatter field to use for property-based coloring.").addText(
+          (text) => text.setPlaceholder("type").setValue(this.plugin.settings.colorPropertyField).onChange(async (value) => {
+            this.plugin.settings.colorPropertyField = value;
+            await this.plugin.saveSettings();
+            this.plugin.refreshMapViews();
+            this.plugin.updateExplorerDots();
+          }).then((t) => {
+            t.inputEl.addClass("chorographia-input-sm");
+          })
+        );
+      }
+      new import_obsidian2.Setting(sec).setName("Show link overlay").setDesc("Draw wikilink edges between notes on the map.").addToggle(
+        (toggle) => toggle.setValue(this.plugin.settings.showLinks).onChange(async (value) => {
+          this.plugin.settings.showLinks = value;
+          await this.plugin.saveSettings();
+        })
+      );
+      new import_obsidian2.Setting(sec).setName("File explorer dots").setDesc("Show colored circles next to notes in the file explorer.").addToggle(
+        (toggle) => toggle.setValue(this.plugin.settings.showExplorerDots).onChange(async (value) => {
+          this.plugin.settings.showExplorerDots = value;
+          await this.plugin.saveSettings();
+          this.plugin.updateExplorerDots();
+          this.display();
+        })
+      );
+      if (this.plugin.settings.showExplorerDots) {
+        new import_obsidian2.Setting(sec).setName("Dot offset").setDesc("Left offset in pixels for the explorer dot (adjust if you have other badges).").addSlider(
+          (sl) => sl.setLimits(0, 200, 1).setValue(this.plugin.settings.explorerDotOffset).setDynamicTooltip().onChange(async (value) => {
+            this.plugin.settings.explorerDotOffset = value;
+            await this.plugin.saveSettings();
+            this.plugin.updateExplorerDots();
+          })
+        );
+      }
+      new import_obsidian2.Setting(sec).setName("Minimap corner").setDesc("Corner for the global minimap shown in local view.").addDropdown(
+        (dd) => dd.addOption("off", "Off").addOption("top-left", "Top-left").addOption("top-right", "Top-right").addOption("bottom-left", "Bottom-left").addOption("bottom-right", "Bottom-right").setValue(this.plugin.settings.minimapCorner).onChange(async (value) => {
+          this.plugin.settings.minimapCorner = value;
+          await this.plugin.saveSettings();
+          this.plugin.refreshMapViews();
+        })
+      );
+    }
+    {
+      const sec = this.createSection(containerEl, "Label appearance", "Control the size, opacity, and contrast of zone and note labels on the map.");
+      new import_obsidian2.Setting(sec).setName("Zone label size").setDesc("Font size for zone name labels (px).").addSlider(
+        (sl) => sl.setLimits(6, 18, 1).setValue(this.plugin.settings.zoneLabelSize).setDynamicTooltip().onChange(async (value) => {
+          this.plugin.settings.zoneLabelSize = value;
+          await this.plugin.saveSettings();
+          this.plugin.refreshMapViews();
+        })
+      );
+      new import_obsidian2.Setting(sec).setName("Zone label opacity").setDesc("Opacity of zone name labels.").addSlider(
+        (sl) => sl.setLimits(0.1, 1, 0.05).setValue(this.plugin.settings.zoneLabelOpacity).setDynamicTooltip().onChange(async (value) => {
+          this.plugin.settings.zoneLabelOpacity = value;
+          await this.plugin.saveSettings();
+          this.plugin.refreshMapViews();
+        })
+      );
+      new import_obsidian2.Setting(sec).setName("Sub-zone label size").setDesc("Font size for sub-zone (province) labels (px).").addSlider(
+        (sl) => sl.setLimits(4, 14, 1).setValue(this.plugin.settings.subZoneLabelSize).setDynamicTooltip().onChange(async (value) => {
+          this.plugin.settings.subZoneLabelSize = value;
+          await this.plugin.saveSettings();
+          this.plugin.refreshMapViews();
+        })
+      );
+      new import_obsidian2.Setting(sec).setName("Sub-zone label opacity").setDesc("Opacity of sub-zone (province) labels.").addSlider(
+        (sl) => sl.setLimits(0.1, 1, 0.05).setValue(this.plugin.settings.subZoneLabelOpacity).setDynamicTooltip().onChange(async (value) => {
+          this.plugin.settings.subZoneLabelOpacity = value;
+          await this.plugin.saveSettings();
+          this.plugin.refreshMapViews();
+        })
+      );
+      new import_obsidian2.Setting(sec).setName("Note title size").setDesc("Font size for note title labels (px).").addSlider(
+        (sl) => sl.setLimits(3, 12, 1).setValue(this.plugin.settings.noteTitleSize).setDynamicTooltip().onChange(async (value) => {
+          this.plugin.settings.noteTitleSize = value;
+          await this.plugin.saveSettings();
+          this.plugin.refreshMapViews();
+        })
+      );
+      new import_obsidian2.Setting(sec).setName("Note title opacity").setDesc("Opacity of note title labels when zoomed in.").addSlider(
+        (sl) => sl.setLimits(0.1, 1, 0.05).setValue(this.plugin.settings.noteTitleOpacity).setDynamicTooltip().onChange(async (value) => {
+          this.plugin.settings.noteTitleOpacity = value;
+          await this.plugin.saveSettings();
+          this.plugin.refreshMapViews();
+        })
+      );
+      new import_obsidian2.Setting(sec).setName("Label outline").setDesc("Add a contrasting outline behind labels for readability.").addToggle(
+        (toggle) => toggle.setValue(this.plugin.settings.labelOutline).onChange(async (value) => {
+          this.plugin.settings.labelOutline = value;
+          await this.plugin.saveSettings();
+          this.display();
+          this.plugin.refreshMapViews();
+        })
+      );
+      if (this.plugin.settings.labelOutline) {
+        new import_obsidian2.Setting(sec).setName("Outline width").setDesc("Thickness of the label outline (px).").addSlider(
+          (sl) => sl.setLimits(1, 4, 0.5).setValue(this.plugin.settings.labelOutlineWidth).setDynamicTooltip().onChange(async (value) => {
+            this.plugin.settings.labelOutlineWidth = value;
+            await this.plugin.saveSettings();
+            this.plugin.refreshMapViews();
+          })
+        );
+      }
+    }
+    {
+      const sec = this.createSection(containerEl, "Actions", "Run pipeline steps or clear data.", true);
+      new import_obsidian2.Setting(sec).setName("Setup wizard").setDesc("Walk through initial configuration.").addButton(
+        (btn) => btn.setButtonText("Open").onClick(() => {
+          new OnboardingModal(this.app, this.plugin).open();
+        })
+      );
+      new import_obsidian2.Setting(sec).setName("Re-embed changed notes").setDesc("Index notes and compute embeddings for new/changed notes.").addButton(
+        (btn) => btn.setButtonText("Run").onClick(async () => {
           btn.setDisabled(true);
           btn.setButtonText("Running...");
           try {
-            await this.plugin.runZoneNaming();
-            new import_obsidian.Notice("Chorographia: Zone naming complete.");
+            await this.plugin.runEmbedPipeline();
           } catch (e) {
-            new import_obsidian.Notice("Chorographia: " + e.message);
+            new import_obsidian2.Notice("Chorographia: " + (e instanceof Error ? e.message : String(e)));
           }
           btn.setDisabled(false);
           btn.setButtonText("Run");
         })
       );
+      new import_obsidian2.Setting(sec).setName("Recompute layout").setDesc("Run UMAP on cached embeddings to produce a new 2D layout.").addButton(
+        (btn) => btn.setButtonText("Run").onClick(async () => {
+          btn.setDisabled(true);
+          btn.setButtonText("Running...");
+          try {
+            await this.plugin.runLayoutCompute();
+            new import_obsidian2.Notice("Chorographia: Layout complete.");
+          } catch (e) {
+            new import_obsidian2.Notice("Chorographia: " + (e instanceof Error ? e.message : String(e)));
+          }
+          btn.setDisabled(false);
+          btn.setButtonText("Run");
+        })
+      );
+      if (this.plugin.settings.enableLLMZoneNaming) {
+        new import_obsidian2.Setting(sec).setName("Re-run zone naming").setDesc("Regenerate LLM names for all zones and sub-zones.").addButton(
+          (btn) => btn.setButtonText("Run").onClick(() => {
+            const runNaming = async () => {
+              btn.setDisabled(true);
+              btn.setButtonText("Running...");
+              try {
+                await this.plugin.runZoneNaming();
+                new import_obsidian2.Notice("Chorographia: Zone naming complete.");
+              } catch (e) {
+                new import_obsidian2.Notice("Chorographia: " + (e instanceof Error ? e.message : String(e)));
+              }
+              btn.setDisabled(false);
+              btn.setButtonText("Run");
+            };
+            if (this.plugin.settings.mapLocked) {
+              new ConfirmModal(this.app, "Map is locked. This will regenerate all zone names. Continue?", runNaming).open();
+            } else {
+              void runNaming();
+            }
+          })
+        );
+      }
+      new import_obsidian2.Setting(sec).setName("Clear cache").setDesc("Delete all cached embeddings and layout data.").addButton(
+        (btn) => btn.setButtonText("Clear").setWarning().onClick(() => {
+          const locked = this.plugin.settings.mapLocked;
+          const msg = locked ? "Map is locked. Clearing cache will erase all positions, zone data, and locked names. Continue?" : "This will erase all cached embeddings, positions, and zone data. You will need to re-embed to rebuild the map. Continue?";
+          new ConfirmModal(this.app, msg, async () => {
+            this.plugin.cache = { notes: {} };
+            if (locked) {
+              this.plugin.settings.mapLocked = false;
+              await this.plugin.saveSettings();
+            }
+            await this.plugin.saveCache();
+            new import_obsidian2.Notice("Chorographia: Cache cleared.");
+            this.display();
+          }).open();
+        })
+      );
     }
-    new import_obsidian.Setting(containerEl).setName("Clear cache").setDesc("Delete all cached embeddings and layout data.").addButton(
-      (btn) => btn.setButtonText("Clear").setWarning().onClick(async () => {
-        const locked = this.plugin.settings.mapLocked;
-        const msg = locked ? "Map is locked. Clearing cache will erase all positions, zone data, and locked names. Continue?" : "This will erase all cached embeddings, positions, and zone data. You will need to re-embed to rebuild the map. Continue?";
-        if (!confirm(msg))
-          return;
-        this.plugin.cache = { notes: {} };
-        if (locked) {
-          this.plugin.settings.mapLocked = false;
-          await this.plugin.saveSettings();
-        }
-        await this.plugin.saveCache();
-        new import_obsidian.Notice("Chorographia: Cache cleared.");
-        this.display();
-      })
-    );
   }
 };
 
@@ -8104,7 +8608,13 @@ function matchesGlob(path, pattern) {
   const re = pattern.replace(/[.+^${}()|[\]\\]/g, "\\$&").replace(/\*\*/g, "\xA7\xA7").replace(/\*/g, "[^/]*").replace(/§§/g, ".*");
   return new RegExp("^" + re + "$").test(path);
 }
-async function indexVault(vault, globs, excludeGlobs, maxNotes) {
+function stringifyVal(val) {
+  if (Array.isArray(val))
+    return val.map(String).join(", ");
+  return String(val);
+}
+async function indexVault(app, config) {
+  const vault = app.vault;
   const files = vault.getMarkdownFiles();
   const byBasename = /* @__PURE__ */ new Map();
   for (const f of files) {
@@ -8114,7 +8624,7 @@ async function indexVault(vault, globs, excludeGlobs, maxNotes) {
   let matched = [];
   for (const f of files) {
     let included = false;
-    for (const g of globs) {
+    for (const g of config.globs) {
       if (matchesGlob(f.path, g)) {
         included = true;
         break;
@@ -8123,7 +8633,7 @@ async function indexVault(vault, globs, excludeGlobs, maxNotes) {
     if (!included)
       continue;
     let excluded = false;
-    for (const g of excludeGlobs) {
+    for (const g of config.excludeGlobs) {
       if (matchesGlob(f.path, g)) {
         excluded = true;
         break;
@@ -8132,39 +8642,45 @@ async function indexVault(vault, globs, excludeGlobs, maxNotes) {
     if (!excluded)
       matched.push(f);
   }
-  if (matched.length > maxNotes) {
-    matched = matched.slice(0, maxNotes);
+  if (config.filterIncludeFolders.length > 0) {
+    const inc = new Set(config.filterIncludeFolders.map((s) => s.toLowerCase()));
+    matched = matched.filter((f) => {
+      const folder = f.path.includes("/") ? f.path.split("/")[0].toLowerCase() : "";
+      return inc.has(folder);
+    });
+  }
+  if (config.filterExcludeFolders.length > 0) {
+    const exc = new Set(config.filterExcludeFolders.map((s) => s.toLowerCase()));
+    matched = matched.filter((f) => {
+      const folder = f.path.includes("/") ? f.path.split("/")[0].toLowerCase() : "";
+      return !exc.has(folder);
+    });
+  }
+  if (matched.length > config.maxNotes) {
+    matched = matched.slice(0, config.maxNotes);
   }
   const matchedPaths = new Set(matched.map((f) => f.path));
   const results = [];
-  for (const file of matched) {
-    const content = await vault.cachedRead(file);
-    const fm = parseFrontmatter(content);
-    const title = fm.title || file.basename;
-    const type = fm.type || "";
-    const cat = fm.cat || "";
-    const topics = Array.isArray(fm.topics) ? fm.topics.map(String).join(", ") : "";
-    const body = stripFrontmatter(content).slice(0, 12e3);
-    const embedText = [
-      title ? `title: ${title}` : null,
-      type ? `type: ${type}` : null,
-      cat ? `cat: ${cat}` : null,
-      topics ? `topics: ${topics}` : null,
-      "",
-      body
-    ].filter((x) => x !== null).join("\n");
-    const sha256 = await sha256Hex(embedText);
-    const links = [];
-    let m;
-    const linkRe = new RegExp(WIKILINK_RE.source, "g");
-    while ((m = linkRe.exec(content)) !== null) {
-      const target = m[1].trim().toLowerCase();
-      const resolved = byBasename.get(target);
-      if (resolved && matchedPaths.has(resolved)) {
-        links.push(resolved);
-      }
+  let requirePropKey = "";
+  let requirePropVal = "";
+  if (config.filterRequireProperty) {
+    const colonIdx = config.filterRequireProperty.indexOf(":");
+    if (colonIdx >= 0) {
+      requirePropKey = config.filterRequireProperty.slice(0, colonIdx).trim();
+      requirePropVal = config.filterRequireProperty.slice(colonIdx + 1).trim();
+    } else {
+      requirePropKey = config.filterRequireProperty.trim();
     }
-    const folder = file.path.includes("/") ? file.path.split("/")[0] : "";
+  }
+  for (const file of matched) {
+    const content = await vault.read(file);
+    const cached = app.metadataCache.getFileCache(file);
+    const fm = cached?.frontmatter ? { ...cached.frontmatter } : {};
+    delete fm.position;
+    const title = fm.title ? String(fm.title) : file.basename;
+    const type = fm.type ? String(fm.type) : "";
+    const cat = fm.cat ? String(fm.cat) : "";
+    const body = stripFrontmatter(content).slice(0, 12e3);
     const tags = [];
     const fmTags = fm.tags;
     if (Array.isArray(fmTags)) {
@@ -8179,6 +8695,56 @@ async function indexVault(vault, globs, excludeGlobs, maxNotes) {
       tags.push(tagMatch[1]);
     }
     const uniqueTags = [...new Set(tags)];
+    if (config.filterIncludeTags.length > 0) {
+      const inc = new Set(config.filterIncludeTags.map((s) => s.toLowerCase()));
+      if (!uniqueTags.some((t) => inc.has(t.toLowerCase())))
+        continue;
+    }
+    if (config.filterExcludeTags.length > 0) {
+      const exc = new Set(config.filterExcludeTags.map((s) => s.toLowerCase()));
+      if (uniqueTags.some((t) => exc.has(t.toLowerCase())))
+        continue;
+    }
+    if (requirePropKey) {
+      const propVal = fm[requirePropKey];
+      if (propVal == null || propVal === "")
+        continue;
+      if (requirePropVal && String(propVal).toLowerCase() !== requirePropVal.toLowerCase())
+        continue;
+    }
+    const parts = [];
+    for (const field of config.embedFields) {
+      if (field === "title") {
+        if (title)
+          parts.push(`title: ${title}`);
+      } else {
+        const val = fm[field];
+        if (val)
+          parts.push(`${field}: ${stringifyVal(val)}`);
+      }
+    }
+    if (config.embedIncludeTags && uniqueTags.length) {
+      parts.push(`tags: ${uniqueTags.join(", ")}`);
+    }
+    parts.push("");
+    parts.push(body);
+    const embedText = parts.join("\n");
+    const sha256 = await sha256Hex(embedText);
+    const links = [];
+    let m;
+    const linkRe = new RegExp(WIKILINK_RE.source, "g");
+    while ((m = linkRe.exec(content)) !== null) {
+      const target = m[1].trim().toLowerCase();
+      const resolved = byBasename.get(target);
+      if (resolved && matchedPaths.has(resolved)) {
+        links.push(resolved);
+      }
+    }
+    const folder = file.path.includes("/") ? file.path.split("/")[0] : "";
+    const frontmatter = {};
+    for (const [k, v] of Object.entries(fm)) {
+      frontmatter[k] = stringifyVal(v);
+    }
     results.push({
       path: file.path,
       title,
@@ -8188,29 +8754,11 @@ async function indexVault(vault, globs, excludeGlobs, maxNotes) {
       tags: uniqueTags,
       embedText,
       sha256,
-      links: [...new Set(links)]
+      links: [...new Set(links)],
+      frontmatter
     });
   }
   return results;
-}
-function parseFrontmatter(content) {
-  const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
-  if (!match)
-    return {};
-  const block = match[1];
-  const result = {};
-  for (const line of block.split("\n")) {
-    const idx = line.indexOf(":");
-    if (idx < 0)
-      continue;
-    const key = line.slice(0, idx).trim();
-    let val = line.slice(idx + 1).trim();
-    if (val.startsWith("[") && val.endsWith("]")) {
-      val = val.slice(1, -1).split(",").map((s) => s.trim().replace(/^['"]|['"]$/g, ""));
-    }
-    result[key] = val;
-  }
-  return result;
 }
 function stripFrontmatter(content) {
   return content.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, "");
@@ -8223,7 +8771,7 @@ async function sha256Hex(text) {
 }
 
 // src/openai.ts
-var import_obsidian2 = require("obsidian");
+var import_obsidian3 = require("obsidian");
 
 // src/cache.ts
 function encodeFloat32(arr) {
@@ -8244,26 +8792,27 @@ function decodeFloat32(b64) {
 }
 
 // src/openai.ts
-var BATCH_SIZE = 50;
 var DELAY_MS = 200;
-async function embedTexts(texts, apiKey, model, onProgress) {
+async function embedTexts(texts, apiKey, model, onProgress, batchSize = 50) {
   if (!apiKey)
     throw new Error("OpenAI API key not set.");
+  const step = Math.max(1, Math.floor(batchSize));
   const results = [];
   const skipped = [];
-  for (let i = 0; i < texts.length; i += BATCH_SIZE) {
-    const batch = texts.slice(i, i + BATCH_SIZE);
+  for (let i = 0; i < texts.length; i += step) {
+    const batch = texts.slice(i, i + step);
     try {
       const batchResults = await embedBatch(batch, apiKey, model);
       results.push(...batchResults);
     } catch (e) {
-      if (e.status === 400 && batch.length > 1) {
+      const status = e instanceof Error ? e.status : void 0;
+      if (status === 400 && batch.length > 1) {
         for (const item of batch) {
           try {
             const single = await embedBatch([item], apiKey, model);
             results.push(...single);
           } catch (e2) {
-            const msg = e2.message || `HTTP ${e2.status}`;
+            const msg = e2 instanceof Error ? e2.message : String(e2);
             console.warn(`Chorographia: Skipping "${item.path}": ${msg}`);
             skipped.push(item.path);
           }
@@ -8272,9 +8821,9 @@ async function embedTexts(texts, apiKey, model, onProgress) {
         throw e;
       }
     }
-    onProgress?.(Math.min(i + BATCH_SIZE, texts.length), texts.length);
-    if (i + BATCH_SIZE < texts.length) {
-      await sleep(DELAY_MS);
+    onProgress?.(Math.min(i + step, texts.length), texts.length);
+    if (i + step < texts.length) {
+      await (0, import_obsidian3.sleep)(DELAY_MS);
     }
   }
   if (skipped.length > 0) {
@@ -8283,7 +8832,7 @@ async function embedTexts(texts, apiKey, model, onProgress) {
   return results;
 }
 async function embedBatch(batch, apiKey, model) {
-  const resp = await (0, import_obsidian2.requestUrl)({
+  const resp = await (0, import_obsidian3.requestUrl)({
     url: "https://api.openai.com/v1/embeddings",
     method: "POST",
     headers: {
@@ -8297,8 +8846,7 @@ async function embedBatch(batch, apiKey, model) {
   });
   if (resp.status !== 200) {
     const msg = resp.json?.error?.message || `HTTP ${resp.status}`;
-    const err = new Error(`OpenAI API error: ${msg}`);
-    err.status = resp.status;
+    const err = Object.assign(new Error(`OpenAI API error: ${msg}`), { status: resp.status });
     throw err;
   }
   const results = [];
@@ -8312,18 +8860,15 @@ async function embedBatch(batch, apiKey, model) {
   }
   return results;
 }
-function sleep(ms) {
-  return new Promise((r) => setTimeout(r, ms));
-}
 
 // src/ollama.ts
-var import_obsidian3 = require("obsidian");
-var BATCH_SIZE2 = 50;
-async function embedTextsOllama(texts, baseUrl, model, onProgress) {
+var import_obsidian4 = require("obsidian");
+async function embedTextsOllama(texts, baseUrl, model, onProgress, batchSize = 50) {
+  const step = Math.max(1, Math.floor(batchSize));
   const results = [];
-  for (let i = 0; i < texts.length; i += BATCH_SIZE2) {
-    const batch = texts.slice(i, i + BATCH_SIZE2);
-    const resp = await (0, import_obsidian3.requestUrl)({
+  for (let i = 0; i < texts.length; i += step) {
+    const batch = texts.slice(i, i + step);
+    const resp = await (0, import_obsidian4.requestUrl)({
       url: `${baseUrl}/api/embed`,
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -8344,7 +8889,7 @@ async function embedTextsOllama(texts, baseUrl, model, onProgress) {
         embedding: encodeFloat32(arr)
       });
     }
-    onProgress?.(Math.min(i + BATCH_SIZE2, texts.length), texts.length);
+    onProgress?.(Math.min(i + step, texts.length), texts.length);
   }
   return results;
 }
@@ -8357,7 +8902,7 @@ async function generateZoneNamesOllama(clusters, baseUrl, model) {
     return `Cluster ${c.idx}: ${sample}`;
   }).join("\n");
   try {
-    const resp = await (0, import_obsidian3.requestUrl)({
+    const resp = await (0, import_obsidian4.requestUrl)({
       url: `${baseUrl}/api/chat`,
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -8401,27 +8946,28 @@ ${clusterDescs}`
 }
 
 // src/openrouter.ts
-var import_obsidian4 = require("obsidian");
-var BATCH_SIZE3 = 50;
+var import_obsidian5 = require("obsidian");
 var DELAY_MS2 = 200;
-async function embedTextsOpenRouter(texts, apiKey, model, onProgress) {
+async function embedTextsOpenRouter(texts, apiKey, model, onProgress, batchSize = 50) {
   if (!apiKey)
     throw new Error("OpenRouter API key not set.");
+  const step = Math.max(1, Math.floor(batchSize));
   const results = [];
   const skipped = [];
-  for (let i = 0; i < texts.length; i += BATCH_SIZE3) {
-    const batch = texts.slice(i, i + BATCH_SIZE3);
+  for (let i = 0; i < texts.length; i += step) {
+    const batch = texts.slice(i, i + step);
     try {
       const batchResults = await embedBatch2(batch, apiKey, model);
       results.push(...batchResults);
     } catch (e) {
-      if (e.status === 400 && batch.length > 1) {
+      const status = e instanceof Error ? e.status : void 0;
+      if (status === 400 && batch.length > 1) {
         for (const item of batch) {
           try {
             const single = await embedBatch2([item], apiKey, model);
             results.push(...single);
           } catch (e2) {
-            const msg = e2.message || `HTTP ${e2.status}`;
+            const msg = e2 instanceof Error ? e2.message : String(e2);
             console.warn(`Chorographia: Skipping "${item.path}": ${msg}`);
             skipped.push(item.path);
           }
@@ -8430,9 +8976,9 @@ async function embedTextsOpenRouter(texts, apiKey, model, onProgress) {
         throw e;
       }
     }
-    onProgress?.(Math.min(i + BATCH_SIZE3, texts.length), texts.length);
-    if (i + BATCH_SIZE3 < texts.length) {
-      await sleep2(DELAY_MS2);
+    onProgress?.(Math.min(i + step, texts.length), texts.length);
+    if (i + step < texts.length) {
+      await (0, import_obsidian5.sleep)(DELAY_MS2);
     }
   }
   if (skipped.length > 0) {
@@ -8441,7 +8987,7 @@ async function embedTextsOpenRouter(texts, apiKey, model, onProgress) {
   return results;
 }
 async function embedBatch2(batch, apiKey, model) {
-  const resp = await (0, import_obsidian4.requestUrl)({
+  const resp = await (0, import_obsidian5.requestUrl)({
     url: "https://openrouter.ai/api/v1/embeddings",
     method: "POST",
     headers: {
@@ -8455,8 +9001,7 @@ async function embedBatch2(batch, apiKey, model) {
   });
   if (resp.status !== 200) {
     const msg = resp.json?.error?.message || `HTTP ${resp.status}`;
-    const err = new Error(`OpenRouter API error: ${msg}`);
-    err.status = resp.status;
+    const err = Object.assign(new Error(`OpenRouter API error: ${msg}`), { status: resp.status });
     throw err;
   }
   const results = [];
@@ -8479,7 +9024,7 @@ async function generateZoneNamesOpenRouter(clusters, apiKey, model) {
     return `Cluster ${c.idx}: ${sample}`;
   }).join("\n");
   try {
-    const resp = await (0, import_obsidian4.requestUrl)({
+    const resp = await (0, import_obsidian5.requestUrl)({
       url: "https://openrouter.ai/api/v1/chat/completions",
       method: "POST",
       headers: {
@@ -8519,9 +9064,6 @@ ${clusterDescs}`
   } catch {
   }
   return result;
-}
-function sleep2(ms) {
-  return new Promise((r) => setTimeout(r, ms));
 }
 
 // src/layout.ts
@@ -8740,7 +9282,7 @@ function computeSemanticAssignments(vectors, centroids) {
 }
 
 // src/view.ts
-var import_obsidian6 = require("obsidian");
+var import_obsidian7 = require("obsidian");
 
 // src/voronoi.ts
 function mulberry323(seed) {
@@ -10279,8 +10821,8 @@ function drawZone(ctx, zone, w2s, alpha, dashed = false, worldmap = false, skipL
 }
 
 // src/zoneNaming.ts
-var import_obsidian5 = require("obsidian");
-async function generateZoneNames(clusters, apiKey, model = "gpt-4o-mini") {
+var import_obsidian6 = require("obsidian");
+async function generateZoneNames(clusters, apiKey, model = "gpt-5-mini") {
   const result = /* @__PURE__ */ new Map();
   if (!apiKey || clusters.length === 0)
     return result;
@@ -10289,7 +10831,7 @@ async function generateZoneNames(clusters, apiKey, model = "gpt-4o-mini") {
     return `Cluster ${c.idx}: ${sample}`;
   }).join("\n");
   try {
-    const resp = await (0, import_obsidian5.requestUrl)({
+    const resp = await (0, import_obsidian6.requestUrl)({
       url: "https://api.openai.com/v1/chat/completions",
       method: "POST",
       headers: {
@@ -10864,13 +11406,7 @@ function themeOutlineColor() {
   const isDark = document.body.classList.contains("theme-dark");
   return isDark ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.7)";
 }
-function hashStr(s) {
-  let h = 0;
-  for (let i = 0; i < s.length; i++)
-    h = (h << 5) - h + s.charCodeAt(i) | 0;
-  return Math.abs(h);
-}
-var ChorographiaView = class extends import_obsidian6.ItemView {
+var ChorographiaView = class extends import_obsidian7.ItemView {
   constructor(leaf, plugin) {
     super(leaf);
     this.dpr = 1;
@@ -10906,7 +11442,7 @@ var ChorographiaView = class extends import_obsidian6.ItemView {
     this.dragPanY = 0;
     // color maps
     this.folderColorMap = /* @__PURE__ */ new Map();
-    this.catColorMap = /* @__PURE__ */ new Map();
+    this.propertyColorMap = /* @__PURE__ */ new Map();
     this.allPanels = [];
     this.editMode = false;
     // export state
@@ -10926,6 +11462,7 @@ var ChorographiaView = class extends import_obsidian6.ItemView {
     this.labelHitboxes = [];
     this.activeFolderFilters = /* @__PURE__ */ new Set();
     this.activeTagFilters = /* @__PURE__ */ new Set();
+    this.cursorState = "grab";
     this.plugin = plugin;
   }
   get mapTheme() {
@@ -10955,9 +11492,7 @@ var ChorographiaView = class extends import_obsidian6.ItemView {
     const root = this.containerEl.children[1];
     root.empty();
     root.addClass("chorographia-container");
-    root.style.overflow = "hidden";
     this.applyThemeBackground(root);
-    this.containerEl.style.overflow = "hidden";
     this.canvas = root.createEl("canvas", { cls: "chorographia-canvas" });
     this.statusEl = root.createEl("div", { cls: "chorographia-status" });
     this.buildControls(root);
@@ -10974,22 +11509,23 @@ var ChorographiaView = class extends import_obsidian6.ItemView {
       this.syncActiveNoteSelection();
     }));
     this.syncActiveNoteSelection();
+    if (Object.keys(this.plugin.cache.notes).length === 0) {
+      const { OnboardingModal: OnboardingModal2 } = await Promise.resolve().then(() => (init_onboarding(), onboarding_exports));
+      new OnboardingModal2(this.app, this.plugin).open();
+    }
   }
   async onClose() {
     cancelAnimationFrame(this.animFrameId);
   }
   // ===================== controls =====================
   buildControls(root) {
-    const gearSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`;
-    const cameraSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>`;
-    const downloadSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`;
     const iconBar = root.createEl("div", { cls: "chorographia-icon-bar" });
     const settingsBtn = iconBar.createEl("button", { cls: "chorographia-icon-btn", attr: { "aria-label": "Settings" } });
-    settingsBtn.innerHTML = gearSvg;
+    (0, import_obsidian7.setIcon)(settingsBtn, "settings");
     const snapshotBtn = iconBar.createEl("button", { cls: "chorographia-icon-btn", attr: { "aria-label": "Snapshots" } });
-    snapshotBtn.innerHTML = cameraSvg;
+    (0, import_obsidian7.setIcon)(snapshotBtn, "camera");
     const exportBtn = iconBar.createEl("button", { cls: "chorographia-icon-btn", attr: { "aria-label": "Export" } });
-    exportBtn.innerHTML = downloadSvg;
+    (0, import_obsidian7.setIcon)(exportBtn, "download");
     this.settingsPanel = root.createEl("div", { cls: "chorographia-menu" });
     this.snapshotPanel = root.createEl("div", { cls: "chorographia-menu chorographia-snapshot-panel" });
     this.exportPanel = root.createEl("div", { cls: "chorographia-menu chorographia-export-panel" });
@@ -11036,8 +11572,7 @@ var ChorographiaView = class extends import_obsidian6.ItemView {
     for (const [v, t] of [
       ["semantic", "Semantic"],
       ["folder", "Folder"],
-      ["type", "Type"],
-      ["cat", "Category"]
+      ["property", "Property"]
     ])
       this.colorModeSelect.createEl("option", { text: t, value: v });
     this.colorModeSelect.value = this.plugin.settings.colorMode;
@@ -11134,17 +11669,17 @@ var ChorographiaView = class extends import_obsidian6.ItemView {
     saveBtn.addEventListener("click", async () => {
       const name = saveInput.value.trim();
       if (!name) {
-        new import_obsidian6.Notice("Enter a name for the snapshot.");
+        new import_obsidian7.Notice("Enter a name for the snapshot.");
         return;
       }
       saveBtn.disabled = true;
       try {
         await this.plugin.saveSnapshot(name);
-        new import_obsidian6.Notice(`Snapshot "${name}" saved.`);
+        new import_obsidian7.Notice(`Snapshot "${name}" saved.`);
         saveInput.value = "";
         this.refreshSnapshotList();
       } catch (e) {
-        new import_obsidian6.Notice("Save failed: " + e.message);
+        new import_obsidian7.Notice("Save failed: " + (e instanceof Error ? e.message : String(e)));
       }
       saveBtn.disabled = false;
     });
@@ -11185,15 +11720,15 @@ var ChorographiaView = class extends import_obsidian6.ItemView {
           return;
         }
         await this.plugin.deleteSnapshot(s.path);
-        new import_obsidian6.Notice("Snapshot deleted.");
+        new import_obsidian7.Notice("Snapshot deleted.");
         this.refreshSnapshotList();
       });
       row.addEventListener("click", async () => {
         try {
           await this.plugin.loadSnapshot(s.path);
-          new import_obsidian6.Notice(`Snapshot "${s.name}" loaded.`);
+          new import_obsidian7.Notice(`Snapshot "${s.name}" loaded.`);
         } catch (e) {
-          new import_obsidian6.Notice("Load failed: " + e.message);
+          new import_obsidian7.Notice("Load failed: " + (e instanceof Error ? e.message : String(e)));
         }
       });
     }
@@ -11305,7 +11840,7 @@ var ChorographiaView = class extends import_obsidian6.ItemView {
       this.exportWholeMap();
     } else if (this.exportMode === "region") {
       if (!this.regionWorld) {
-        new import_obsidian6.Notice("Draw a rectangle on the map first.");
+        new import_obsidian7.Notice("Draw a rectangle on the map first.");
         return;
       }
       this.exportRegion();
@@ -11314,7 +11849,7 @@ var ChorographiaView = class extends import_obsidian6.ItemView {
   exportCurrentView() {
     this.canvas.toBlob((blob) => {
       if (!blob) {
-        new import_obsidian6.Notice("Export failed.");
+        new import_obsidian7.Notice("Export failed.");
         return;
       }
       this.downloadBlob(blob, "chorographia-view");
@@ -11322,7 +11857,7 @@ var ChorographiaView = class extends import_obsidian6.ItemView {
   }
   exportWholeMap() {
     if (this.allPoints.length === 0) {
-      new import_obsidian6.Notice("No points to export.");
+      new import_obsidian7.Notice("No points to export.");
       return;
     }
     let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
@@ -11431,12 +11966,12 @@ var ChorographiaView = class extends import_obsidian6.ItemView {
     this.plugin.settings.minimapCorner = origMinimap;
     offCanvas.toBlob((blob) => {
       if (!blob) {
-        new import_obsidian6.Notice("Export failed.");
+        new import_obsidian7.Notice("Export failed.");
         return;
       }
       const suffix = this.exportMode === "region" ? "region" : "full";
       this.downloadBlob(blob, `chorographia-${suffix}`);
-      new import_obsidian6.Notice("Map exported.");
+      new import_obsidian7.Notice("Map exported.");
     }, "image/png");
   }
   downloadBlob(blob, prefix) {
@@ -11449,7 +11984,7 @@ var ChorographiaView = class extends import_obsidian6.ItemView {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    new import_obsidian6.Notice("Map exported.");
+    new import_obsidian7.Notice("Map exported.");
   }
   buildFilterUI() {
     this.filterPanel.empty();
@@ -11536,10 +12071,12 @@ var ChorographiaView = class extends import_obsidian6.ItemView {
   async loadPoints() {
     const pts = [];
     const folders = /* @__PURE__ */ new Set();
-    const cats = /* @__PURE__ */ new Set();
+    const propVals = /* @__PURE__ */ new Set();
+    const propField = this.plugin.settings.colorPropertyField;
     for (const [path, n] of Object.entries(this.plugin.cache.notes)) {
       if (n.x == null || n.y == null)
         continue;
+      const fm = n.frontmatter || {};
       const p = {
         path,
         x: n.x,
@@ -11552,16 +12089,18 @@ var ChorographiaView = class extends import_obsidian6.ItemView {
         noteType: n.noteType || "",
         cat: n.cat || "",
         tags: n.tags || [],
-        links: n.links || []
+        links: n.links || [],
+        frontmatter: fm
       };
       pts.push(p);
       folders.add(p.folder);
-      if (p.cat)
-        cats.add(p.cat);
+      if (propField && fm[propField])
+        propVals.add(fm[propField]);
     }
     const folderPal = this.mapTheme.palette.folder;
     [...folders].sort().forEach((f, i) => this.folderColorMap.set(f, folderPal[i % folderPal.length]));
-    [...cats].sort().forEach((c, i) => this.catColorMap.set(c, folderPal[i % folderPal.length]));
+    this.propertyColorMap.clear();
+    [...propVals].sort().forEach((v, i) => this.propertyColorMap.set(v, folderPal[i % folderPal.length]));
     this.allPoints = pts;
     this.points = pts;
     this.hoverIdx = -1;
@@ -11844,7 +12383,7 @@ var ChorographiaView = class extends import_obsidian6.ItemView {
         if (this.plugin.settings.llmProvider === "ollama") {
           llmNames = await generateZoneNamesOllama(clusters, this.plugin.settings.ollamaUrl, this.plugin.settings.ollamaLlmModel);
         } else if (this.plugin.settings.llmProvider === "openai" && this.plugin.settings.openaiApiKey) {
-          llmNames = await generateZoneNames(clusters, this.plugin.settings.openaiApiKey);
+          llmNames = await generateZoneNames(clusters, this.plugin.settings.openaiApiKey, this.plugin.settings.openaiLlmModel);
         } else if (this.plugin.settings.llmProvider === "openrouter" && this.plugin.settings.openrouterApiKey) {
           llmNames = await generateZoneNamesOpenRouter(clusters, this.plugin.settings.openrouterApiKey, this.plugin.settings.openrouterLlmModel);
         }
@@ -11901,7 +12440,7 @@ var ChorographiaView = class extends import_obsidian6.ItemView {
         if (this.plugin.settings.llmProvider === "ollama") {
           llmNames = await generateZoneNamesOllama(batchClusters, this.plugin.settings.ollamaUrl, this.plugin.settings.ollamaLlmModel);
         } else if (this.plugin.settings.llmProvider === "openai" && this.plugin.settings.openaiApiKey) {
-          llmNames = await generateZoneNames(batchClusters, this.plugin.settings.openaiApiKey);
+          llmNames = await generateZoneNames(batchClusters, this.plugin.settings.openaiApiKey, this.plugin.settings.openaiLlmModel);
         } else if (this.plugin.settings.llmProvider === "openrouter" && this.plugin.settings.openrouterApiKey) {
           llmNames = await generateZoneNamesOpenRouter(batchClusters, this.plugin.settings.openrouterApiKey, this.plugin.settings.openrouterLlmModel);
         }
@@ -12032,6 +12571,13 @@ var ChorographiaView = class extends import_obsidian6.ItemView {
     this.ctx = this.canvas.getContext("2d");
     this.ctx.scale(this.dpr, this.dpr);
   }
+  setCursor(el, cursor) {
+    if (cursor === this.cursorState)
+      return;
+    el.removeClass("cursor-grab", "cursor-grabbing", "cursor-pointer", "cursor-crosshair");
+    el.addClass(`cursor-${cursor}`);
+    this.cursorState = cursor;
+  }
   w2s(wx, wy) {
     const w = this.canvas.clientWidth, h = this.canvas.clientHeight;
     const s = Math.min(w, h) * 0.42 * this.zoom;
@@ -12050,12 +12596,10 @@ var ChorographiaView = class extends import_obsidian6.ItemView {
         return this.semColor(p);
       case "folder":
         return this.folderColorMap.get(p.folder) || pal.folder[0];
-      case "type": {
-        const t = p.noteType.toUpperCase();
-        return pal.type[t] || pal.folder[hashStr(p.noteType) % pal.folder.length];
+      case "property": {
+        const val = p.frontmatter[this.plugin.settings.colorPropertyField] ?? "";
+        return val ? this.propertyColorMap.get(val) || pal.folder[0] : pal.folder[0];
       }
-      case "cat":
-        return p.cat ? this.catColorMap.get(p.cat) || pal.folder[0] : pal.folder[0];
       default:
         return pal.folder[0];
     }
@@ -13331,7 +13875,7 @@ var ChorographiaView = class extends import_obsidian6.ItemView {
         this.regionStart = { x: mx, y: my };
         this.regionEnd = { x: mx, y: my };
         this.regionWorld = null;
-        c.style.cursor = "crosshair";
+        this.setCursor(c, "crosshair");
         return;
       }
       this.dragging = true;
@@ -13339,7 +13883,7 @@ var ChorographiaView = class extends import_obsidian6.ItemView {
       this.dragStartY = e.clientY;
       this.dragPanX = this.panX;
       this.dragPanY = this.panY;
-      c.style.cursor = "grabbing";
+      this.setCursor(c, "grabbing");
     });
     c.addEventListener("mousemove", (e) => {
       if (this.regionSelectActive && this.regionStart) {
@@ -13368,7 +13912,7 @@ var ChorographiaView = class extends import_obsidian6.ItemView {
       }
       if (best !== this.hoverIdx) {
         this.hoverIdx = best;
-        c.style.cursor = this.regionSelectActive ? "crosshair" : best >= 0 ? "pointer" : "grab";
+        this.setCursor(c, this.regionSelectActive ? "crosshair" : best >= 0 ? "pointer" : "grab");
         this.draw();
       }
     });
@@ -13394,7 +13938,7 @@ var ChorographiaView = class extends import_obsidian6.ItemView {
       }
       const was = this.dragging;
       this.dragging = false;
-      c.style.cursor = this.hoverIdx >= 0 ? "pointer" : "grab";
+      this.setCursor(c, this.hoverIdx >= 0 ? "pointer" : "grab");
       const dx = e.clientX - this.dragStartX, dy = e.clientY - this.dragStartY;
       if (was && dx * dx + dy * dy < 9)
         this.handleClick();
@@ -13588,6 +14132,9 @@ var ChorographiaView = class extends import_obsidian6.ItemView {
   }
 };
 
+// src/main.ts
+init_theme();
+
 // src/snapshots.ts
 var SETTINGS_KEYS = [
   "zoneGranularity",
@@ -13624,7 +14171,10 @@ function deserializeSnapshot(data) {
   if (!data || typeof data !== "object")
     return null;
   const obj = data;
-  if (obj.version !== 1 || !obj.name || !obj.cache || !obj.cache.notes)
+  if (obj.version !== 1 || !obj.name || !obj.cache)
+    return null;
+  const cache = obj.cache;
+  if (!cache.notes)
     return null;
   return obj;
 }
@@ -13642,8 +14192,17 @@ function lerpHex(c1, c2, t) {
   const b = Math.round(b1 + (b2 - b1) * t);
   return "#" + (1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1);
 }
-function noteColor(note, folderColors, theme) {
+function noteColor(note, folderColors, propertyColorMap, colorMode, colorPropertyField, theme) {
   const pal = theme.palette;
+  if (colorMode === "property") {
+    const val = note.frontmatter?.[colorPropertyField] ?? "";
+    if (val && propertyColorMap.has(val))
+      return propertyColorMap.get(val);
+    return pal.folder[0];
+  }
+  if (colorMode === "folder") {
+    return folderColors.get(note.folder) || pal.folder[0];
+  }
   const semA = note.semA ?? -1;
   const semB = note.semB ?? -1;
   const semW = note.semW ?? 3;
@@ -13656,12 +14215,14 @@ function noteColor(note, folderColors, theme) {
   }
   return folderColors.get(note.folder) || pal.folder[0];
 }
-var ChorographiaPlugin = class extends import_obsidian7.Plugin {
+var ChorographiaPlugin = class extends import_obsidian8.Plugin {
   constructor() {
     super(...arguments);
     this.settings = DEFAULT_SETTINGS;
     this.cache = { notes: {} };
-    this.explorerStyleEl = null;
+    this.dotColorMap = /* @__PURE__ */ new Map();
+    this.explorerObserver = null;
+    this.applyDotsDebounced = (0, import_obsidian8.debounce)(() => this.applyDotsToVisibleNodes(), 50, true);
   }
   getActiveTheme() {
     return getThemeById(this.settings.activeTheme);
@@ -13674,12 +14235,12 @@ var ChorographiaPlugin = class extends import_obsidian7.Plugin {
       await this.computeSemanticColors();
     }
     this.registerView(VIEW_TYPE, (leaf) => new ChorographiaView(leaf, this));
-    this.addRibbonIcon("map", "Open Chorographia Map", () => {
+    this.addRibbonIcon("map", "Open Chorographia map", () => {
       this.activateView();
     });
     this.addCommand({
       id: "open-chorographia-map",
-      name: "Open Chorographia Map",
+      name: "Open Chorographia map",
       callback: () => this.activateView()
     });
     this.addCommand({
@@ -13712,6 +14273,33 @@ var ChorographiaPlugin = class extends import_obsidian7.Plugin {
     const data = await this.loadData();
     if (data?.settings) {
       this.settings = { ...DEFAULT_SETTINGS, ...data.settings };
+      const mode = this.settings.colorMode;
+      if (mode === "type") {
+        this.settings.colorMode = "property";
+        this.settings.colorPropertyField = "type";
+      } else if (mode === "cat") {
+        this.settings.colorMode = "property";
+        this.settings.colorPropertyField = "cat";
+      }
+    }
+    const normalizedOllamaBatchSize = clampEmbedBatchSize(
+      this.settings.ollamaEmbedBatchSize,
+      DEFAULT_SETTINGS.ollamaEmbedBatchSize
+    );
+    const normalizedOpenAIBatchSize = clampEmbedBatchSize(
+      this.settings.openaiEmbedBatchSize,
+      DEFAULT_SETTINGS.openaiEmbedBatchSize
+    );
+    const normalizedOpenRouterBatchSize = clampEmbedBatchSize(
+      this.settings.openrouterEmbedBatchSize,
+      DEFAULT_SETTINGS.openrouterEmbedBatchSize
+    );
+    const needsSettingsSave = normalizedOllamaBatchSize !== this.settings.ollamaEmbedBatchSize || normalizedOpenAIBatchSize !== this.settings.openaiEmbedBatchSize || normalizedOpenRouterBatchSize !== this.settings.openrouterEmbedBatchSize;
+    this.settings.ollamaEmbedBatchSize = normalizedOllamaBatchSize;
+    this.settings.openaiEmbedBatchSize = normalizedOpenAIBatchSize;
+    this.settings.openrouterEmbedBatchSize = normalizedOpenRouterBatchSize;
+    if (needsSettingsSave) {
+      await this.saveSettings();
     }
   }
   async saveSettings() {
@@ -13743,24 +14331,34 @@ var ChorographiaPlugin = class extends import_obsidian7.Plugin {
     }
   }
   async runEmbedPipeline() {
-    if (this.settings.embeddingProvider === "openai" && !this.settings.openaiApiKey) {
-      new import_obsidian7.Notice("Chorographia: Set your OpenAI API key in settings first.");
+    const pipelineStart = performance.now();
+    const provider = this.settings.embeddingProvider;
+    const modelName = provider === "ollama" ? this.settings.ollamaEmbedModel : provider === "openai" ? this.settings.embeddingModel : this.settings.openrouterEmbedModel;
+    console.debug(`[Chorographia] Pipeline started | provider: ${provider} | model: ${modelName}`);
+    if (provider === "openai" && !this.settings.openaiApiKey) {
+      new import_obsidian8.Notice("Chorographia: Set your OpenAI API key in settings first.");
       return;
     }
-    if (this.settings.embeddingProvider === "openrouter" && !this.settings.openrouterApiKey) {
-      new import_obsidian7.Notice("Chorographia: Set your OpenRouter API key in settings first.");
+    if (provider === "openrouter" && !this.settings.openrouterApiKey) {
+      new import_obsidian8.Notice("Chorographia: Set your OpenRouter API key in settings first.");
       return;
     }
-    const globs = this.settings.includeGlobs.split(",").map((g) => g.trim()).filter(Boolean);
-    const excludeGlobs = this.settings.excludeGlobs.split(",").map((g) => g.trim()).filter(Boolean);
-    new import_obsidian7.Notice("Chorographia: Indexing vault...");
-    const notes = await indexVault(
-      this.app.vault,
-      globs,
-      excludeGlobs,
-      this.settings.maxNotes
-    );
-    new import_obsidian7.Notice(`Chorographia: Found ${notes.length} notes.`);
+    const splitTrim = (s) => s.split(",").map((x) => x.trim()).filter(Boolean);
+    const indexerConfig = {
+      globs: splitTrim(this.settings.includeGlobs),
+      excludeGlobs: splitTrim(this.settings.excludeGlobs),
+      maxNotes: this.settings.maxNotes,
+      embedFields: splitTrim(this.settings.embedFields),
+      embedIncludeTags: this.settings.embedIncludeTags,
+      filterIncludeTags: splitTrim(this.settings.filterIncludeTags),
+      filterExcludeTags: splitTrim(this.settings.filterExcludeTags),
+      filterIncludeFolders: splitTrim(this.settings.filterIncludeFolders),
+      filterExcludeFolders: splitTrim(this.settings.filterExcludeFolders),
+      filterRequireProperty: this.settings.filterRequireProperty
+    };
+    new import_obsidian8.Notice("Chorographia: Indexing vault...");
+    const notes = await indexVault(this.app, indexerConfig);
+    new import_obsidian8.Notice(`Chorographia: Found ${notes.length} notes.`);
     const modelStr = this.embeddingModelString;
     const toEmbed = [];
     for (const note of notes) {
@@ -13772,6 +14370,7 @@ var ChorographiaPlugin = class extends import_obsidian7.Plugin {
         cached.cat = note.cat;
         cached.tags = note.tags;
         cached.links = note.links;
+        cached.frontmatter = note.frontmatter;
         continue;
       }
       toEmbed.push({ path: note.path, text: note.embedText });
@@ -13783,29 +14382,45 @@ var ChorographiaPlugin = class extends import_obsidian7.Plugin {
       }
     }
     if (toEmbed.length === 0) {
-      new import_obsidian7.Notice("Chorographia: All notes up to date.");
+      new import_obsidian8.Notice("Chorographia: All notes up to date.");
       await this.saveCache();
       this.refreshMapViews();
       this.updateExplorerDots();
       return;
     }
-    new import_obsidian7.Notice(
+    new import_obsidian8.Notice(
       `Chorographia: Embedding ${toEmbed.length} notes...`
     );
+    const batchSize = provider === "ollama" ? clampEmbedBatchSize(this.settings.ollamaEmbedBatchSize, DEFAULT_SETTINGS.ollamaEmbedBatchSize) : provider === "openai" ? clampEmbedBatchSize(this.settings.openaiEmbedBatchSize, DEFAULT_SETTINGS.openaiEmbedBatchSize) : clampEmbedBatchSize(this.settings.openrouterEmbedBatchSize, DEFAULT_SETTINGS.openrouterEmbedBatchSize);
     const onProgress = (done, total) => {
-      new import_obsidian7.Notice(`Chorographia: Embedded ${done}/${total}`);
+      const pct = Math.round(done / total * 100);
+      const elapsedSec = (performance.now() - pipelineStart) / 1e3;
+      const safeElapsed = Math.max(elapsedSec, 1e-3);
+      const rate = done / safeElapsed;
+      const rateStr = rate < 0.1 ? rate.toFixed(2) : rate.toFixed(1);
+      const eta = done > 0 && rate > 0 ? Math.round((total - done) / rate) : "?";
+      new import_obsidian8.Notice(`Chorographia: Embedded ${done}/${total} (${pct}%)`);
     };
-    let results;
-    switch (this.settings.embeddingProvider) {
-      case "ollama":
-        results = await embedTextsOllama(toEmbed, this.settings.ollamaUrl, this.settings.ollamaEmbedModel, onProgress);
-        break;
-      case "openai":
-        results = await embedTexts(toEmbed, this.settings.openaiApiKey, this.settings.embeddingModel, onProgress);
-        break;
-      case "openrouter":
-        results = await embedTextsOpenRouter(toEmbed, this.settings.openrouterApiKey, this.settings.openrouterEmbedModel, onProgress);
-        break;
+    let results = [];
+    try {
+      switch (provider) {
+        case "ollama":
+          results = await embedTextsOllama(toEmbed, this.settings.ollamaUrl, this.settings.ollamaEmbedModel, onProgress, batchSize);
+          break;
+        case "openai":
+          results = await embedTexts(toEmbed, this.settings.openaiApiKey, this.settings.embeddingModel, onProgress, batchSize);
+          break;
+        case "openrouter":
+          results = await embedTextsOpenRouter(toEmbed, this.settings.openrouterApiKey, this.settings.openrouterEmbedModel, onProgress, batchSize);
+          break;
+      }
+    } catch (err) {
+      const elapsed = ((performance.now() - pipelineStart) / 1e3).toFixed(1);
+      const message = err instanceof Error ? err.message : String(err);
+      const batchHint = `If this looks like a request-size or rate-limit error, try lowering Embedding > Batch size (currently ${batchSize}).`;
+      console.error(`[Chorographia] [${modelName}] Pipeline FAILED after ${elapsed}s:`, err);
+      new import_obsidian8.Notice(`Chorographia: Embedding failed - ${message}. ${batchHint}`);
+      return;
     }
     for (const r of results) {
       const note = notes.find((n) => n.path === r.path);
@@ -13820,7 +14435,8 @@ var ChorographiaPlugin = class extends import_obsidian7.Plugin {
         noteType: note.noteType,
         cat: note.cat,
         tags: note.tags,
-        links: note.links
+        links: note.links,
+        frontmatter: note.frontmatter
       };
     }
     for (const note of notes) {
@@ -13831,6 +14447,7 @@ var ChorographiaPlugin = class extends import_obsidian7.Plugin {
         this.cache.notes[note.path].cat = note.cat;
         this.cache.notes[note.path].tags = note.tags;
         this.cache.notes[note.path].links = note.links;
+        this.cache.notes[note.path].frontmatter = note.frontmatter;
       }
     }
     if (this.settings.mapLocked) {
@@ -13846,7 +14463,7 @@ var ChorographiaPlugin = class extends import_obsidian7.Plugin {
     await this.saveCache();
     this.refreshMapViews();
     this.updateExplorerDots();
-    new import_obsidian7.Notice(`Chorographia: Embedding complete (${results.length} new).`);
+    new import_obsidian8.Notice(`Chorographia: Embedding complete (${results.length} new).`);
     const hasLayout = Object.values(this.cache.notes).some(
       (n) => n.x != null
     );
@@ -13883,7 +14500,7 @@ var ChorographiaPlugin = class extends import_obsidian7.Plugin {
     if (!await this.app.vault.adapter.exists(dir)) {
       await this.app.vault.adapter.mkdir(dir);
     }
-    const filename = `${dir}/${name.replace(/[^a-zA-Z0-9_-]/g, "_")}.json`;
+    const filename = (0, import_obsidian8.normalizePath)(`${dir}/${name.replace(/[^a-zA-Z0-9_-]/g, "_")}.json`);
     await this.app.vault.adapter.write(filename, JSON.stringify(snapshot));
   }
   async loadSnapshot(filename) {
@@ -13939,53 +14556,80 @@ var ChorographiaPlugin = class extends import_obsidian7.Plugin {
     folderArr.forEach((f, i) => {
       folderColors.set(f, folderPal[i % folderPal.length]);
     });
-    const dotSize = 9;
-    const dotLeft = 104 + 6;
-    const totalPad = dotLeft + dotSize + 6;
-    const rules = [];
-    rules.push(
-      `.chorographia-dots .nav-file-title[data-path] .nav-file-title-content { padding-left: ${totalPad}px !important; }`
-    );
+    const propertyColorMap = /* @__PURE__ */ new Map();
+    const propField = this.settings.colorPropertyField;
+    if (propField) {
+      const vals = /* @__PURE__ */ new Set();
+      for (const n of Object.values(notes)) {
+        const v = n.frontmatter?.[propField];
+        if (v)
+          vals.add(v);
+      }
+      [...vals].sort().forEach((v, i) => {
+        propertyColorMap.set(v, folderPal[i % folderPal.length]);
+      });
+    }
+    this.dotColorMap.clear();
     for (const [path, note] of Object.entries(notes)) {
-      const color = noteColor(note, folderColors, this.getActiveTheme());
-      const escaped = CSS.escape(path);
-      rules.push(
-        `.nav-file-title[data-path="${escaped}"] .nav-file-title-content { background-image: radial-gradient(circle, transparent 0 58%, var(--background-primary) 60% 100%), radial-gradient(circle at 40% 35%, rgba(255,255,255,0.15) 0 45%, transparent 78%), radial-gradient(circle, ${color} 50%, transparent 51%); background-size: ${dotSize}px ${dotSize}px; background-position: ${dotLeft}px 50%; background-repeat: no-repeat; }`
+      this.dotColorMap.set(
+        path,
+        noteColor(note, folderColors, propertyColorMap, this.settings.colorMode, this.settings.colorPropertyField, this.getActiveTheme())
       );
     }
-    const el = document.createElement("style");
-    el.id = "chorographia-explorer-dots";
-    el.textContent = rules.join("\n");
-    document.head.appendChild(el);
-    this.explorerStyleEl = el;
-    document.querySelectorAll(".nav-files-container").forEach((c) => {
-      c.classList.add("chorographia-dots");
+    this.applyDotsToVisibleNodes();
+    this.ensureExplorerObserver();
+  }
+  applyDotsToVisibleNodes() {
+    const dotLeft = this.settings.explorerDotOffset;
+    for (const titleEl of document.querySelectorAll(".nav-file-title-content")) {
+      if (titleEl.querySelector(".chorographia-explorer-dot"))
+        continue;
+      const navTitle = titleEl.closest(".nav-file-title");
+      const path = navTitle?.dataset.path;
+      if (!path)
+        continue;
+      const color = this.dotColorMap.get(path);
+      if (!color)
+        continue;
+      const dot = createDiv({ cls: "chorographia-explorer-dot" });
+      dot.style.setProperty("--dot-color", color);
+      dot.style.setProperty("--dot-left", `${dotLeft}px`);
+      titleEl.prepend(dot);
+    }
+  }
+  ensureExplorerObserver() {
+    if (this.explorerObserver)
+      return;
+    const container = document.querySelector(".nav-files-container");
+    if (!container)
+      return;
+    this.explorerObserver = new MutationObserver(() => {
+      this.applyDotsDebounced();
     });
+    this.explorerObserver.observe(container, { childList: true, subtree: true });
   }
   removeExplorerDots() {
-    if (this.explorerStyleEl) {
-      this.explorerStyleEl.remove();
-      this.explorerStyleEl = null;
+    if (this.explorerObserver) {
+      this.explorerObserver.disconnect();
+      this.explorerObserver = null;
     }
-    document.getElementById("chorographia-explorer-dots")?.remove();
-    document.querySelectorAll(".chorographia-dots").forEach((c) => {
-      c.classList.remove("chorographia-dots");
-    });
+    this.dotColorMap.clear();
+    document.querySelectorAll(".chorographia-explorer-dot").forEach((el) => el.remove());
   }
   async runLayoutCompute() {
     const count = Object.values(this.cache.notes).filter(
       (n) => n.embedding
     ).length;
     if (count === 0) {
-      new import_obsidian7.Notice("Chorographia: No embeddings cached. Run re-embed first.");
+      new import_obsidian8.Notice("Chorographia: No embeddings cached. Run re-embed first.");
       return;
     }
     if (this.settings.mapLocked) {
       const newPaths = Object.entries(this.cache.notes).filter(([_, n]) => n.embedding && n.x == null).map(([p]) => p);
       if (newPaths.length === 0) {
-        new import_obsidian7.Notice("Chorographia: All notes already placed.");
+        new import_obsidian8.Notice("Chorographia: All notes already placed.");
       } else {
-        new import_obsidian7.Notice(`Chorographia: Placing ${newPaths.length} new notes...`);
+        new import_obsidian8.Notice(`Chorographia: Placing ${newPaths.length} new notes...`);
         const points = interpolateNewPoints(this.cache.notes, newPaths);
         for (const p of points) {
           if (this.cache.notes[p.path]) {
@@ -13997,7 +14641,7 @@ var ChorographiaPlugin = class extends import_obsidian7.Plugin {
       this.computeSemanticColorsLocked();
       this.preserveAndInvalidateZones();
     } else {
-      new import_obsidian7.Notice(`Chorographia: Computing layout for ${count} notes...`);
+      new import_obsidian8.Notice(`Chorographia: Computing layout for ${count} notes...`);
       await new Promise((resolve) => {
         setTimeout(() => {
           const points = computeLayout(this.cache.notes);
@@ -14014,7 +14658,7 @@ var ChorographiaPlugin = class extends import_obsidian7.Plugin {
       await this.computeSemanticColors();
     }
     await this.saveCache();
-    new import_obsidian7.Notice("Chorographia: Layout computed.");
+    new import_obsidian8.Notice("Chorographia: Layout computed.");
     for (const leaf of this.app.workspace.getLeavesOfType(VIEW_TYPE)) {
       leaf.view.refresh();
     }

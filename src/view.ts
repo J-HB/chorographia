@@ -1,5 +1,6 @@
-import { ItemView, WorkspaceLeaf, Notice } from "obsidian";
+import { ItemView, WorkspaceLeaf, Notice, setIcon } from "obsidian";
 import type ChorographiaPlugin from "./main";
+import type { ChorographiaSettings } from "./settings";
 import type { NoteCache, ZoneCacheEntry } from "./cache";
 import { decodeFloat32, encodeFloat32 } from "./cache";
 import { kMeans, computeSemanticAssignments } from "./kmeans";
@@ -27,6 +28,7 @@ interface MapPoint {
 	cat: string;
 	tags: string[];
 	links: string[];
+	frontmatter: Record<string, string>;
 }
 
 interface ScreenPt { x: number; y: number }
@@ -102,7 +104,7 @@ export class ChorographiaView extends ItemView {
 
 	// color maps
 	private folderColorMap = new Map<string, string>();
-	private catColorMap = new Map<string, string>();
+	private propertyColorMap = new Map<string, string>();
 
 	// controls
 	private statusEl!: HTMLDivElement;
@@ -169,10 +171,7 @@ export class ChorographiaView extends ItemView {
 		const root = this.containerEl.children[1] as HTMLElement;
 		root.empty();
 		root.addClass("chorographia-container");
-		root.style.overflow = "hidden";
 		this.applyThemeBackground(root);
-		// Also prevent scrollbars on the parent view-content
-		this.containerEl.style.overflow = "hidden";
 
 		this.canvas = root.createEl("canvas", { cls: "chorographia-canvas" });
 		this.statusEl = root.createEl("div", { cls: "chorographia-status" });
@@ -187,6 +186,11 @@ export class ChorographiaView extends ItemView {
 		this.registerEvent(this.app.workspace.on("resize", () => { this.resizeCanvas(); this.draw(); }));
 		this.registerEvent(this.app.workspace.on("active-leaf-change", () => { this.syncActiveNoteSelection(); }));
 		this.syncActiveNoteSelection();
+
+		if (Object.keys(this.plugin.cache.notes).length === 0) {
+			const { OnboardingModal } = await import("./onboarding");
+			new OnboardingModal(this.app, this.plugin).open();
+		}
 	}
 
 	async onClose() {
@@ -196,22 +200,17 @@ export class ChorographiaView extends ItemView {
 	// ===================== controls =====================
 
 	private buildControls(root: HTMLElement) {
-		// SVG icon strings
-		const gearSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`;
-		const cameraSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>`;
-		const downloadSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`;
-
 		// Icon bar
 		const iconBar = root.createEl("div", { cls: "chorographia-icon-bar" });
 
 		const settingsBtn = iconBar.createEl("button", { cls: "chorographia-icon-btn", attr: { "aria-label": "Settings" } });
-		settingsBtn.innerHTML = gearSvg;
+		setIcon(settingsBtn, "settings");
 
 		const snapshotBtn = iconBar.createEl("button", { cls: "chorographia-icon-btn", attr: { "aria-label": "Snapshots" } });
-		snapshotBtn.innerHTML = cameraSvg;
+		setIcon(snapshotBtn, "camera");
 
 		const exportBtn = iconBar.createEl("button", { cls: "chorographia-icon-btn", attr: { "aria-label": "Export" } });
-		exportBtn.innerHTML = downloadSvg;
+		setIcon(exportBtn, "download");
 
 		// Build panels
 		this.settingsPanel = root.createEl("div", { cls: "chorographia-menu" });
@@ -257,12 +256,12 @@ export class ChorographiaView extends ItemView {
 		this.colorModeSelect = colorRow.createEl("select");
 		for (const [v, t] of [
 			["semantic", "Semantic"], ["folder", "Folder"],
-			["type", "Type"], ["cat", "Category"],
+			["property", "Property"],
 		] as const)
 			this.colorModeSelect.createEl("option", { text: t, value: v });
 		this.colorModeSelect.value = this.plugin.settings.colorMode;
 		this.colorModeSelect.addEventListener("change", async () => {
-			this.plugin.settings.colorMode = this.colorModeSelect.value as any;
+			this.plugin.settings.colorMode = this.colorModeSelect.value as ChorographiaSettings["colorMode"];
 			await this.plugin.saveSettings();
 			this.draw();
 		});
@@ -340,7 +339,7 @@ export class ChorographiaView extends ItemView {
 			this.minimapSelect.createEl("option", { text: t, value: v });
 		this.minimapSelect.value = this.plugin.settings.minimapCorner;
 		this.minimapSelect.addEventListener("change", async () => {
-			this.plugin.settings.minimapCorner = this.minimapSelect.value as any;
+			this.plugin.settings.minimapCorner = this.minimapSelect.value as ChorographiaSettings["minimapCorner"];
 			await this.plugin.saveSettings();
 			this.draw();
 		});
@@ -377,8 +376,8 @@ export class ChorographiaView extends ItemView {
 				new Notice(`Snapshot "${name}" saved.`);
 				saveInput.value = "";
 				this.refreshSnapshotList();
-			} catch (e: any) {
-				new Notice("Save failed: " + e.message);
+			} catch (e: unknown) {
+				new Notice("Save failed: " + (e instanceof Error ? e.message : String(e)));
 			}
 			saveBtn.disabled = false;
 		});
@@ -433,8 +432,8 @@ export class ChorographiaView extends ItemView {
 				try {
 					await this.plugin.loadSnapshot(s.path);
 					new Notice(`Snapshot "${s.name}" loaded.`);
-				} catch (e: any) {
-					new Notice("Load failed: " + e.message);
+				} catch (e: unknown) {
+					new Notice("Load failed: " + (e instanceof Error ? e.message : String(e)));
 				}
 			});
 		}
@@ -812,10 +811,12 @@ export class ChorographiaView extends ItemView {
 	async loadPoints(): Promise<void> {
 		const pts: MapPoint[] = [];
 		const folders = new Set<string>();
-		const cats = new Set<string>();
+		const propVals = new Set<string>();
+		const propField = this.plugin.settings.colorPropertyField;
 
 		for (const [path, n] of Object.entries(this.plugin.cache.notes)) {
 			if (n.x == null || n.y == null) continue;
+			const fm = n.frontmatter || {};
 			const p: MapPoint = {
 				path, x: n.x, y: n.y,
 				title: n.title, folder: n.folder,
@@ -823,15 +824,17 @@ export class ChorographiaView extends ItemView {
 				noteType: n.noteType || "", cat: n.cat || "",
 				tags: n.tags || [],
 				links: n.links || [],
+				frontmatter: fm,
 			};
 			pts.push(p);
 			folders.add(p.folder);
-			if (p.cat) cats.add(p.cat);
+			if (propField && fm[propField]) propVals.add(fm[propField]);
 		}
 
 		const folderPal = this.mapTheme.palette.folder;
 		[...folders].sort().forEach((f, i) => this.folderColorMap.set(f, folderPal[i % folderPal.length]));
-		[...cats].sort().forEach((c, i) => this.catColorMap.set(c, folderPal[i % folderPal.length]));
+		this.propertyColorMap.clear();
+		[...propVals].sort().forEach((v, i) => this.propertyColorMap.set(v, folderPal[i % folderPal.length]));
 
 		this.allPoints = pts;
 		this.points = pts;
@@ -1136,7 +1139,7 @@ export class ChorographiaView extends ItemView {
 				if (this.plugin.settings.llmProvider === "ollama") {
 					llmNames = await generateZoneNamesOllama(clusters, this.plugin.settings.ollamaUrl, this.plugin.settings.ollamaLlmModel);
 				} else if (this.plugin.settings.llmProvider === "openai" && this.plugin.settings.openaiApiKey) {
-					llmNames = await generateZoneNames(clusters, this.plugin.settings.openaiApiKey);
+					llmNames = await generateZoneNames(clusters, this.plugin.settings.openaiApiKey, this.plugin.settings.openaiLlmModel);
 				} else if (this.plugin.settings.llmProvider === "openrouter" && this.plugin.settings.openrouterApiKey) {
 					llmNames = await generateZoneNamesOpenRouter(clusters, this.plugin.settings.openrouterApiKey, this.plugin.settings.openrouterLlmModel);
 				}
@@ -1203,7 +1206,7 @@ export class ChorographiaView extends ItemView {
 				if (this.plugin.settings.llmProvider === "ollama") {
 					llmNames = await generateZoneNamesOllama(batchClusters, this.plugin.settings.ollamaUrl, this.plugin.settings.ollamaLlmModel);
 				} else if (this.plugin.settings.llmProvider === "openai" && this.plugin.settings.openaiApiKey) {
-					llmNames = await generateZoneNames(batchClusters, this.plugin.settings.openaiApiKey);
+					llmNames = await generateZoneNames(batchClusters, this.plugin.settings.openaiApiKey, this.plugin.settings.openaiLlmModel);
 				} else if (this.plugin.settings.llmProvider === "openrouter" && this.plugin.settings.openrouterApiKey) {
 					llmNames = await generateZoneNamesOpenRouter(batchClusters, this.plugin.settings.openrouterApiKey, this.plugin.settings.openrouterLlmModel);
 				}
@@ -1345,6 +1348,14 @@ export class ChorographiaView extends ItemView {
 		this.ctx.scale(this.dpr, this.dpr);
 	}
 
+	private cursorState = "grab";
+	private setCursor(el: HTMLElement, cursor: string) {
+		if (cursor === this.cursorState) return;
+		el.removeClass("cursor-grab", "cursor-grabbing", "cursor-pointer", "cursor-crosshair");
+		el.addClass(`cursor-${cursor}`);
+		this.cursorState = cursor;
+	}
+
 	private w2s(wx: number, wy: number): ScreenPt {
 		const w = this.canvas.clientWidth, h = this.canvas.clientHeight;
 		const s = Math.min(w, h) * 0.42 * this.zoom;
@@ -1364,11 +1375,10 @@ export class ChorographiaView extends ItemView {
 		switch (this.plugin.settings.colorMode) {
 			case "semantic": return this.semColor(p);
 			case "folder": return this.folderColorMap.get(p.folder) || pal.folder[0];
-			case "type": {
-				const t = p.noteType.toUpperCase();
-				return pal.type[t] || pal.folder[hashStr(p.noteType) % pal.folder.length];
+			case "property": {
+				const val = p.frontmatter[this.plugin.settings.colorPropertyField] ?? "";
+				return val ? (this.propertyColorMap.get(val) || pal.folder[0]) : pal.folder[0];
 			}
-			case "cat": return p.cat ? (this.catColorMap.get(p.cat) || pal.folder[0]) : pal.folder[0];
 			default: return pal.folder[0];
 		}
 	}
@@ -2724,7 +2734,7 @@ export class ChorographiaView extends ItemView {
 				this.regionStart = { x: mx, y: my };
 				this.regionEnd = { x: mx, y: my };
 				this.regionWorld = null;
-				c.style.cursor = "crosshair";
+				this.setCursor(c, "crosshair");
 				return;
 			}
 			this.dragging = true;
@@ -2732,7 +2742,7 @@ export class ChorographiaView extends ItemView {
 			this.dragStartY = e.clientY;
 			this.dragPanX = this.panX;
 			this.dragPanY = this.panY;
-			c.style.cursor = "grabbing";
+			this.setCursor(c, "grabbing");
 		});
 
 		c.addEventListener("mousemove", (e) => {
@@ -2759,7 +2769,7 @@ export class ChorographiaView extends ItemView {
 			}
 			if (best !== this.hoverIdx) {
 				this.hoverIdx = best;
-				c.style.cursor = this.regionSelectActive ? "crosshair" : (best >= 0 ? "pointer" : "grab");
+				this.setCursor(c, this.regionSelectActive ? "crosshair" : (best >= 0 ? "pointer" : "grab"));
 				this.draw();
 			}
 		});
@@ -2786,7 +2796,7 @@ export class ChorographiaView extends ItemView {
 			}
 			const was = this.dragging;
 			this.dragging = false;
-			c.style.cursor = this.hoverIdx >= 0 ? "pointer" : "grab";
+			this.setCursor(c, this.hoverIdx >= 0 ? "pointer" : "grab");
 			const dx = e.clientX - this.dragStartX, dy = e.clientY - this.dragStartY;
 			if (was && dx * dx + dy * dy < 9) this.handleClick();
 		});

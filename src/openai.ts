@@ -1,4 +1,4 @@
-import { requestUrl } from "obsidian";
+import { requestUrl, sleep } from "obsidian";
 import { encodeFloat32 } from "./cache";
 
 const DELAY_MS = 200;
@@ -26,15 +26,16 @@ export async function embedTexts(
 		try {
 			const batchResults = await embedBatch(batch, apiKey, model);
 			results.push(...batchResults);
-		} catch (e: any) {
-			if (e.status === 400 && batch.length > 1) {
+		} catch (e: unknown) {
+			const status = e instanceof Error ? (e as Error & { status?: number }).status : undefined;
+			if (status === 400 && batch.length > 1) {
 				// Batch failed — retry individually to isolate the bad note(s)
 				for (const item of batch) {
 					try {
 						const single = await embedBatch([item], apiKey, model);
 						results.push(...single);
-					} catch (e2: any) {
-						const msg = e2.message || `HTTP ${e2.status}`;
+					} catch (e2: unknown) {
+						const msg = e2 instanceof Error ? e2.message : String(e2);
 						console.warn(`Chorographia: Skipping "${item.path}": ${msg}`);
 						skipped.push(item.path);
 					}
@@ -79,8 +80,7 @@ async function embedBatch(
 
 	if (resp.status !== 200) {
 		const msg = resp.json?.error?.message || `HTTP ${resp.status}`;
-		const err = new Error(`OpenAI API error: ${msg}`) as any;
-		err.status = resp.status;
+		const err = Object.assign(new Error(`OpenAI API error: ${msg}`), { status: resp.status });
 		throw err;
 	}
 
@@ -94,8 +94,4 @@ async function embedBatch(
 		});
 	}
 	return results;
-}
-
-function sleep(ms: number): Promise<void> {
-	return new Promise((r) => setTimeout(r, ms));
 }

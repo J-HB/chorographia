@@ -11,7 +11,6 @@ export interface ThemeColors {
 export interface MapThemePalette {
 	semantic: string[];
 	folder: string[];
-	type: Record<string, string>;
 	semSplit: Record<number, number>;
 }
 
@@ -95,10 +94,6 @@ export const DEFAULT_THEME: MapTheme = {
 			"#9AB2AF", "#BCDC2B", "#FF7A00", "#A855F7", "#00D6FF",
 			"#00FFB3", "#FF3DB8",
 		],
-		type: {
-			SRC: "#8E9AAF", LIT: "#C9963B", SEED: "#B8541A",
-			EVE: "#B28DFF", REV: "#9AB2AF", NOTE: "#5AC6CE",
-		},
 		semSplit: { 1: 0.80, 2: 0.65, 3: 0.50, 4: 0.35, 5: 0.20 },
 	},
 	background: {
@@ -188,10 +183,6 @@ export const CARTOGRAPHY_THEME: MapTheme = {
 			"#524335", "#695343", "#4F4030", "#635040", "#584838",
 			"#6E5A48", "#4D3E30",
 		],
-		type: {
-			SRC: "#5C4833", LIT: "#4A3C2A", SEED: "#6B5540",
-			EVE: "#3D3028", REV: "#524335", NOTE: "#7A6350",
-		},
 		semSplit: { 1: 0.80, 2: 0.65, 3: 0.50, 4: 0.35, 5: 0.20 },
 	},
 	background: {

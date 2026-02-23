@@ -3,7 +3,7 @@ import { requestUrl } from "obsidian";
 export async function generateZoneNames(
 	clusters: { idx: number; titles: string[] }[],
 	apiKey: string,
-	model = "gpt-4o-mini"
+	model = "gpt-5-mini"
 ): Promise<Map<number, string>> {
 	const result = new Map<number, string>();
 	if (!apiKey || clusters.length === 0) return result;

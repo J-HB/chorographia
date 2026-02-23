@@ -13,6 +13,7 @@ export interface NoteCache {
 	cat?: string; // frontmatter "cat" field
 	tags?: string[]; // frontmatter + inline tags
 	links: string[]; // wikilink targets (resolved paths)
+	frontmatter?: Record<string, string>; // all frontmatter fields as strings
 }
 
 export interface ZoneCacheEntry {

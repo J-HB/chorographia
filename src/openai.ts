@@ -1,4 +1,4 @@
-import { requestUrl, sleep } from "obsidian";
+import { requestUrl } from "obsidian";
 import { encodeFloat32 } from "./cache";
 
 const DELAY_MS = 200;
@@ -49,7 +49,7 @@ export async function embedTexts(
 
 		// Rate-limit delay between batches
 		if (i + step < texts.length) {
-			await sleep(DELAY_MS);
+			await window.sleep(DELAY_MS);
 		}
 	}
 

@@ -192,7 +192,7 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 				text
 					.setPlaceholder(String(fallback))
 					.setValue(String(getValue()))
-					.onChange(async (raw) => {
+					.onChange((raw) => {
 						if (raw.trim() === "") return;
 						const parsed = Number(raw);
 						if (!Number.isFinite(parsed)) return;
@@ -224,7 +224,7 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 	private createSection(container: HTMLElement, title: string, desc: string, open = false): HTMLElement {
 		const details = container.createEl("details", { cls: "chorographia-settings-section" });
 		if (open) details.setAttribute("open", "");
-		const summary = details.createEl("summary", { cls: "chorographia-settings-summary", text: title });
+		details.createEl("summary", { cls: "chorographia-settings-summary", text: title });
 		if (desc) {
 			details.createEl("p", { text: desc, cls: "setting-item-description chorographia-settings-desc" });
 		}
@@ -247,9 +247,9 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 					text
 						.setPlaceholder("http://localhost:11434")
 						.setValue(this.plugin.settings.ollamaUrl)
-						.onChange(async (value) => {
+						.onChange((value) => {
 							this.plugin.settings.ollamaUrl = value;
-							await this.plugin.saveSettings();
+							void this.plugin.saveSettings();
 						})
 						.then((t) => { t.inputEl.addClass("chorographia-input-lg"); })
 				);
@@ -260,9 +260,9 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 					text
 						.setPlaceholder("sk-...")
 						.setValue(this.plugin.settings.openaiApiKey)
-						.onChange(async (value) => {
+						.onChange((value) => {
 							this.plugin.settings.openaiApiKey = value;
-							await this.plugin.saveSettings();
+							void this.plugin.saveSettings();
 						})
 						.then((t) => {
 							t.inputEl.type = "password";
@@ -277,9 +277,9 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 					text
 						.setPlaceholder("sk-or-...")
 						.setValue(this.plugin.settings.openrouterApiKey)
-						.onChange(async (value) => {
+						.onChange((value) => {
 							this.plugin.settings.openrouterApiKey = value;
-							await this.plugin.saveSettings();
+							void this.plugin.saveSettings();
 						})
 						.then((t) => {
 							t.inputEl.type = "password";
@@ -300,9 +300,9 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 						.addOption("openai", "OpenAI")
 						.addOption("openrouter", "OpenRouter")
 						.setValue(this.plugin.settings.embeddingProvider)
-						.onChange(async (value) => {
+						.onChange((value) => {
 							this.plugin.settings.embeddingProvider = value as ChorographiaSettings["embeddingProvider"];
-							await this.plugin.saveSettings();
+							void this.plugin.saveSettings();
 							this.display();
 						})
 				);
@@ -314,9 +314,9 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 					.addText((text) =>
 						text
 							.setValue(this.plugin.settings.ollamaEmbedModel)
-							.onChange(async (value) => {
+							.onChange((value) => {
 								this.plugin.settings.ollamaEmbedModel = value;
-								await this.plugin.saveSettings();
+								void this.plugin.saveSettings();
 							})
 					);
 				this.addEmbedBatchSizeSetting(
@@ -333,9 +333,9 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 					.addText((text) =>
 						text
 							.setValue(this.plugin.settings.embeddingModel)
-							.onChange(async (value) => {
+							.onChange((value) => {
 								this.plugin.settings.embeddingModel = value;
-								await this.plugin.saveSettings();
+								void this.plugin.saveSettings();
 							})
 					);
 				this.addEmbedBatchSizeSetting(
@@ -352,9 +352,9 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 					.addText((text) =>
 						text
 							.setValue(this.plugin.settings.openrouterEmbedModel)
-							.onChange(async (value) => {
+							.onChange((value) => {
 								this.plugin.settings.openrouterEmbedModel = value;
-								await this.plugin.saveSettings();
+								void this.plugin.saveSettings();
 							})
 					);
 				this.addEmbedBatchSizeSetting(
@@ -378,9 +378,9 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 					text
 						.setPlaceholder("**/*.md")
 						.setValue(this.plugin.settings.includeGlobs)
-						.onChange(async (value) => {
+						.onChange((value) => {
 							this.plugin.settings.includeGlobs = value;
-							await this.plugin.saveSettings();
+							void this.plugin.saveSettings();
 						})
 						.then((t) => { t.inputEl.addClass("chorographia-input-xl"); })
 				);
@@ -392,9 +392,9 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 					text
 						.setPlaceholder("templates/**,daily/**")
 						.setValue(this.plugin.settings.excludeGlobs)
-						.onChange(async (value) => {
+						.onChange((value) => {
 							this.plugin.settings.excludeGlobs = value;
-							await this.plugin.saveSettings();
+							void this.plugin.saveSettings();
 						})
 						.then((t) => { t.inputEl.addClass("chorographia-input-xl"); })
 				);
@@ -406,9 +406,9 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 					text
 						.setPlaceholder("projects, references")
 						.setValue(this.plugin.settings.filterIncludeFolders)
-						.onChange(async (value) => {
+						.onChange((value) => {
 							this.plugin.settings.filterIncludeFolders = value;
-							await this.plugin.saveSettings();
+							void this.plugin.saveSettings();
 						})
 						.then((t) => { t.inputEl.addClass("chorographia-input-xl"); })
 				);
@@ -420,9 +420,9 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 					text
 						.setPlaceholder("archive, drafts")
 						.setValue(this.plugin.settings.filterExcludeFolders)
-						.onChange(async (value) => {
+						.onChange((value) => {
 							this.plugin.settings.filterExcludeFolders = value;
-							await this.plugin.saveSettings();
+							void this.plugin.saveSettings();
 						})
 						.then((t) => { t.inputEl.addClass("chorographia-input-xl"); })
 				);
@@ -434,9 +434,9 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 					text
 						.setPlaceholder("project, evergreen")
 						.setValue(this.plugin.settings.filterIncludeTags)
-						.onChange(async (value) => {
+						.onChange((value) => {
 							this.plugin.settings.filterIncludeTags = value;
-							await this.plugin.saveSettings();
+							void this.plugin.saveSettings();
 						})
 						.then((t) => { t.inputEl.addClass("chorographia-input-xl"); })
 				);
@@ -448,9 +448,9 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 					text
 						.setPlaceholder("draft, private")
 						.setValue(this.plugin.settings.filterExcludeTags)
-						.onChange(async (value) => {
+						.onChange((value) => {
 							this.plugin.settings.filterExcludeTags = value;
-							await this.plugin.saveSettings();
+							void this.plugin.saveSettings();
 						})
 						.then((t) => { t.inputEl.addClass("chorographia-input-xl"); })
 				);
@@ -462,9 +462,9 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 					text
 						.setPlaceholder("status:published")
 						.setValue(this.plugin.settings.filterRequireProperty)
-						.onChange(async (value) => {
+						.onChange((value) => {
 							this.plugin.settings.filterRequireProperty = value;
-							await this.plugin.saveSettings();
+							void this.plugin.saveSettings();
 						})
 						.then((t) => { t.inputEl.addClass("chorographia-input-md"); })
 				);
@@ -475,11 +475,11 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 				.addText((text) =>
 					text
 						.setValue(String(this.plugin.settings.maxNotes))
-						.onChange(async (value) => {
+						.onChange((value) => {
 							const n = parseInt(value, 10);
 							if (!isNaN(n) && n > 0) {
 								this.plugin.settings.maxNotes = n;
-								await this.plugin.saveSettings();
+								void this.plugin.saveSettings();
 							}
 						})
 						.then((t) => { t.inputEl.addClass("chorographia-input-xs"); })
@@ -497,9 +497,9 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 					text
 						.setPlaceholder("title, type, cat, topics")
 						.setValue(this.plugin.settings.embedFields)
-						.onChange(async (value) => {
+						.onChange((value) => {
 							this.plugin.settings.embedFields = value;
-							await this.plugin.saveSettings();
+							void this.plugin.saveSettings();
 						})
 						.then((t) => { t.inputEl.addClass("chorographia-input-xl"); })
 				);
@@ -510,9 +510,9 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 				.addToggle((toggle) =>
 					toggle
 						.setValue(this.plugin.settings.embedIncludeTags)
-						.onChange(async (value) => {
+						.onChange((value) => {
 							this.plugin.settings.embedIncludeTags = value;
-							await this.plugin.saveSettings();
+							void this.plugin.saveSettings();
 						})
 				);
 		}
@@ -527,11 +527,11 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 				.addToggle((toggle) =>
 					toggle
 						.setValue(this.plugin.settings.showZones)
-						.onChange(async (value) => {
+						.onChange((value) => {
 							this.plugin.settings.showZones = value;
-							await this.plugin.saveSettings();
+							void this.plugin.saveSettings();
 							this.display();
-							this.plugin.refreshMapViews();
+							void this.plugin.refreshMapViews();
 						})
 				);
 
@@ -543,10 +543,10 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 						for (let n = 3; n <= 24; n++)
 							dd.addOption(String(n), String(n));
 						dd.setValue(String(this.plugin.settings.zoneGranularity));
-						dd.onChange(async (value) => {
+						dd.onChange((value) => {
 							this.plugin.settings.zoneGranularity = parseInt(value, 10);
-							await this.plugin.saveSettings();
-							this.plugin.refreshMapViews();
+							void this.plugin.saveSettings();
+							void this.plugin.refreshMapViews();
 						});
 					});
 
@@ -557,10 +557,10 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 						dd.addOption("starmap", "Star map");
 						dd.addOption("worldmap", "World map");
 						dd.setValue(this.plugin.settings.zoneStyle);
-						dd.onChange(async (value) => {
+						dd.onChange((value) => {
 							this.plugin.settings.zoneStyle = value as "starmap" | "worldmap";
-							await this.plugin.saveSettings();
-							this.plugin.refreshMapViews();
+							void this.plugin.saveSettings();
+							void this.plugin.refreshMapViews();
 							this.display();
 						});
 					});
@@ -574,10 +574,10 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 								.setLimits(0.05, 0.50, 0.01)
 								.setValue(this.plugin.settings.worldmapSeaLevel)
 								.setDynamicTooltip()
-								.onChange(async (value) => {
+								.onChange((value) => {
 									this.plugin.settings.worldmapSeaLevel = value;
-									await this.plugin.saveSettings();
-									this.plugin.refreshMapViews();
+									void this.plugin.saveSettings();
+									void this.plugin.refreshMapViews();
 								})
 						);
 
@@ -589,10 +589,10 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 								.setLimits(0.03, 0.12, 0.005)
 								.setValue(this.plugin.settings.worldmapUnity)
 								.setDynamicTooltip()
-								.onChange(async (value) => {
+								.onChange((value) => {
 									this.plugin.settings.worldmapUnity = value;
-									await this.plugin.saveSettings();
-									this.plugin.refreshMapViews();
+									void this.plugin.saveSettings();
+									void this.plugin.refreshMapViews();
 								})
 						);
 
@@ -604,10 +604,10 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 								.setLimits(0.1, 1.0, 0.05)
 								.setValue(this.plugin.settings.worldmapRuggedness)
 								.setDynamicTooltip()
-								.onChange(async (value) => {
+								.onChange((value) => {
 									this.plugin.settings.worldmapRuggedness = value;
-									await this.plugin.saveSettings();
-									this.plugin.refreshMapViews();
+									void this.plugin.saveSettings();
+									void this.plugin.refreshMapViews();
 								})
 						);
 				}
@@ -618,11 +618,11 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 					.addToggle((toggle) =>
 						toggle
 							.setValue(this.plugin.settings.enableLLMZoneNaming)
-							.onChange(async (value) => {
+							.onChange((value) => {
 								this.plugin.settings.enableLLMZoneNaming = value;
-								await this.plugin.saveSettings();
+								void this.plugin.saveSettings();
 								this.display();
-								this.plugin.refreshMapViews();
+								void this.plugin.refreshMapViews();
 							})
 					);
 
@@ -635,9 +635,9 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 								.addOption("openai", "OpenAI")
 								.addOption("openrouter", "OpenRouter")
 								.setValue(this.plugin.settings.llmProvider)
-								.onChange(async (value) => {
+								.onChange((value) => {
 									this.plugin.settings.llmProvider = value as ChorographiaSettings["llmProvider"];
-									await this.plugin.saveSettings();
+									void this.plugin.saveSettings();
 									this.display();
 								})
 						);
@@ -649,9 +649,9 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 							.addText((text) =>
 								text
 									.setValue(this.plugin.settings.ollamaLlmModel)
-									.onChange(async (value) => {
+									.onChange((value) => {
 										this.plugin.settings.ollamaLlmModel = value;
-										await this.plugin.saveSettings();
+										void this.plugin.saveSettings();
 									})
 							);
 					} else if (this.plugin.settings.llmProvider === "openai") {
@@ -661,9 +661,9 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 							.addText((text) =>
 								text
 									.setValue(this.plugin.settings.openaiLlmModel)
-									.onChange(async (value) => {
+									.onChange((value) => {
 										this.plugin.settings.openaiLlmModel = value;
-										await this.plugin.saveSettings();
+										void this.plugin.saveSettings();
 									})
 							);
 					} else if (this.plugin.settings.llmProvider === "openrouter") {
@@ -673,9 +673,9 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 							.addText((text) =>
 								text
 									.setValue(this.plugin.settings.openrouterLlmModel)
-									.onChange(async (value) => {
+									.onChange((value) => {
 										this.plugin.settings.openrouterLlmModel = value;
-										await this.plugin.saveSettings();
+										void this.plugin.saveSettings();
 									})
 							);
 					}
@@ -687,10 +687,10 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 					.addToggle((toggle) =>
 						toggle
 							.setValue(this.plugin.settings.mapLocked)
-							.onChange(async (value) => {
+							.onChange((value) => {
 								this.plugin.settings.mapLocked = value;
-								await this.plugin.saveSettings();
-								this.plugin.refreshMapViews();
+								void this.plugin.saveSettings();
+								void this.plugin.refreshMapViews();
 							})
 					);
 			}
@@ -706,10 +706,10 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 				.addDropdown((dd) => {
 					for (const t of BUILTIN_THEMES) dd.addOption(t.id, t.name);
 					dd.setValue(this.plugin.settings.activeTheme);
-					dd.onChange(async (value) => {
+					dd.onChange((value) => {
 						this.plugin.settings.activeTheme = value;
-						await this.plugin.saveSettings();
-						this.plugin.refreshMapViews();
+						void this.plugin.saveSettings();
+						void this.plugin.refreshMapViews();
 					});
 				});
 
@@ -722,11 +722,11 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 						.addOption("folder", "Folder")
 						.addOption("property", "Property")
 						.setValue(this.plugin.settings.colorMode)
-						.onChange(async (value) => {
+						.onChange((value) => {
 							this.plugin.settings.colorMode = value as ColorMode;
-							await this.plugin.saveSettings();
+							void this.plugin.saveSettings();
 							this.display();
-							this.plugin.refreshMapViews();
+							void this.plugin.refreshMapViews();
 						})
 				);
 
@@ -738,10 +738,10 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 						text
 							.setPlaceholder("type")
 							.setValue(this.plugin.settings.colorPropertyField)
-							.onChange(async (value) => {
+							.onChange((value) => {
 								this.plugin.settings.colorPropertyField = value;
-								await this.plugin.saveSettings();
-								this.plugin.refreshMapViews();
+								void this.plugin.saveSettings();
+								void this.plugin.refreshMapViews();
 								this.plugin.updateExplorerDots();
 							})
 							.then((t) => { t.inputEl.addClass("chorographia-input-sm"); })
@@ -754,9 +754,9 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 				.addToggle((toggle) =>
 					toggle
 						.setValue(this.plugin.settings.showLinks)
-						.onChange(async (value) => {
+						.onChange((value) => {
 							this.plugin.settings.showLinks = value;
-							await this.plugin.saveSettings();
+							void this.plugin.saveSettings();
 						})
 				);
 
@@ -766,9 +766,9 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 				.addToggle((toggle) =>
 					toggle
 						.setValue(this.plugin.settings.showExplorerDots)
-						.onChange(async (value) => {
+						.onChange((value) => {
 							this.plugin.settings.showExplorerDots = value;
-							await this.plugin.saveSettings();
+							void this.plugin.saveSettings();
 							this.plugin.updateExplorerDots();
 							this.display();
 						})
@@ -783,9 +783,9 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 							.setLimits(0, 200, 1)
 							.setValue(this.plugin.settings.explorerDotOffset)
 							.setDynamicTooltip()
-							.onChange(async (value) => {
+							.onChange((value) => {
 								this.plugin.settings.explorerDotOffset = value;
-								await this.plugin.saveSettings();
+								void this.plugin.saveSettings();
 								this.plugin.updateExplorerDots();
 							})
 					);
@@ -802,10 +802,10 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 						.addOption("bottom-left", "Bottom-left")
 						.addOption("bottom-right", "Bottom-right")
 						.setValue(this.plugin.settings.minimapCorner)
-						.onChange(async (value) => {
+						.onChange((value) => {
 							this.plugin.settings.minimapCorner = value as MinimapCorner;
-							await this.plugin.saveSettings();
-							this.plugin.refreshMapViews();
+							void this.plugin.saveSettings();
+							void this.plugin.refreshMapViews();
 						})
 				);
 		}
@@ -822,10 +822,10 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 						.setLimits(6, 18, 1)
 						.setValue(this.plugin.settings.zoneLabelSize)
 						.setDynamicTooltip()
-						.onChange(async (value) => {
+						.onChange((value) => {
 							this.plugin.settings.zoneLabelSize = value;
-							await this.plugin.saveSettings();
-							this.plugin.refreshMapViews();
+							void this.plugin.saveSettings();
+							void this.plugin.refreshMapViews();
 						})
 				);
 
@@ -837,10 +837,10 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 						.setLimits(0.1, 1.0, 0.05)
 						.setValue(this.plugin.settings.zoneLabelOpacity)
 						.setDynamicTooltip()
-						.onChange(async (value) => {
+						.onChange((value) => {
 							this.plugin.settings.zoneLabelOpacity = value;
-							await this.plugin.saveSettings();
-							this.plugin.refreshMapViews();
+							void this.plugin.saveSettings();
+							void this.plugin.refreshMapViews();
 						})
 				);
 
@@ -852,10 +852,10 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 						.setLimits(4, 14, 1)
 						.setValue(this.plugin.settings.subZoneLabelSize)
 						.setDynamicTooltip()
-						.onChange(async (value) => {
+						.onChange((value) => {
 							this.plugin.settings.subZoneLabelSize = value;
-							await this.plugin.saveSettings();
-							this.plugin.refreshMapViews();
+							void this.plugin.saveSettings();
+							void this.plugin.refreshMapViews();
 						})
 				);
 
@@ -867,10 +867,10 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 						.setLimits(0.1, 1.0, 0.05)
 						.setValue(this.plugin.settings.subZoneLabelOpacity)
 						.setDynamicTooltip()
-						.onChange(async (value) => {
+						.onChange((value) => {
 							this.plugin.settings.subZoneLabelOpacity = value;
-							await this.plugin.saveSettings();
-							this.plugin.refreshMapViews();
+							void this.plugin.saveSettings();
+							void this.plugin.refreshMapViews();
 						})
 				);
 
@@ -882,10 +882,10 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 						.setLimits(3, 12, 1)
 						.setValue(this.plugin.settings.noteTitleSize)
 						.setDynamicTooltip()
-						.onChange(async (value) => {
+						.onChange((value) => {
 							this.plugin.settings.noteTitleSize = value;
-							await this.plugin.saveSettings();
-							this.plugin.refreshMapViews();
+							void this.plugin.saveSettings();
+							void this.plugin.refreshMapViews();
 						})
 				);
 
@@ -897,10 +897,10 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 						.setLimits(0.1, 1.0, 0.05)
 						.setValue(this.plugin.settings.noteTitleOpacity)
 						.setDynamicTooltip()
-						.onChange(async (value) => {
+						.onChange((value) => {
 							this.plugin.settings.noteTitleOpacity = value;
-							await this.plugin.saveSettings();
-							this.plugin.refreshMapViews();
+							void this.plugin.saveSettings();
+							void this.plugin.refreshMapViews();
 						})
 				);
 
@@ -910,11 +910,11 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 				.addToggle((toggle) =>
 					toggle
 						.setValue(this.plugin.settings.labelOutline)
-						.onChange(async (value) => {
+						.onChange((value) => {
 							this.plugin.settings.labelOutline = value;
-							await this.plugin.saveSettings();
+							void this.plugin.saveSettings();
 							this.display();
-							this.plugin.refreshMapViews();
+							void this.plugin.refreshMapViews();
 						})
 				);
 
@@ -927,10 +927,10 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 							.setLimits(1, 4, 0.5)
 							.setValue(this.plugin.settings.labelOutlineWidth)
 							.setDynamicTooltip()
-							.onChange(async (value) => {
+							.onChange((value) => {
 								this.plugin.settings.labelOutlineWidth = value;
-								await this.plugin.saveSettings();
-								this.plugin.refreshMapViews();
+								void this.plugin.saveSettings();
+								void this.plugin.refreshMapViews();
 							})
 					);
 			}
@@ -953,16 +953,18 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 				.setName("Re-embed changed notes")
 				.setDesc("Index notes and compute embeddings for new/changed notes.")
 				.addButton((btn) =>
-					btn.setButtonText("Run").onClick(async () => {
-						btn.setDisabled(true);
-						btn.setButtonText("Running...");
-						try {
-							await this.plugin.runEmbedPipeline();
-						} catch (e: unknown) {
-							new Notice("Chorographia: " + (e instanceof Error ? e.message : String(e)));
-						}
-						btn.setDisabled(false);
-						btn.setButtonText("Run");
+					btn.setButtonText("Run").onClick(() => {
+						void (async () => {
+							btn.setDisabled(true);
+							btn.setButtonText("Running...");
+							try {
+								await this.plugin.runEmbedPipeline();
+							} catch (e: unknown) {
+								new Notice("Chorographia: " + (e instanceof Error ? e.message : String(e)));
+							}
+							btn.setDisabled(false);
+							btn.setButtonText("Run");
+						})();
 					})
 				);
 
@@ -970,17 +972,19 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 				.setName("Recompute layout")
 				.setDesc("Run UMAP on cached embeddings to produce a new 2D layout.")
 				.addButton((btn) =>
-					btn.setButtonText("Run").onClick(async () => {
-						btn.setDisabled(true);
-						btn.setButtonText("Running...");
-						try {
-							await this.plugin.runLayoutCompute();
-							new Notice("Chorographia: Layout complete.");
-						} catch (e: unknown) {
-							new Notice("Chorographia: " + (e instanceof Error ? e.message : String(e)));
-						}
-						btn.setDisabled(false);
-						btn.setButtonText("Run");
+					btn.setButtonText("Run").onClick(() => {
+						void (async () => {
+							btn.setDisabled(true);
+							btn.setButtonText("Running...");
+							try {
+								await this.plugin.runLayoutCompute();
+								new Notice("Chorographia: Layout complete.");
+							} catch (e: unknown) {
+								new Notice("Chorographia: " + (e instanceof Error ? e.message : String(e)));
+							}
+							btn.setDisabled(false);
+							btn.setButtonText("Run");
+						})();
 					})
 				);
 
@@ -1023,13 +1027,13 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 							const msg = locked
 								? "Map is locked. Clearing cache will erase all positions, zone data, and locked names. Continue?"
 								: "This will erase all cached embeddings, positions, and zone data. You will need to re-embed to rebuild the map. Continue?";
-							new ConfirmModal(this.app, msg, async () => {
+							new ConfirmModal(this.app, msg, () => {
 								this.plugin.cache = { notes: {} };
 								if (locked) {
 									this.plugin.settings.mapLocked = false;
-									await this.plugin.saveSettings();
+									void this.plugin.saveSettings();
 								}
-								await this.plugin.saveCache();
+								void this.plugin.saveCache();
 								new Notice("Chorographia: Cache cleared.");
 								this.display();
 							}).open();

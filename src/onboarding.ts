@@ -74,9 +74,9 @@ export class OnboardingModal extends Modal {
 					.addOption("openai", "OpenAI")
 					.addOption("openrouter", "OpenRouter")
 					.setValue(s.embeddingProvider)
-					.onChange(async (value) => {
+					.onChange((value) => {
 						s.embeddingProvider = value as typeof s.embeddingProvider;
-						await this.plugin.saveSettings();
+						void this.plugin.saveSettings();
 						this.renderStep();
 					})
 			);
@@ -88,9 +88,9 @@ export class OnboardingModal extends Modal {
 					text
 						.setPlaceholder("http://localhost:11434")
 						.setValue(s.ollamaUrl)
-						.onChange(async (value) => {
+						.onChange((value) => {
 							s.ollamaUrl = value;
-							await this.plugin.saveSettings();
+							void this.plugin.saveSettings();
 						})
 						.then((t) => { t.inputEl.addClass("chorographia-input-lg"); })
 				);
@@ -101,9 +101,9 @@ export class OnboardingModal extends Modal {
 					text
 						.setPlaceholder("qwen3-embedding")
 						.setValue(s.ollamaEmbedModel)
-						.onChange(async (value) => {
+						.onChange((value) => {
 							s.ollamaEmbedModel = value;
-							await this.plugin.saveSettings();
+							void this.plugin.saveSettings();
 						})
 				);
 
@@ -118,9 +118,9 @@ export class OnboardingModal extends Modal {
 					text
 						.setPlaceholder("sk-...")
 						.setValue(s.openaiApiKey)
-						.onChange(async (value) => {
+						.onChange((value) => {
 							s.openaiApiKey = value;
-							await this.plugin.saveSettings();
+							void this.plugin.saveSettings();
 						})
 						.then((t) => {
 							t.inputEl.type = "password";
@@ -134,9 +134,9 @@ export class OnboardingModal extends Modal {
 					text
 						.setPlaceholder("text-embedding-3-large")
 						.setValue(s.embeddingModel)
-						.onChange(async (value) => {
+						.onChange((value) => {
 							s.embeddingModel = value;
-							await this.plugin.saveSettings();
+							void this.plugin.saveSettings();
 						})
 				);
 		} else if (s.embeddingProvider === "openrouter") {
@@ -146,9 +146,9 @@ export class OnboardingModal extends Modal {
 					text
 						.setPlaceholder("sk-or-...")
 						.setValue(s.openrouterApiKey)
-						.onChange(async (value) => {
+						.onChange((value) => {
 							s.openrouterApiKey = value;
-							await this.plugin.saveSettings();
+							void this.plugin.saveSettings();
 						})
 						.then((t) => {
 							t.inputEl.type = "password";
@@ -162,9 +162,9 @@ export class OnboardingModal extends Modal {
 					text
 						.setPlaceholder("openai/text-embedding-3-small")
 						.setValue(s.openrouterEmbedModel)
-						.onChange(async (value) => {
+						.onChange((value) => {
 							s.openrouterEmbedModel = value;
-							await this.plugin.saveSettings();
+							void this.plugin.saveSettings();
 						})
 				);
 		}
@@ -184,9 +184,9 @@ export class OnboardingModal extends Modal {
 				text
 					.setPlaceholder("**/*.md")
 					.setValue(s.includeGlobs)
-					.onChange(async (value) => {
+					.onChange((value) => {
 						s.includeGlobs = value;
-						await this.plugin.saveSettings();
+						void this.plugin.saveSettings();
 					})
 					.then((t) => { t.inputEl.addClass("chorographia-input-xl"); })
 			);
@@ -198,9 +198,9 @@ export class OnboardingModal extends Modal {
 				text
 					.setPlaceholder("templates/**,daily/**")
 					.setValue(s.excludeGlobs)
-					.onChange(async (value) => {
+					.onChange((value) => {
 						s.excludeGlobs = value;
-						await this.plugin.saveSettings();
+						void this.plugin.saveSettings();
 					})
 					.then((t) => { t.inputEl.addClass("chorographia-input-xl"); })
 			);
@@ -211,11 +211,11 @@ export class OnboardingModal extends Modal {
 			.addText((text) =>
 				text
 					.setValue(String(s.maxNotes))
-					.onChange(async (value) => {
+					.onChange((value) => {
 						const n = parseInt(value, 10);
 						if (!isNaN(n) && n > 0) {
 							s.maxNotes = n;
-							await this.plugin.saveSettings();
+							void this.plugin.saveSettings();
 						}
 					})
 					.then((t) => { t.inputEl.addClass("chorographia-input-xs"); })
@@ -240,9 +240,9 @@ export class OnboardingModal extends Modal {
 			.addToggle((toggle) =>
 				toggle
 					.setValue(s.showZones)
-					.onChange(async (value) => {
+					.onChange((value) => {
 						s.showZones = value;
-						await this.plugin.saveSettings();
+						void this.plugin.saveSettings();
 						this.renderStep();
 					})
 			);
@@ -270,13 +270,13 @@ export class OnboardingModal extends Modal {
 				const card = picker.createEl("div", {
 					cls: `chorographia-onboarding-style-card${s.zoneStyle === style.id ? " is-selected" : ""}`,
 				});
-				card.addEventListener("click", async () => {
+				card.addEventListener("click", () => {
 					s.zoneStyle = style.id;
-					await this.plugin.saveSettings();
+					void this.plugin.saveSettings();
 					this.renderStep();
 				});
 
-				const preview = card.createEl("pre", {
+				card.createEl("pre", {
 					cls: "chorographia-onboarding-style-preview",
 					text: style.preview,
 				});
@@ -293,9 +293,9 @@ export class OnboardingModal extends Modal {
 			.addDropdown((dd) => {
 				for (const t of BUILTIN_THEMES) dd.addOption(t.id, t.name);
 				dd.setValue(s.activeTheme);
-				dd.onChange(async (value) => {
+				dd.onChange((value) => {
 					s.activeTheme = value;
-					await this.plugin.saveSettings();
+					void this.plugin.saveSettings();
 				});
 			});
 
@@ -309,9 +309,9 @@ export class OnboardingModal extends Modal {
 					.addOption("folder", "Folder \u2014 by vault folder")
 					.addOption("property", "Property \u2014 by frontmatter field")
 					.setValue(s.colorMode)
-					.onChange(async (value) => {
+					.onChange((value) => {
 						s.colorMode = value as typeof s.colorMode;
-						await this.plugin.saveSettings();
+						void this.plugin.saveSettings();
 					})
 			);
 	}
@@ -390,7 +390,7 @@ export class OnboardingModal extends Modal {
 			const startBtn = nav.createEl("button", { text: "Start embedding", cls: "chorographia-onboarding-btn chorographia-onboarding-btn-primary" });
 			startBtn.addEventListener("click", () => {
 				this.close();
-				this.plugin.runEmbedPipeline();
+				void this.plugin.runEmbedPipeline();
 			});
 		}
 	}

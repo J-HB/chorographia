@@ -120,9 +120,9 @@ export async function indexVault(
 		// metadataCache adds a "position" key — remove it
 		delete fm.position;
 
-		const title = fm.title ? String(fm.title) : file.basename;
-		const type = fm.type ? String(fm.type) : "";
-		const cat = fm.cat ? String(fm.cat) : "";
+		const title = fm.title ? stringifyVal(fm.title) : file.basename;
+		const type = fm.type ? stringifyVal(fm.type) : "";
+		const cat = fm.cat ? stringifyVal(fm.cat) : "";
 		const body = stripFrontmatter(content).slice(0, 12000);
 
 		// Extract tags from frontmatter and inline #tags
@@ -154,7 +154,7 @@ export async function indexVault(
 		if (requirePropKey) {
 			const propVal = fm[requirePropKey];
 			if (propVal == null || propVal === "") continue;
-			if (requirePropVal && String(propVal).toLowerCase() !== requirePropVal.toLowerCase()) continue;
+			if (requirePropVal && stringifyVal(propVal).toLowerCase() !== requirePropVal.toLowerCase()) continue;
 		}
 
 		// Build embedText dynamically from config.embedFields

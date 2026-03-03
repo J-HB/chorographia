@@ -1,4 +1,4 @@
-import { Notice, requestUrl, normalizePath } from "obsidian";
+import { requestUrl, normalizePath } from "obsidian";
 import type ChorographiaPlugin from "./main";
 import { decodeFloat32 } from "./cache";
 import { embedTexts, type EmbedResult } from "./openai";

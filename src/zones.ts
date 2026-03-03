@@ -1,4 +1,4 @@
-import { computeVoronoiCells, clipConvexPolygons, fractalDisplace, isEdgeOnBoundary } from "./voronoi";
+import { computeVoronoiCells, clipConvexPolygons, fractalDisplace } from "./voronoi";
 import type { Bounds } from "./voronoi";
 import { runWorldMapPipeline } from "./worldmap";
 
@@ -86,29 +86,6 @@ export function scaleHull(hull: Point2D[], factor: number): Point2D[] {
 		x: cx + (p.x - cx) * factor,
 		y: cy + (p.y - cy) * factor,
 	}));
-}
-
-// ---------- resample edges so no segment is too long ----------
-
-function resamplePoly(pts: Point2D[], maxSegLen: number): Point2D[] {
-	if (pts.length < 2) return pts;
-	const result: Point2D[] = [];
-	const n = pts.length;
-
-	for (let i = 0; i < n; i++) {
-		const a = pts[i];
-		const b = pts[(i + 1) % n];
-		const dx = b.x - a.x, dy = b.y - a.y;
-		const len = Math.sqrt(dx * dx + dy * dy);
-		const segs = Math.max(1, Math.ceil(len / maxSegLen));
-
-		for (let s = 0; s < segs; s++) {
-			const t = s / segs;
-			result.push({ x: a.x + dx * t, y: a.y + dy * t });
-		}
-	}
-
-	return result;
 }
 
 // ---------- Chaikin corner-cutting subdivision ----------
@@ -201,36 +178,6 @@ export function computeZones(points: MapPointLike[], assignments: number[], k: n
 	}
 
 	return zones;
-}
-
-// ---------- geometry helpers for world map ----------
-
-/** Distance from a point to the boundary of a convex polygon, or 0 if inside. */
-function pointOutsideConvexDist(p: Point2D, hull: Point2D[]): number {
-	// Check if inside (left of all edges for CCW polygon)
-	let inside = true;
-	for (let i = 0; i < hull.length; i++) {
-		const a = hull[i], b = hull[(i + 1) % hull.length];
-		if ((b.x - a.x) * (p.y - a.y) - (b.y - a.y) * (p.x - a.x) < 0) {
-			inside = false;
-			break;
-		}
-	}
-	if (inside) return 0;
-
-	// Minimum distance to any edge
-	let minD = Infinity;
-	for (let i = 0; i < hull.length; i++) {
-		const a = hull[i], b = hull[(i + 1) % hull.length];
-		const dx = b.x - a.x, dy = b.y - a.y;
-		const lenSq = dx * dx + dy * dy;
-		if (lenSq < 1e-12) continue;
-		const t = Math.max(0, Math.min(1, ((p.x - a.x) * dx + (p.y - a.y) * dy) / lenSq));
-		const projX = a.x + t * dx, projY = a.y + t * dy;
-		const d = Math.sqrt((p.x - projX) ** 2 + (p.y - projY) ** 2);
-		if (d < minD) minD = d;
-	}
-	return minD;
 }
 
 // ---------- world map zones ----------
@@ -335,84 +282,6 @@ export function computeWorldMapSubZones(
 	}
 
 	return zones;
-}
-
-/**
- * Clip a (potentially non-convex) polygon to a convex boundary.
- * Uses Sutherland-Hodgman which works for any subject against convex clip.
- */
-function clipToConvexBoundary(polygon: Point2D[], convexBound: Point2D[]): Point2D[] {
-	if (polygon.length < 3 || convexBound.length < 3) return polygon;
-	const result = clipConvexPolygons(polygon, convexBound);
-	return result.length >= 3 ? result : polygon;
-}
-
-/**
- * Fractal displacement that only affects internal edges (not on parent boundary).
- * Outer edges are left straight (hidden behind parent's fractal blob).
- */
-function fractalDisplaceInternal(
-	polygon: Point2D[],
-	iterations: number,
-	amplitude: number,
-	parentPoly: Point2D[],
-	tolerance: number,
-): Point2D[] {
-	if (polygon.length < 3 || iterations <= 0) return polygon;
-
-	let current = polygon;
-
-	for (let iter = 0; iter < iterations; iter++) {
-		const next: Point2D[] = [];
-		const amp = amplitude / Math.pow(2, iter);
-
-		for (let i = 0; i < current.length; i++) {
-			const a = current[i];
-			const b = current[(i + 1) % current.length];
-			next.push(a);
-
-			// Check if this edge is on the parent boundary
-			if (isEdgeOnBoundary(a, b, parentPoly, tolerance)) {
-				// Just add midpoint without displacement (subdivide but keep straight)
-				next.push({ x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 });
-				continue;
-			}
-
-			// Internal edge — apply fractal displacement (same logic as voronoi.ts)
-			const mx = (a.x + b.x) / 2;
-			const my = (a.y + b.y) / 2;
-			const dx = b.x - a.x, dy = b.y - a.y;
-			const len = Math.sqrt(dx * dx + dy * dy);
-			if (len < 1e-10) continue;
-
-			// Canonical perpendicular (must match voronoi.ts)
-			let p0 = a, p1 = b;
-			if (a.x > b.x || (a.x === b.x && a.y > b.y)) {
-				p0 = b; p1 = a;
-			}
-			const cdx = p1.x - p0.x, cdy = p1.y - p0.y;
-			const px = -cdy / len, py = cdx / len;
-			const h = Math.round(p0.x * 100000) * 73856093 ^
-				Math.round(p0.y * 100000) * 19349663 ^
-				Math.round(p1.x * 100000) * 83492791 ^
-				Math.round(p1.y * 100000) * 45989861;
-			const seed = (Math.abs(h) >>> 0) + iter * 7919;
-
-			// Inline mulberry32 for one value
-			let s = seed | 0;
-			s = (s + 0x6d2b79f5) | 0;
-			let t = Math.imul(s ^ (s >>> 15), 1 | s);
-			t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-			const rng = ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-
-			const disp = (rng - 0.5) * 2 * amp;
-			next.push({ x: mx + px * disp, y: my + py * disp });
-		}
-
-		current = next;
-	}
-
-	return current;
 }
 
 // ---------- transform global zone → local space ----------

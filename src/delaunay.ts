@@ -373,33 +373,8 @@ function orderTrianglesAroundPoint(
 ): number[] {
 	if (triIndices.length <= 1) return triIndices;
 
-	// Sort by angle from point to circumcenter
-	const px = 0, py = 0; // we'll compute angles relative to average
-	const angles: { idx: number; angle: number }[] = triIndices.map((t) => {
-		const tri = triangles[t];
-		return { idx: t, angle: 0 };
-	});
-
-	// Get the point coordinates from a triangle that contains it
-	let refX = 0, refY = 0;
-	{
-		const t0 = triangles[triIndices[0]];
-		const verts = [t0.i0, t0.i1, t0.i2];
-		// We need the actual point coordinates — use circumcenter relative to point position
-		// Actually, we can just sort circumcenters by angle
-	}
-
-	// Better approach: sort circumcenters by angle relative to point
-	// We need the point's coordinates. We can recover them from a triangle.
-	const tri0 = triangles[triIndices[0]];
-	// Find which vertex is our point in the first triangle
-	let ptX = 0, ptY = 0;
-	// We need the original coords — pass them through the triangles list
-	// The circumcenter is already stored. Sort by atan2 from point to circumcenter.
-	// But we don't have the point coords directly here.
-	// Use the circumcenters' mean as reference, then sort by angle around that.
-
-	// Actually, we can sort by angle of circumcenter relative to the mean of all circumcenters
+	// Sort circumcenters by angle relative to their mean
+	const angles: { idx: number; angle: number }[] = triIndices.map((t) => ({ idx: t, angle: 0 }));
 	let meanX = 0, meanY = 0;
 	for (const t of triIndices) {
 		meanX += triangles[t].cx;

@@ -1,10 +1,9 @@
 import { ItemView, WorkspaceLeaf, Notice, setIcon } from "obsidian";
 import type ChorographiaPlugin from "./main";
 import type { ChorographiaSettings } from "./settings";
-import type { NoteCache, ZoneCacheEntry } from "./cache";
 import { decodeFloat32, encodeFloat32 } from "./cache";
 import { kMeans, computeSemanticAssignments } from "./kmeans";
-import { Zone, Continent, BorderEdge, WorldMapResult, WorldMapSettings, computeZones, computeWorldMapZones, computeWorldMapSubZones, drawZone, drawZoneLabel, type LabelConfig } from "./zones";
+import { Zone, Continent, BorderEdge, WorldMapSettings, computeZones, computeWorldMapZones, computeWorldMapSubZones, drawZone, type LabelConfig } from "./zones";
 import { generateZoneNames } from "./zoneNaming";
 import { generateZoneNamesOllama } from "./ollama";
 import { generateZoneNamesOpenRouter } from "./openrouter";
@@ -54,11 +53,6 @@ function lerpColor(c1: string, c2: string, t: number): string {
 function themeOutlineColor(): string {
 	const isDark = document.body.classList.contains("theme-dark");
 	return isDark ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.7)";
-}
-function hashStr(s: string): number {
-	let h = 0;
-	for (let i = 0; i < s.length; i++) h = ((h << 5) - h + s.charCodeAt(i)) | 0;
-	return Math.abs(h);
 }
 // UI theme colors are now sourced from the active MapTheme — see theme.ts
 
@@ -134,6 +128,8 @@ export class ChorographiaView extends ItemView {
 	private regionWorld: { x1: number; y1: number; x2: number; y2: number } | null = null;
 	private exportLabelOverride = false;
 	private exportLabelScale = 1;
+	private exportSuppressZoneLabels = false;
+	private exportSuppressSubZoneLabels = false;
 	private editingLabel: { type: "zone" | "subzone"; zoneId: number; subId?: number; el: HTMLInputElement } | null = null;
 	private labelHitboxes: { type: "zone" | "subzone"; zoneId: number; subId?: number; x: number; y: number; w: number; h: number }[] = [];
 	private filterPanel!: HTMLDivElement;
@@ -162,7 +158,7 @@ export class ChorographiaView extends ItemView {
 	}
 
 	getViewType() { return VIEW_TYPE; }
-	getDisplayText() { return "Chorographia Map"; }
+	getDisplayText() { return "Chorographia map"; }
 	getIcon() { return "map"; }
 
 	// ===================== lifecycle =====================
@@ -193,7 +189,7 @@ export class ChorographiaView extends ItemView {
 		}
 	}
 
-	async onClose() {
+	onClose() {
 		cancelAnimationFrame(this.animFrameId);
 	}
 
@@ -248,7 +244,7 @@ export class ChorographiaView extends ItemView {
 
 	private buildSettingsPanel() {
 		const panel = this.settingsPanel;
-		panel.createEl("div", { cls: "chorographia-panel-heading", text: "SETTINGS" });
+		panel.createEl("div", { cls: "chorographia-panel-heading", text: "Settings" });
 
 		// Color row
 		const colorRow = panel.createEl("div", { cls: "chorographia-menu-row" });
@@ -260,9 +256,9 @@ export class ChorographiaView extends ItemView {
 		] as const)
 			this.colorModeSelect.createEl("option", { text: t, value: v });
 		this.colorModeSelect.value = this.plugin.settings.colorMode;
-		this.colorModeSelect.addEventListener("change", async () => {
+		this.colorModeSelect.addEventListener("change", () => {
 			this.plugin.settings.colorMode = this.colorModeSelect.value as ChorographiaSettings["colorMode"];
-			await this.plugin.saveSettings();
+			void this.plugin.saveSettings();
 			this.draw();
 		});
 
@@ -272,9 +268,9 @@ export class ChorographiaView extends ItemView {
 		this.linksToggle = linksLbl.createEl("input", { type: "checkbox" });
 		this.linksToggle.checked = this.plugin.settings.showLinks;
 		linksLbl.appendText(" Links");
-		this.linksToggle.addEventListener("change", async () => {
+		this.linksToggle.addEventListener("change", () => {
 			this.plugin.settings.showLinks = this.linksToggle.checked;
-			await this.plugin.saveSettings();
+			void this.plugin.saveSettings();
 			this.draw();
 		});
 
@@ -284,9 +280,9 @@ export class ChorographiaView extends ItemView {
 		this.zonesToggle = zonesLbl.createEl("input", { type: "checkbox" });
 		this.zonesToggle.checked = this.plugin.settings.showZones;
 		zonesLbl.appendText(" Zones");
-		this.zonesToggle.addEventListener("change", async () => {
+		this.zonesToggle.addEventListener("change", () => {
 			this.plugin.settings.showZones = this.zonesToggle.checked;
-			await this.plugin.saveSettings();
+			void this.plugin.saveSettings();
 			this.draw();
 		});
 
@@ -296,9 +292,9 @@ export class ChorographiaView extends ItemView {
 		this.subZonesToggle = subZonesLbl.createEl("input", { type: "checkbox" });
 		this.subZonesToggle.checked = this.plugin.settings.showSubZones;
 		subZonesLbl.appendText(" Sub-zones");
-		this.subZonesToggle.addEventListener("change", async () => {
+		this.subZonesToggle.addEventListener("change", () => {
 			this.plugin.settings.showSubZones = this.subZonesToggle.checked;
-			await this.plugin.saveSettings();
+			void this.plugin.saveSettings();
 			this.draw();
 		});
 
@@ -306,7 +302,7 @@ export class ChorographiaView extends ItemView {
 		const editRow = panel.createEl("div", { cls: "chorographia-menu-row" });
 		const editLbl = editRow.createEl("label", { cls: "chorographia-toggle-label" });
 		const editToggle = editLbl.createEl("input", { type: "checkbox" });
-		editLbl.appendText(" Edit Labels");
+		editLbl.appendText(" Edit labels");
 		editToggle.addEventListener("change", () => {
 			this.editMode = editToggle.checked;
 			if (!this.editMode && this.editingLabel) {
@@ -322,9 +318,9 @@ export class ChorographiaView extends ItemView {
 		this.titlesToggle = titlesLbl.createEl("input", { type: "checkbox" });
 		this.titlesToggle.checked = this.plugin.settings.showNoteTitles;
 		titlesLbl.appendText(" Titles");
-		this.titlesToggle.addEventListener("change", async () => {
+		this.titlesToggle.addEventListener("change", () => {
 			this.plugin.settings.showNoteTitles = this.titlesToggle.checked;
-			await this.plugin.saveSettings();
+			void this.plugin.saveSettings();
 			this.draw();
 		});
 
@@ -338,9 +334,9 @@ export class ChorographiaView extends ItemView {
 		] as const)
 			this.minimapSelect.createEl("option", { text: t, value: v });
 		this.minimapSelect.value = this.plugin.settings.minimapCorner;
-		this.minimapSelect.addEventListener("change", async () => {
+		this.minimapSelect.addEventListener("change", () => {
 			this.plugin.settings.minimapCorner = this.minimapSelect.value as ChorographiaSettings["minimapCorner"];
-			await this.plugin.saveSettings();
+			void this.plugin.saveSettings();
 			this.draw();
 		});
 
@@ -357,7 +353,7 @@ export class ChorographiaView extends ItemView {
 
 	private buildSnapshotPanel() {
 		const panel = this.snapshotPanel;
-		panel.createEl("div", { cls: "chorographia-panel-heading", text: "SNAPSHOTS" });
+		panel.createEl("div", { cls: "chorographia-panel-heading", text: "Snapshots" });
 
 		// Save input
 		const saveInput = panel.createEl("input", {
@@ -366,28 +362,30 @@ export class ChorographiaView extends ItemView {
 		});
 
 		// Save button
-		const saveBtn = panel.createEl("button", { cls: "chorographia-export-btn-primary", text: "Save Snapshot" });
-		saveBtn.addEventListener("click", async () => {
-			const name = saveInput.value.trim();
-			if (!name) { new Notice("Enter a name for the snapshot."); return; }
-			saveBtn.disabled = true;
-			try {
-				await this.plugin.saveSnapshot(name);
-				new Notice(`Snapshot "${name}" saved.`);
-				saveInput.value = "";
-				this.refreshSnapshotList();
-			} catch (e: unknown) {
-				new Notice("Save failed: " + (e instanceof Error ? e.message : String(e)));
-			}
-			saveBtn.disabled = false;
+		const saveBtn = panel.createEl("button", { cls: "chorographia-export-btn-primary", text: "Save snapshot" });
+		saveBtn.addEventListener("click", () => {
+			void (async () => {
+				const name = saveInput.value.trim();
+				if (!name) { new Notice("Enter a name for the snapshot."); return; }
+				saveBtn.disabled = true;
+				try {
+					await this.plugin.saveSnapshot(name);
+					new Notice(`Snapshot "${name}" saved.`);
+					saveInput.value = "";
+					void this.refreshSnapshotList();
+				} catch (e: unknown) {
+					new Notice("Save failed: " + (e instanceof Error ? e.message : String(e)));
+				}
+				saveBtn.disabled = false;
+			})();
 		});
 
 		panel.createEl("div", { cls: "chorographia-menu-sep" });
-		panel.createEl("div", { cls: "chorographia-panel-subheading", text: "Saved Snapshots:" });
+		panel.createEl("div", { cls: "chorographia-panel-subheading", text: "Saved snapshots:" });
 
 		// Scrollable list
 		this.snapshotListEl = panel.createEl("div", { cls: "chorographia-snapshot-list" });
-		this.refreshSnapshotList();
+		void this.refreshSnapshotList();
 	}
 
 	private async refreshSnapshotList() {
@@ -407,7 +405,7 @@ export class ChorographiaView extends ItemView {
 
 			const delBtn = row.createEl("button", { cls: "chorographia-snapshot-list-del", text: "\u00d7" });
 			let confirmPending = false;
-			delBtn.addEventListener("click", async (e) => {
+			delBtn.addEventListener("click", (e) => {
 				e.stopPropagation();
 				if (!confirmPending) {
 					confirmPending = true;
@@ -422,19 +420,23 @@ export class ChorographiaView extends ItemView {
 					}, 3000);
 					return;
 				}
-				await this.plugin.deleteSnapshot(s.path);
-				new Notice("Snapshot deleted.");
-				this.refreshSnapshotList();
+				void (async () => {
+					await this.plugin.deleteSnapshot(s.path);
+					new Notice("Snapshot deleted.");
+					void this.refreshSnapshotList();
+				})();
 			});
 
 			// Click row to load
-			row.addEventListener("click", async () => {
-				try {
-					await this.plugin.loadSnapshot(s.path);
-					new Notice(`Snapshot "${s.name}" loaded.`);
-				} catch (e: unknown) {
-					new Notice("Load failed: " + (e instanceof Error ? e.message : String(e)));
-				}
+			row.addEventListener("click", () => {
+				void (async () => {
+					try {
+						await this.plugin.loadSnapshot(s.path);
+						new Notice(`Snapshot "${s.name}" loaded.`);
+					} catch (e: unknown) {
+						new Notice("Load failed: " + (e instanceof Error ? e.message : String(e)));
+					}
+				})();
 			});
 		}
 	}
@@ -443,14 +445,14 @@ export class ChorographiaView extends ItemView {
 
 	private buildExportPanel() {
 		const panel = this.exportPanel;
-		panel.createEl("div", { cls: "chorographia-panel-heading", text: "EXPORT MAP" });
+		panel.createEl("div", { cls: "chorographia-panel-heading", text: "Export map" });
 
 		// Mode selection
 		const modeGroup = panel.createEl("div", { cls: "chorographia-export-mode-group" });
 		const modes: { value: typeof this.exportMode; label: string }[] = [
-			{ value: "current", label: "Current View" },
-			{ value: "whole", label: "Whole Map" },
-			{ value: "region", label: "Select Region" },
+			{ value: "current", label: "Current view" },
+			{ value: "whole", label: "Whole map" },
+			{ value: "region", label: "Select region" },
 		];
 
 		const modeEls: HTMLDivElement[] = [];
@@ -498,7 +500,7 @@ export class ChorographiaView extends ItemView {
 		}
 
 		if (this.exportMode === "region") {
-			exportBtn.textContent = "Export Region";
+			exportBtn.textContent = "Export region";
 			exportBtn.disabled = !this.regionWorld;
 			this.regionSelectActive = true;
 			// Show hint overlay
@@ -661,8 +663,9 @@ export class ChorographiaView extends ItemView {
 		this.panY = cy * s;
 
 		// Apply export panel toggles (override main settings)
-		this.plugin.settings.showZones = this.exportZoneLabels;
-		this.plugin.settings.showSubZones = this.exportSubZoneLabels;
+		// Zones always render; the toggles control label visibility only
+		this.plugin.settings.showZones = origShowZones;
+		this.plugin.settings.showSubZones = origShowSubZones;
 		this.plugin.settings.showNoteTitles = this.exportNoteTitles;
 		this.plugin.settings.noteTitleOpacity = this.exportNoteTitles ? 1 : 0;
 		this.plugin.settings.showLinks = this.exportLinks;
@@ -675,6 +678,8 @@ export class ChorographiaView extends ItemView {
 
 		// Force labels to render at full alpha regardless of zoom level
 		this.exportLabelOverride = true;
+		this.exportSuppressZoneLabels = !this.exportZoneLabels;
+		this.exportSuppressSubZoneLabels = !this.exportSubZoneLabels;
 		// Scale labels relative to base resolution (before scale multiplier)
 		// so that 1x/2x/4x only increases pixel density, not label size
 		this.exportLabelScale = Math.max(canvasW / scale, canvasH / scale) / 1200;
@@ -682,6 +687,8 @@ export class ChorographiaView extends ItemView {
 		this.draw();
 		this.exportLabelOverride = false;
 		this.exportLabelScale = 1;
+		this.exportSuppressZoneLabels = false;
+		this.exportSuppressSubZoneLabels = false;
 
 		// Restore
 		this.canvas = origCanvas;
@@ -905,7 +912,7 @@ export class ChorographiaView extends ItemView {
 								}
 							}
 							const subCentroids: { x: number; y: number }[] = [];
-							for (const [_, pts] of [...subGroups].sort((a, b) => a[0] - b[0])) {
+							for (const [, pts] of [...subGroups].sort((a, b) => a[0] - b[0])) {
 								let cx = 0, cy = 0;
 								for (const p of pts) { cx += p.x; cy += p.y; }
 								subCentroids.push({ x: cx / pts.length, y: cy / pts.length });
@@ -1094,7 +1101,7 @@ export class ChorographiaView extends ItemView {
 				subGroups.get(s)!.push({ x: members[i].x, y: members[i].y });
 			}
 			const subCentroids: { x: number; y: number }[] = [];
-			for (const [_, pts] of [...subGroups].sort((a, b) => a[0] - b[0])) {
+			for (const [, pts] of [...subGroups].sort((a, b) => a[0] - b[0])) {
 				let cx = 0, cy = 0;
 				for (const p of pts) { cx += p.x; cy += p.y; }
 				subCentroids.push({ x: cx / pts.length, y: cy / pts.length });
@@ -1408,7 +1415,7 @@ export class ChorographiaView extends ItemView {
 			ctx.textAlign = "center";
 			const hasEmbeddings = Object.values(this.plugin.cache.notes).some((n) => n.embedding);
 			const msg = hasEmbeddings
-				? "Embeddings found but no layout. Run Recompute Layout in settings."
+				? "Embeddings found but no layout. Run Recompute layout in settings."
 				: "No points. Run Re-embed in settings.";
 			ctx.fillText(msg, W / 2, H / 2);
 			return;
@@ -1736,7 +1743,7 @@ export class ChorographiaView extends ItemView {
 				}
 
 				// Zone labels (inside each country)
-				{
+				if (!this.exportSuppressZoneLabels) {
 				const fonts = this.mapTheme.fonts;
 				for (const zone of this.zones) {
 					if (!zone.cellPolygons || zone.cellPolygons.length === 0) continue;
@@ -1776,7 +1783,7 @@ export class ChorographiaView extends ItemView {
 				}
 
 				// Province labels (fade in with zoom, italic, smaller)
-				if (subAlpha > 0.01) {
+				if (subAlpha > 0.01 && !this.exportSuppressSubZoneLabels) {
 					const fonts = this.mapTheme.fonts;
 					for (const zone of this.zones) {
 						if (!zone.subDomainCells || zone.subDomainCells.size <= 1) continue;
@@ -1878,10 +1885,10 @@ export class ChorographiaView extends ItemView {
 					fontWeight: fonts.zoneLabelWeight,
 				};
 				for (const zone of this.zones) {
-					drawZone(ctx, zone, w2sFn, globalZoneAlpha, false, isWorldmap, false, undefined, parentFillFade, lcfg);
+					drawZone(ctx, zone, w2sFn, globalZoneAlpha, false, isWorldmap, this.exportSuppressZoneLabels, undefined, parentFillFade, lcfg);
 				}
 
-				if (subAlpha > 0.01) {
+				if (subAlpha > 0.01 && !this.exportSuppressSubZoneLabels) {
 					for (const zone of this.zones) {
 						const subZones = this.subZonesMap.get(zone.id);
 						if (!subZones) continue;

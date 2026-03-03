@@ -24,7 +24,6 @@ export function serializeSnapshot(
 ): MapSnapshot {
 	const subset: Partial<ChorographiaSettings> = {};
 	for (const key of SETTINGS_KEYS) {
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any -- generic key copy across matching types
 		(subset as Record<string, unknown>)[key] = settings[key];
 	}
 	return {

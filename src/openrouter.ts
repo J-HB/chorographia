@@ -1,4 +1,4 @@
-import { requestUrl, sleep } from "obsidian";
+import { requestUrl } from "obsidian";
 import { encodeFloat32 } from "./cache";
 import type { EmbedResult } from "./openai";
 
@@ -43,7 +43,7 @@ export async function embedTextsOpenRouter(
 		onProgress?.(Math.min(i + step, texts.length), texts.length);
 
 		if (i + step < texts.length) {
-			await sleep(DELAY_MS);
+			await window.sleep(DELAY_MS);
 		}
 	}
 

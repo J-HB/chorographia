@@ -1,4 +1,4 @@
-import { Plugin, Notice, WorkspaceLeaf, normalizePath, debounce } from "obsidian";
+import { Plugin, Notice, normalizePath, debounce } from "obsidian";
 import {
 	ChorographiaSettings,
 	DEFAULT_SETTINGS,
@@ -12,10 +12,10 @@ import { embedTextsOllama } from "./ollama";
 import { embedTextsOpenRouter } from "./openrouter";
 import { computeLayout, interpolateNewPoints } from "./layout";
 import { kMeans, computeSemanticAssignments } from "./kmeans";
-import { decodeFloat32, encodeFloat32 } from "./cache";
+import { decodeFloat32 } from "./cache";
 import { ChorographiaView, VIEW_TYPE } from "./view";
 import { MapTheme, getThemeById } from "./theme";
-import { serializeSnapshot, deserializeSnapshot, MapSnapshot } from "./snapshots";
+import { serializeSnapshot, deserializeSnapshot } from "./snapshots";
 
 // palettes are now sourced from the active MapTheme — see theme.ts
 
@@ -80,25 +80,25 @@ export default class ChorographiaPlugin extends Plugin {
 		// Migration: compute semantic colors if notes exist but have no semA yet
 		const noteEntries = Object.values(this.cache.notes);
 		if (noteEntries.length > 0 && noteEntries.some(n => n.embedding) && !noteEntries.some(n => n.semA != null)) {
-			await this.computeSemanticColors();
+			this.computeSemanticColors();
 		}
 
 		this.registerView(VIEW_TYPE, (leaf) => new ChorographiaView(leaf, this));
 
 		this.addRibbonIcon("map", "Open Chorographia map", () => {
-			this.activateView();
+			void this.activateView();
 		});
 
 		this.addCommand({
-			id: "open-chorographia-map",
-			name: "Open Chorographia map",
-			callback: () => this.activateView(),
+			id: "open-map",
+			name: "Open map",
+			callback: () => { void this.activateView(); },
 		});
 
 		this.addCommand({
 			id: "re-embed-changed",
 			name: "Re-embed changed notes",
-			callback: () => this.runEmbedPipeline(),
+			callback: () => { void this.runEmbedPipeline(); },
 		});
 
 		this.addSettingTab(new ChorographiaSettingTab(this.app, this));
@@ -109,7 +109,7 @@ export default class ChorographiaPlugin extends Plugin {
 		});
 	}
 
-	async onunload(): Promise<void> {
+	onunload(): void {
 		this.removeExplorerDots();
 	}
 
@@ -271,7 +271,7 @@ export default class ChorographiaPlugin extends Plugin {
 		if (toEmbed.length === 0) {
 			new Notice("Chorographia: All notes up to date.");
 			await this.saveCache();
-			this.refreshMapViews();
+			void this.refreshMapViews();
 			this.updateExplorerDots();
 			return;
 		}
@@ -290,8 +290,6 @@ export default class ChorographiaPlugin extends Plugin {
 			const elapsedSec = (performance.now() - pipelineStart) / 1000;
 			const safeElapsed = Math.max(elapsedSec, 0.001);
 			const rate = done / safeElapsed;
-			const rateStr = rate < 0.1 ? rate.toFixed(2) : rate.toFixed(1);
-			const eta = done > 0 && rate > 0 ? Math.round((total - done) / rate) : "?";
 			new Notice(`Chorographia: Embedded ${done}/${total} (${pct}%)`);
 		};
 
@@ -360,11 +358,11 @@ export default class ChorographiaPlugin extends Plugin {
 		if (this.settings.mapLocked) {
 			this.computeSemanticColorsLocked();
 		} else {
-			await this.computeSemanticColors();
+			this.computeSemanticColors();
 		}
 
 		await this.saveCache();
-		this.refreshMapViews();
+		void this.refreshMapViews();
 		this.updateExplorerDots();
 		new Notice(`Chorographia: Embedding complete (${results.length} new).`);
 
@@ -502,8 +500,8 @@ export default class ChorographiaPlugin extends Plugin {
 		const dotLeft = this.settings.explorerDotOffset;
 		for (const titleEl of document.querySelectorAll(".nav-file-title-content")) {
 			if (titleEl.querySelector(".chorographia-explorer-dot")) continue;
-			const navTitle = titleEl.closest(".nav-file-title") as HTMLElement | null;
-			const path = navTitle?.dataset.path;
+			const navTitle = titleEl.closest(".nav-file-title");
+			const path = navTitle?.getAttribute("data-path");
 			if (!path) continue;
 			const color = this.dotColorMap.get(path);
 			if (!color) continue;
@@ -585,7 +583,7 @@ export default class ChorographiaPlugin extends Plugin {
 			this.cache.zones = {};
 
 			// Recompute semantic colors
-			await this.computeSemanticColors();
+			this.computeSemanticColors();
 		}
 
 		await this.saveCache();
@@ -593,12 +591,12 @@ export default class ChorographiaPlugin extends Plugin {
 
 		// Refresh open map views
 		for (const leaf of this.app.workspace.getLeavesOfType(VIEW_TYPE)) {
-			(leaf.view as ChorographiaView).refresh();
+			void (leaf.view as ChorographiaView).refresh();
 		}
 		this.updateExplorerDots();
 	}
 
-	async computeSemanticColors(): Promise<void> {
+	computeSemanticColors(): void {
 		const paths: string[] = [];
 		const vectors: Float32Array[] = [];
 		for (const [path, note] of Object.entries(this.cache.notes)) {

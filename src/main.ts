@@ -85,7 +85,7 @@ export default class ChorographiaPlugin extends Plugin {
 
 		this.registerView(VIEW_TYPE, (leaf) => new ChorographiaView(leaf, this));
 
-		this.addRibbonIcon("map", "Open Chorographia map", () => {
+		this.addRibbonIcon("map", "Open map", () => {
 			void this.activateView();
 		});
 
@@ -116,14 +116,14 @@ export default class ChorographiaPlugin extends Plugin {
 	async activateView(): Promise<void> {
 		const existing = this.app.workspace.getLeavesOfType(VIEW_TYPE);
 		if (existing.length > 0) {
-			this.app.workspace.revealLeaf(existing[0]);
+			void this.app.workspace.revealLeaf(existing[0]);
 			return;
 		}
 
 		const leaf = this.app.workspace.getRightLeaf(false);
 		if (leaf) {
 			await leaf.setViewState({ type: VIEW_TYPE, active: true });
-			this.app.workspace.revealLeaf(leaf);
+			void this.app.workspace.revealLeaf(leaf);
 		}
 	}
 
@@ -210,11 +210,11 @@ export default class ChorographiaPlugin extends Plugin {
 
 		// Validate per-provider requirements
 		if (provider === "openai" && !this.settings.openaiApiKey) {
-			new Notice("Chorographia: Set your OpenAI API key in settings first.");
+			new Notice("Set your OpenAI API key in settings first.");
 			return;
 		}
 		if (provider === "openrouter" && !this.settings.openrouterApiKey) {
-			new Notice("Chorographia: Set your OpenRouter API key in settings first.");
+			new Notice("Set your OpenRouter API key in settings first.");
 			return;
 		}
 
@@ -232,9 +232,9 @@ export default class ChorographiaPlugin extends Plugin {
 			filterRequireProperty: this.settings.filterRequireProperty,
 		};
 
-		new Notice("Chorographia: Indexing vault...");
+		new Notice("Indexing vault...");
 		const notes = await indexVault(this.app, indexerConfig);
-		new Notice(`Chorographia: Found ${notes.length} notes.`);
+		new Notice(`Found ${notes.length} notes.`);
 
 		// Determine which notes need (re-)embedding
 		const modelStr = this.embeddingModelString;
@@ -269,7 +269,7 @@ export default class ChorographiaPlugin extends Plugin {
 		}
 
 		if (toEmbed.length === 0) {
-			new Notice("Chorographia: All notes up to date.");
+			new Notice("All notes up to date.");
 			await this.saveCache();
 			void this.refreshMapViews();
 			this.updateExplorerDots();
@@ -277,7 +277,7 @@ export default class ChorographiaPlugin extends Plugin {
 		}
 
 		new Notice(
-			`Chorographia: Embedding ${toEmbed.length} notes...`
+			`Embedding ${toEmbed.length} notes...`
 		);
 		const batchSize = provider === "ollama"
 			? clampEmbedBatchSize(this.settings.ollamaEmbedBatchSize, DEFAULT_SETTINGS.ollamaEmbedBatchSize)
@@ -289,8 +289,7 @@ export default class ChorographiaPlugin extends Plugin {
 			const pct = Math.round((done / total) * 100);
 			const elapsedSec = (performance.now() - pipelineStart) / 1000;
 			const safeElapsed = Math.max(elapsedSec, 0.001);
-			const rate = done / safeElapsed;
-			new Notice(`Chorographia: Embedded ${done}/${total} (${pct}%)`);
+			new Notice(`Embedded ${done}/${total} (${pct}%)`);
 		};
 
 		let results: import("./openai").EmbedResult[] = [];
@@ -311,7 +310,7 @@ export default class ChorographiaPlugin extends Plugin {
 			const message = err instanceof Error ? err.message : String(err);
 			const batchHint = `If this looks like a request-size or rate-limit error, try lowering Embedding > Batch size (currently ${batchSize}).`;
 			console.error(`[Chorographia] [${modelName}] Pipeline FAILED after ${elapsed}s:`, err);
-			new Notice(`Chorographia: Embedding failed - ${message}. ${batchHint}`);
+			new Notice(`Embedding failed - ${message}. ${batchHint}`);
 			return;
 		}
 
@@ -364,7 +363,7 @@ export default class ChorographiaPlugin extends Plugin {
 		await this.saveCache();
 		void this.refreshMapViews();
 		this.updateExplorerDots();
-		new Notice(`Chorographia: Embedding complete (${results.length} new).`);
+		new Notice(`Embedding complete (${results.length} new).`);
 
 		// Auto-compute layout if this is first run or locked mode has new notes without coords
 		const hasLayout = Object.values(this.cache.notes).some(
@@ -536,7 +535,7 @@ export default class ChorographiaPlugin extends Plugin {
 			(n) => n.embedding
 		).length;
 		if (count === 0) {
-			new Notice("Chorographia: No embeddings cached. Run re-embed first.");
+			new Notice("No embeddings cached. Run re-embed first.");
 			return;
 		}
 
@@ -547,9 +546,9 @@ export default class ChorographiaPlugin extends Plugin {
 				.map(([p]) => p);
 
 			if (newPaths.length === 0) {
-				new Notice("Chorographia: All notes already placed.");
+				new Notice("All notes already placed.");
 			} else {
-				new Notice(`Chorographia: Placing ${newPaths.length} new notes...`);
+				new Notice(`Placing ${newPaths.length} new notes...`);
 				const points = interpolateNewPoints(this.cache.notes, newPaths);
 				for (const p of points) {
 					if (this.cache.notes[p.path]) {
@@ -563,7 +562,7 @@ export default class ChorographiaPlugin extends Plugin {
 			this.computeSemanticColorsLocked();
 			this.preserveAndInvalidateZones();
 		} else {
-			new Notice(`Chorographia: Computing layout for ${count} notes...`);
+			new Notice(`Computing layout for ${count} notes...`);
 
 			// Run UMAP in a timeout to avoid blocking UI
 			await new Promise<void>((resolve) => {
@@ -587,7 +586,7 @@ export default class ChorographiaPlugin extends Plugin {
 		}
 
 		await this.saveCache();
-		new Notice("Chorographia: Layout computed.");
+		new Notice("Layout computed.");
 
 		// Refresh open map views
 		for (const leaf of this.app.workspace.getLeavesOfType(VIEW_TYPE)) {

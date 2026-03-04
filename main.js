@@ -8124,7 +8124,7 @@ var ChorographiaSettingTab = class extends import_obsidian2.PluginSettingTab {
     containerEl.addClass("chorographia-settings");
     {
       const sec = this.createSection(containerEl, "Providers", "Connection details for services used by embedding or zone naming.");
-      new import_obsidian2.Setting(sec).setName("Ollama URL").setDesc("Base URL for the local Ollama server.").addText(
+      new import_obsidian2.Setting(sec).setName("Server URL").setDesc("Base URL for the local embedding server.").addText(
         (text) => text.setPlaceholder("http://localhost:11434").setValue(this.plugin.settings.ollamaUrl).onChange((value) => {
           this.plugin.settings.ollamaUrl = value;
           void this.plugin.saveSettings();
@@ -8141,7 +8141,7 @@ var ChorographiaSettingTab = class extends import_obsidian2.PluginSettingTab {
           t.inputEl.addClass("chorographia-input-xl");
         })
       );
-      new import_obsidian2.Setting(sec).setName("OpenRouter API key").setDesc("Get one at openrouter.ai/keys.").addText(
+      new import_obsidian2.Setting(sec).setName("OpenRouter API key").setDesc("Get one at openrouter.ai/keys").addText(
         (text) => text.setPlaceholder("sk-or-...").setValue(this.plugin.settings.openrouterApiKey).onChange((value) => {
           this.plugin.settings.openrouterApiKey = value;
           void this.plugin.saveSettings();
@@ -8161,7 +8161,7 @@ var ChorographiaSettingTab = class extends import_obsidian2.PluginSettingTab {
         })
       );
       if (this.plugin.settings.embeddingProvider === "ollama") {
-        new import_obsidian2.Setting(sec).setName("Embedding model").setDesc("Ollama model name (e.g. qwen3-embedding).").addText(
+        new import_obsidian2.Setting(sec).setName("Embedding model").setDesc("Model name for local embeddings (e.g. qwen3-embedding).").addText(
           (text) => text.setValue(this.plugin.settings.ollamaEmbedModel).onChange((value) => {
             this.plugin.settings.ollamaEmbedModel = value;
             void this.plugin.saveSettings();
@@ -8169,7 +8169,7 @@ var ChorographiaSettingTab = class extends import_obsidian2.PluginSettingTab {
         );
         this.addEmbedBatchSizeSetting(
           sec,
-          "Notes per Ollama embedding request (1\u2013100).",
+          "Notes per embedding request (1\u2013100).",
           () => this.plugin.settings.ollamaEmbedBatchSize,
           DEFAULT_SETTINGS.ollamaEmbedBatchSize,
           (next) => {
@@ -8177,7 +8177,7 @@ var ChorographiaSettingTab = class extends import_obsidian2.PluginSettingTab {
           }
         );
       } else if (this.plugin.settings.embeddingProvider === "openai") {
-        new import_obsidian2.Setting(sec).setName("Embedding model").setDesc("OpenAI model name (e.g. text-embedding-3-large).").addText(
+        new import_obsidian2.Setting(sec).setName("Embedding model").setDesc("Model name (e.g. text-embedding-3-large).").addText(
           (text) => text.setValue(this.plugin.settings.embeddingModel).onChange((value) => {
             this.plugin.settings.embeddingModel = value;
             void this.plugin.saveSettings();
@@ -8185,7 +8185,7 @@ var ChorographiaSettingTab = class extends import_obsidian2.PluginSettingTab {
         );
         this.addEmbedBatchSizeSetting(
           sec,
-          "Notes per OpenAI embedding request (1\u2013100).",
+          "Notes per embedding request (1\u2013100).",
           () => this.plugin.settings.openaiEmbedBatchSize,
           DEFAULT_SETTINGS.openaiEmbedBatchSize,
           (next) => {
@@ -8193,7 +8193,7 @@ var ChorographiaSettingTab = class extends import_obsidian2.PluginSettingTab {
           }
         );
       } else if (this.plugin.settings.embeddingProvider === "openrouter") {
-        new import_obsidian2.Setting(sec).setName("Embedding model").setDesc("OpenRouter model ID (e.g. openai/text-embedding-3-small).").addText(
+        new import_obsidian2.Setting(sec).setName("Embedding model").setDesc("Model ID (e.g. openai/text-embedding-3-small).").addText(
           (text) => text.setValue(this.plugin.settings.openrouterEmbedModel).onChange((value) => {
             this.plugin.settings.openrouterEmbedModel = value;
             void this.plugin.saveSettings();
@@ -8201,7 +8201,7 @@ var ChorographiaSettingTab = class extends import_obsidian2.PluginSettingTab {
         );
         this.addEmbedBatchSizeSetting(
           sec,
-          "Notes per OpenRouter embedding request (1\u2013100).",
+          "Notes per embedding request (1\u2013100).",
           () => this.plugin.settings.openrouterEmbedBatchSize,
           DEFAULT_SETTINGS.openrouterEmbedBatchSize,
           (next) => {
@@ -8352,7 +8352,7 @@ var ChorographiaSettingTab = class extends import_obsidian2.PluginSettingTab {
             })
           );
         }
-        new import_obsidian2.Setting(sec).setName("LLM zone naming").setDesc("Use an LLM to generate evocative names for each zone.").addToggle(
+        new import_obsidian2.Setting(sec).setName("Zone naming").setDesc("Use a language model to generate evocative names for each zone.").addToggle(
           (toggle) => toggle.setValue(this.plugin.settings.enableLLMZoneNaming).onChange((value) => {
             this.plugin.settings.enableLLMZoneNaming = value;
             void this.plugin.saveSettings();
@@ -8369,21 +8369,21 @@ var ChorographiaSettingTab = class extends import_obsidian2.PluginSettingTab {
             })
           );
           if (this.plugin.settings.llmProvider === "ollama") {
-            new import_obsidian2.Setting(sec).setName("LLM model").setDesc("Ollama model for zone naming (e.g. qwen3:8b).").addText(
+            new import_obsidian2.Setting(sec).setName("Language model").setDesc("Model for zone naming (e.g. qwen3:8b).").addText(
               (text) => text.setValue(this.plugin.settings.ollamaLlmModel).onChange((value) => {
                 this.plugin.settings.ollamaLlmModel = value;
                 void this.plugin.saveSettings();
               })
             );
           } else if (this.plugin.settings.llmProvider === "openai") {
-            new import_obsidian2.Setting(sec).setName("LLM model").setDesc("OpenAI model for zone naming (e.g. gpt-5-mini).").addText(
+            new import_obsidian2.Setting(sec).setName("Language model").setDesc("Model for zone naming (e.g. gpt-5-mini).").addText(
               (text) => text.setValue(this.plugin.settings.openaiLlmModel).onChange((value) => {
                 this.plugin.settings.openaiLlmModel = value;
                 void this.plugin.saveSettings();
               })
             );
           } else if (this.plugin.settings.llmProvider === "openrouter") {
-            new import_obsidian2.Setting(sec).setName("LLM model").setDesc("OpenRouter model ID (e.g. google/gemini-2.0-flash-001).").addText(
+            new import_obsidian2.Setting(sec).setName("Language model").setDesc("Model ID for zone naming (e.g. google/gemini-2.0-flash-001).").addText(
               (text) => text.setValue(this.plugin.settings.openrouterLlmModel).onChange((value) => {
                 this.plugin.settings.openrouterLlmModel = value;
                 void this.plugin.saveSettings();
@@ -8540,23 +8540,23 @@ var ChorographiaSettingTab = class extends import_obsidian2.PluginSettingTab {
             try {
               await this.plugin.runEmbedPipeline();
             } catch (e) {
-              new import_obsidian2.Notice("Chorographia: " + (e instanceof Error ? e.message : String(e)));
+              new import_obsidian2.Notice(e instanceof Error ? e.message : String(e));
             }
             btn.setDisabled(false);
             btn.setButtonText("Run");
           })();
         })
       );
-      new import_obsidian2.Setting(sec).setName("Recompute layout").setDesc("Run UMAP on cached embeddings to produce a new 2D layout.").addButton(
+      new import_obsidian2.Setting(sec).setName("Recompute layout").setDesc("Reproject cached embeddings into a new 2D layout.").addButton(
         (btn) => btn.setButtonText("Run").onClick(() => {
           void (async () => {
             btn.setDisabled(true);
             btn.setButtonText("Running...");
             try {
               await this.plugin.runLayoutCompute();
-              new import_obsidian2.Notice("Chorographia: Layout complete.");
+              new import_obsidian2.Notice("Layout complete.");
             } catch (e) {
-              new import_obsidian2.Notice("Chorographia: " + (e instanceof Error ? e.message : String(e)));
+              new import_obsidian2.Notice(e instanceof Error ? e.message : String(e));
             }
             btn.setDisabled(false);
             btn.setButtonText("Run");
@@ -8564,22 +8564,24 @@ var ChorographiaSettingTab = class extends import_obsidian2.PluginSettingTab {
         })
       );
       if (this.plugin.settings.enableLLMZoneNaming) {
-        new import_obsidian2.Setting(sec).setName("Re-run zone naming").setDesc("Regenerate LLM names for all zones and sub-zones.").addButton(
+        new import_obsidian2.Setting(sec).setName("Re-run zone naming").setDesc("Regenerate names for all zones and sub-zones.").addButton(
           (btn) => btn.setButtonText("Run").onClick(() => {
             const runNaming = async () => {
               btn.setDisabled(true);
               btn.setButtonText("Running...");
               try {
                 await this.plugin.runZoneNaming();
-                new import_obsidian2.Notice("Chorographia: Zone naming complete.");
+                new import_obsidian2.Notice("Zone naming complete.");
               } catch (e) {
-                new import_obsidian2.Notice("Chorographia: " + (e instanceof Error ? e.message : String(e)));
+                new import_obsidian2.Notice(e instanceof Error ? e.message : String(e));
               }
               btn.setDisabled(false);
               btn.setButtonText("Run");
             };
             if (this.plugin.settings.mapLocked) {
-              new ConfirmModal(this.app, "Map is locked. This will regenerate all zone names. Continue?", runNaming).open();
+              new ConfirmModal(this.app, "Map is locked. This will regenerate all zone names. Continue?", () => {
+                void runNaming();
+              }).open();
             } else {
               void runNaming();
             }
@@ -8597,7 +8599,7 @@ var ChorographiaSettingTab = class extends import_obsidian2.PluginSettingTab {
               void this.plugin.saveSettings();
             }
             void this.plugin.saveCache();
-            new import_obsidian2.Notice("Chorographia: Cache cleared.");
+            new import_obsidian2.Notice("Cache cleared.");
             this.display();
           }).open();
         })
@@ -10193,7 +10195,7 @@ function buildBorderEdges(segments, dataRange) {
   }
   const borderEdges = [];
   const amplitude = dataRange * 8e-3;
-  for (const [_key, segs] of pairMap) {
+  for (const segs of pairMap.values()) {
     if (segs.length === 0)
       continue;
     const edgeType = segs[0].edgeType;
@@ -11493,7 +11495,7 @@ var ChorographiaView = class extends import_obsidian7.ItemView {
     this.buildControls(root);
     this.dpr = window.devicePixelRatio || 1;
     this.setupInteractions();
-    this.loadPoints();
+    void this.loadPoints();
     this.resizeCanvas();
     this.draw();
     this.registerEvent(this.app.workspace.on("resize", () => {
@@ -13931,7 +13933,7 @@ var ChorographiaView = class extends import_obsidian7.ItemView {
           this.regionWorld = { x1: w1.x, y1: w1.y, x2: w2.x, y2: w2.y };
           const exportBtn = this.exportPanel.querySelector(".chorographia-export-btn-primary");
           if (exportBtn)
-            exportBtn.disabled = false;
+            exportBtn.removeAttribute("disabled");
           const hint = this.containerEl.querySelector(".chorographia-region-hint");
           if (hint)
             hint.remove();
@@ -14067,7 +14069,7 @@ var ChorographiaView = class extends import_obsidian7.ItemView {
     const p = this.points[i];
     const leaves = this.app.workspace.getLeavesOfType("markdown");
     const targetLeaf = leaves.length > 0 ? leaves[0] : this.app.workspace.getLeaf("tab");
-    targetLeaf.openFile(this.app.vault.getFileByPath(p.path));
+    void targetLeaf.openFile(this.app.vault.getFileByPath(p.path));
     this.animateTo(p.x, p.y);
   }
   updateStatus() {
@@ -14110,7 +14112,7 @@ var ChorographiaView = class extends import_obsidian7.ItemView {
           if (sub)
             sub.label = val;
         }
-        this.plugin.saveCache();
+        void this.plugin.saveCache();
         this.draw();
       }
       input.remove();
@@ -14240,7 +14242,7 @@ var ChorographiaPlugin = class extends import_obsidian8.Plugin {
       this.computeSemanticColors();
     }
     this.registerView(VIEW_TYPE, (leaf) => new ChorographiaView(leaf, this));
-    this.addRibbonIcon("map", "Open Chorographia map", () => {
+    this.addRibbonIcon("map", "Open map", () => {
       void this.activateView();
     });
     this.addCommand({
@@ -14268,13 +14270,13 @@ var ChorographiaPlugin = class extends import_obsidian8.Plugin {
   async activateView() {
     const existing = this.app.workspace.getLeavesOfType(VIEW_TYPE);
     if (existing.length > 0) {
-      this.app.workspace.revealLeaf(existing[0]);
+      void this.app.workspace.revealLeaf(existing[0]);
       return;
     }
     const leaf = this.app.workspace.getRightLeaf(false);
     if (leaf) {
       await leaf.setViewState({ type: VIEW_TYPE, active: true });
-      this.app.workspace.revealLeaf(leaf);
+      void this.app.workspace.revealLeaf(leaf);
     }
   }
   // --- Settings persistence ---
@@ -14345,11 +14347,11 @@ var ChorographiaPlugin = class extends import_obsidian8.Plugin {
     const modelName = provider === "ollama" ? this.settings.ollamaEmbedModel : provider === "openai" ? this.settings.embeddingModel : this.settings.openrouterEmbedModel;
     console.debug(`[Chorographia] Pipeline started | provider: ${provider} | model: ${modelName}`);
     if (provider === "openai" && !this.settings.openaiApiKey) {
-      new import_obsidian8.Notice("Chorographia: Set your OpenAI API key in settings first.");
+      new import_obsidian8.Notice("Set your OpenAI API key in settings first.");
       return;
     }
     if (provider === "openrouter" && !this.settings.openrouterApiKey) {
-      new import_obsidian8.Notice("Chorographia: Set your OpenRouter API key in settings first.");
+      new import_obsidian8.Notice("Set your OpenRouter API key in settings first.");
       return;
     }
     const splitTrim = (s) => s.split(",").map((x) => x.trim()).filter(Boolean);
@@ -14365,9 +14367,9 @@ var ChorographiaPlugin = class extends import_obsidian8.Plugin {
       filterExcludeFolders: splitTrim(this.settings.filterExcludeFolders),
       filterRequireProperty: this.settings.filterRequireProperty
     };
-    new import_obsidian8.Notice("Chorographia: Indexing vault...");
+    new import_obsidian8.Notice("Indexing vault...");
     const notes = await indexVault(this.app, indexerConfig);
-    new import_obsidian8.Notice(`Chorographia: Found ${notes.length} notes.`);
+    new import_obsidian8.Notice(`Found ${notes.length} notes.`);
     const modelStr = this.embeddingModelString;
     const toEmbed = [];
     for (const note of notes) {
@@ -14391,22 +14393,21 @@ var ChorographiaPlugin = class extends import_obsidian8.Plugin {
       }
     }
     if (toEmbed.length === 0) {
-      new import_obsidian8.Notice("Chorographia: All notes up to date.");
+      new import_obsidian8.Notice("All notes up to date.");
       await this.saveCache();
       void this.refreshMapViews();
       this.updateExplorerDots();
       return;
     }
     new import_obsidian8.Notice(
-      `Chorographia: Embedding ${toEmbed.length} notes...`
+      `Embedding ${toEmbed.length} notes...`
     );
     const batchSize = provider === "ollama" ? clampEmbedBatchSize(this.settings.ollamaEmbedBatchSize, DEFAULT_SETTINGS.ollamaEmbedBatchSize) : provider === "openai" ? clampEmbedBatchSize(this.settings.openaiEmbedBatchSize, DEFAULT_SETTINGS.openaiEmbedBatchSize) : clampEmbedBatchSize(this.settings.openrouterEmbedBatchSize, DEFAULT_SETTINGS.openrouterEmbedBatchSize);
     const onProgress = (done, total) => {
       const pct = Math.round(done / total * 100);
       const elapsedSec = (performance.now() - pipelineStart) / 1e3;
       const safeElapsed = Math.max(elapsedSec, 1e-3);
-      const rate = done / safeElapsed;
-      new import_obsidian8.Notice(`Chorographia: Embedded ${done}/${total} (${pct}%)`);
+      new import_obsidian8.Notice(`Embedded ${done}/${total} (${pct}%)`);
     };
     let results = [];
     try {
@@ -14426,7 +14427,7 @@ var ChorographiaPlugin = class extends import_obsidian8.Plugin {
       const message = err instanceof Error ? err.message : String(err);
       const batchHint = `If this looks like a request-size or rate-limit error, try lowering Embedding > Batch size (currently ${batchSize}).`;
       console.error(`[Chorographia] [${modelName}] Pipeline FAILED after ${elapsed}s:`, err);
-      new import_obsidian8.Notice(`Chorographia: Embedding failed - ${message}. ${batchHint}`);
+      new import_obsidian8.Notice(`Embedding failed - ${message}. ${batchHint}`);
       return;
     }
     for (const r of results) {
@@ -14470,7 +14471,7 @@ var ChorographiaPlugin = class extends import_obsidian8.Plugin {
     await this.saveCache();
     void this.refreshMapViews();
     this.updateExplorerDots();
-    new import_obsidian8.Notice(`Chorographia: Embedding complete (${results.length} new).`);
+    new import_obsidian8.Notice(`Embedding complete (${results.length} new).`);
     const hasLayout = Object.values(this.cache.notes).some(
       (n) => n.x != null
     );
@@ -14628,15 +14629,15 @@ var ChorographiaPlugin = class extends import_obsidian8.Plugin {
       (n) => n.embedding
     ).length;
     if (count === 0) {
-      new import_obsidian8.Notice("Chorographia: No embeddings cached. Run re-embed first.");
+      new import_obsidian8.Notice("No embeddings cached. Run re-embed first.");
       return;
     }
     if (this.settings.mapLocked) {
       const newPaths = Object.entries(this.cache.notes).filter(([_, n]) => n.embedding && n.x == null).map(([p]) => p);
       if (newPaths.length === 0) {
-        new import_obsidian8.Notice("Chorographia: All notes already placed.");
+        new import_obsidian8.Notice("All notes already placed.");
       } else {
-        new import_obsidian8.Notice(`Chorographia: Placing ${newPaths.length} new notes...`);
+        new import_obsidian8.Notice(`Placing ${newPaths.length} new notes...`);
         const points = interpolateNewPoints(this.cache.notes, newPaths);
         for (const p of points) {
           if (this.cache.notes[p.path]) {
@@ -14648,7 +14649,7 @@ var ChorographiaPlugin = class extends import_obsidian8.Plugin {
       this.computeSemanticColorsLocked();
       this.preserveAndInvalidateZones();
     } else {
-      new import_obsidian8.Notice(`Chorographia: Computing layout for ${count} notes...`);
+      new import_obsidian8.Notice(`Computing layout for ${count} notes...`);
       await new Promise((resolve) => {
         setTimeout(() => {
           const points = computeLayout(this.cache.notes);
@@ -14665,7 +14666,7 @@ var ChorographiaPlugin = class extends import_obsidian8.Plugin {
       this.computeSemanticColors();
     }
     await this.saveCache();
-    new import_obsidian8.Notice("Chorographia: Layout computed.");
+    new import_obsidian8.Notice("Layout computed.");
     for (const leaf of this.app.workspace.getLeavesOfType(VIEW_TYPE)) {
       void leaf.view.refresh();
     }

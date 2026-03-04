@@ -176,7 +176,7 @@ export class ChorographiaView extends ItemView {
 
 		this.dpr = window.devicePixelRatio || 1;
 		this.setupInteractions();
-		this.loadPoints();
+		void this.loadPoints();
 		this.resizeCanvas();
 		this.draw();
 		this.registerEvent(this.app.workspace.on("resize", () => { this.resizeCanvas(); this.draw(); }));
@@ -2790,8 +2790,8 @@ export class ChorographiaView extends ItemView {
 					const w2 = this.s2w(this.regionEnd.x, this.regionEnd.y);
 					this.regionWorld = { x1: w1.x, y1: w1.y, x2: w2.x, y2: w2.y };
 					// Enable the export button
-					const exportBtn = this.exportPanel.querySelector(".chorographia-export-btn-primary") as HTMLButtonElement | null;
-					if (exportBtn) exportBtn.disabled = false;
+					const exportBtn = this.exportPanel.querySelector(".chorographia-export-btn-primary");
+					if (exportBtn) exportBtn.removeAttribute("disabled");
 					// Remove hint
 					const hint = this.containerEl.querySelector(".chorographia-region-hint");
 					if (hint) hint.remove();
@@ -2931,7 +2931,7 @@ export class ChorographiaView extends ItemView {
 		// Open note in a separate leaf (not this one — that would destroy the map)
 		const leaves = this.app.workspace.getLeavesOfType("markdown");
 		const targetLeaf = leaves.length > 0 ? leaves[0] : this.app.workspace.getLeaf("tab");
-		targetLeaf.openFile(this.app.vault.getFileByPath(p.path)!);
+		void targetLeaf.openFile(this.app.vault.getFileByPath(p.path)!);
 
 		this.animateTo(p.x, p.y);
 	}
@@ -2976,7 +2976,7 @@ export class ChorographiaView extends ItemView {
 					const sub = this.subZonesMap.get(hb.zoneId)?.find(sz => sz.id === hb.subId);
 					if (sub) sub.label = val;
 				}
-				this.plugin.saveCache();
+				void this.plugin.saveCache();
 				this.draw();
 			}
 			input.remove();

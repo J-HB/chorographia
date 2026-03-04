@@ -241,8 +241,8 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 			const sec = this.createSection(containerEl, "Providers", "Connection details for services used by embedding or zone naming.");
 
 			new Setting(sec)
-				.setName("Ollama URL")
-				.setDesc("Base URL for the local Ollama server.")
+				.setName("Server URL")
+				.setDesc("Base URL for the local embedding server.")
 				.addText((text) =>
 					text
 						.setPlaceholder("http://localhost:11434")
@@ -272,7 +272,7 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 
 			new Setting(sec)
 				.setName("OpenRouter API key")
-				.setDesc("Get one at openrouter.ai/keys.")
+				.setDesc("Get one at openrouter.ai/keys")
 				.addText((text) =>
 					text
 						.setPlaceholder("sk-or-...")
@@ -310,7 +310,7 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 			if (this.plugin.settings.embeddingProvider === "ollama") {
 				new Setting(sec)
 					.setName("Embedding model")
-					.setDesc("Ollama model name (e.g. qwen3-embedding).")
+					.setDesc("Model name for local embeddings (e.g. qwen3-embedding).")
 					.addText((text) =>
 						text
 							.setValue(this.plugin.settings.ollamaEmbedModel)
@@ -321,7 +321,7 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 					);
 				this.addEmbedBatchSizeSetting(
 					sec,
-					"Notes per Ollama embedding request (1\u2013100).",
+					"Notes per embedding request (1\u2013100).",
 					() => this.plugin.settings.ollamaEmbedBatchSize,
 					DEFAULT_SETTINGS.ollamaEmbedBatchSize,
 					(next) => { this.plugin.settings.ollamaEmbedBatchSize = next; }
@@ -329,7 +329,7 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 			} else if (this.plugin.settings.embeddingProvider === "openai") {
 				new Setting(sec)
 					.setName("Embedding model")
-					.setDesc("OpenAI model name (e.g. text-embedding-3-large).")
+					.setDesc("Model name (e.g. text-embedding-3-large).")
 					.addText((text) =>
 						text
 							.setValue(this.plugin.settings.embeddingModel)
@@ -340,7 +340,7 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 					);
 				this.addEmbedBatchSizeSetting(
 					sec,
-					"Notes per OpenAI embedding request (1\u2013100).",
+					"Notes per embedding request (1\u2013100).",
 					() => this.plugin.settings.openaiEmbedBatchSize,
 					DEFAULT_SETTINGS.openaiEmbedBatchSize,
 					(next) => { this.plugin.settings.openaiEmbedBatchSize = next; }
@@ -348,7 +348,7 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 			} else if (this.plugin.settings.embeddingProvider === "openrouter") {
 				new Setting(sec)
 					.setName("Embedding model")
-					.setDesc("OpenRouter model ID (e.g. openai/text-embedding-3-small).")
+					.setDesc("Model ID (e.g. openai/text-embedding-3-small).")
 					.addText((text) =>
 						text
 							.setValue(this.plugin.settings.openrouterEmbedModel)
@@ -359,7 +359,7 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 					);
 				this.addEmbedBatchSizeSetting(
 					sec,
-					"Notes per OpenRouter embedding request (1\u2013100).",
+					"Notes per embedding request (1\u2013100).",
 					() => this.plugin.settings.openrouterEmbedBatchSize,
 					DEFAULT_SETTINGS.openrouterEmbedBatchSize,
 					(next) => { this.plugin.settings.openrouterEmbedBatchSize = next; }
@@ -613,8 +613,8 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 				}
 
 				new Setting(sec)
-					.setName("LLM zone naming")
-					.setDesc("Use an LLM to generate evocative names for each zone.")
+					.setName("Zone naming")
+					.setDesc("Use a language model to generate evocative names for each zone.")
 					.addToggle((toggle) =>
 						toggle
 							.setValue(this.plugin.settings.enableLLMZoneNaming)
@@ -644,8 +644,8 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 
 					if (this.plugin.settings.llmProvider === "ollama") {
 						new Setting(sec)
-							.setName("LLM model")
-							.setDesc("Ollama model for zone naming (e.g. qwen3:8b).")
+							.setName("Language model")
+							.setDesc("Model for zone naming (e.g. qwen3:8b).")
 							.addText((text) =>
 								text
 									.setValue(this.plugin.settings.ollamaLlmModel)
@@ -656,8 +656,8 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 							);
 					} else if (this.plugin.settings.llmProvider === "openai") {
 						new Setting(sec)
-							.setName("LLM model")
-							.setDesc("OpenAI model for zone naming (e.g. gpt-5-mini).")
+							.setName("Language model")
+							.setDesc("Model for zone naming (e.g. gpt-5-mini).")
 							.addText((text) =>
 								text
 									.setValue(this.plugin.settings.openaiLlmModel)
@@ -668,8 +668,8 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 							);
 					} else if (this.plugin.settings.llmProvider === "openrouter") {
 						new Setting(sec)
-							.setName("LLM model")
-							.setDesc("OpenRouter model ID (e.g. google/gemini-2.0-flash-001).")
+							.setName("Language model")
+							.setDesc("Model ID for zone naming (e.g. google/gemini-2.0-flash-001).")
 							.addText((text) =>
 								text
 									.setValue(this.plugin.settings.openrouterLlmModel)
@@ -960,7 +960,7 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 							try {
 								await this.plugin.runEmbedPipeline();
 							} catch (e: unknown) {
-								new Notice("Chorographia: " + (e instanceof Error ? e.message : String(e)));
+								new Notice(e instanceof Error ? e.message : String(e));
 							}
 							btn.setDisabled(false);
 							btn.setButtonText("Run");
@@ -970,7 +970,7 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 
 			new Setting(sec)
 				.setName("Recompute layout")
-				.setDesc("Run UMAP on cached embeddings to produce a new 2D layout.")
+				.setDesc("Reproject cached embeddings into a new 2D layout.")
 				.addButton((btn) =>
 					btn.setButtonText("Run").onClick(() => {
 						void (async () => {
@@ -978,9 +978,9 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 							btn.setButtonText("Running...");
 							try {
 								await this.plugin.runLayoutCompute();
-								new Notice("Chorographia: Layout complete.");
+								new Notice("Layout complete.");
 							} catch (e: unknown) {
-								new Notice("Chorographia: " + (e instanceof Error ? e.message : String(e)));
+								new Notice(e instanceof Error ? e.message : String(e));
 							}
 							btn.setDisabled(false);
 							btn.setButtonText("Run");
@@ -991,7 +991,7 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 			if (this.plugin.settings.enableLLMZoneNaming) {
 				new Setting(sec)
 					.setName("Re-run zone naming")
-					.setDesc("Regenerate LLM names for all zones and sub-zones.")
+					.setDesc("Regenerate names for all zones and sub-zones.")
 					.addButton((btn) =>
 						btn.setButtonText("Run").onClick(() => {
 							const runNaming = async () => {
@@ -999,15 +999,15 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 								btn.setButtonText("Running...");
 								try {
 									await this.plugin.runZoneNaming();
-									new Notice("Chorographia: Zone naming complete.");
+									new Notice("Zone naming complete.");
 								} catch (e: unknown) {
-									new Notice("Chorographia: " + (e instanceof Error ? e.message : String(e)));
+									new Notice(e instanceof Error ? e.message : String(e));
 								}
 								btn.setDisabled(false);
 								btn.setButtonText("Run");
 							};
 							if (this.plugin.settings.mapLocked) {
-								new ConfirmModal(this.app, "Map is locked. This will regenerate all zone names. Continue?", runNaming).open();
+								new ConfirmModal(this.app, "Map is locked. This will regenerate all zone names. Continue?", () => { void runNaming(); }).open();
 							} else {
 								void runNaming();
 							}
@@ -1034,7 +1034,7 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 									void this.plugin.saveSettings();
 								}
 								void this.plugin.saveCache();
-								new Notice("Chorographia: Cache cleared.");
+								new Notice("Cache cleared.");
 								this.display();
 							}).open();
 						})

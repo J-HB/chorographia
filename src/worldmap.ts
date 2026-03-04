@@ -620,7 +620,7 @@ function buildBorderEdges(
 	const borderEdges: BorderEdge[] = [];
 	const amplitude = dataRange * 0.008;
 
-	for (const [_key, segs] of pairMap) {
+	for (const segs of pairMap.values()) {
 		if (segs.length === 0) continue;
 
 		const edgeType = segs[0].edgeType;

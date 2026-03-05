@@ -58,9 +58,9 @@ export class OnboardingModal extends Modal {
 	// ===================== Step 0: Provider =====================
 
 	private renderProviderStep() {
-		this.contentEl.createEl("h2", { text: "Welcome to Chorographia" });
+		this.contentEl.createEl("h2", { text: "Welcome" });
 		this.contentEl.createEl("p", {
-			text: "Chorographia builds a semantic map of your vault by embedding your notes into vectors and projecting them onto a 2D canvas. Let's configure your embedding provider.",
+			text: "This plugin builds a semantic map of your vault by embedding your notes into vectors and projecting them onto a canvas. Let\u2019s configure your embedding provider.",
 			cls: "chorographia-onboarding-desc",
 		});
 
@@ -86,7 +86,7 @@ export class OnboardingModal extends Modal {
 				.setName("Server URL")
 				.addText((text) =>
 					text
-						.setPlaceholder("http://localhost:11434")
+						.setPlaceholder("HTTP://localhost:11434")
 						.setValue(s.ollamaUrl)
 						.onChange((value) => {
 							s.ollamaUrl = value;
@@ -99,7 +99,7 @@ export class OnboardingModal extends Modal {
 				.setName("Embedding model")
 				.addText((text) =>
 					text
-						.setPlaceholder("qwen3-embedding")
+						.setPlaceholder("Qwen3-embedding")
 						.setValue(s.ollamaEmbedModel)
 						.onChange((value) => {
 							s.ollamaEmbedModel = value;
@@ -108,7 +108,7 @@ export class OnboardingModal extends Modal {
 				);
 
 			this.contentEl.createEl("p", {
-				text: "No API key needed \u2014 Ollama runs locally on your machine.",
+				text: "No API key needed \u2014 this provider runs locally on your machine.",
 				cls: "chorographia-onboarding-hint",
 			});
 		} else if (s.embeddingProvider === "openai") {
@@ -116,7 +116,7 @@ export class OnboardingModal extends Modal {
 				.setName("API key")
 				.addText((text) =>
 					text
-						.setPlaceholder("sk-...")
+						.setPlaceholder("Sk-...")
 						.setValue(s.openaiApiKey)
 						.onChange((value) => {
 							s.openaiApiKey = value;
@@ -132,7 +132,7 @@ export class OnboardingModal extends Modal {
 				.setName("Embedding model")
 				.addText((text) =>
 					text
-						.setPlaceholder("text-embedding-3-large")
+						.setPlaceholder("Text-embedding-3-large")
 						.setValue(s.embeddingModel)
 						.onChange((value) => {
 							s.embeddingModel = value;
@@ -144,7 +144,7 @@ export class OnboardingModal extends Modal {
 				.setName("API key")
 				.addText((text) =>
 					text
-						.setPlaceholder("sk-or-...")
+						.setPlaceholder("Sk-or-...")
 						.setValue(s.openrouterApiKey)
 						.onChange((value) => {
 							s.openrouterApiKey = value;
@@ -160,7 +160,7 @@ export class OnboardingModal extends Modal {
 				.setName("Embedding model")
 				.addText((text) =>
 					text
-						.setPlaceholder("openai/text-embedding-3-small")
+						.setPlaceholder("OpenAI/text-embedding-3-small")
 						.setValue(s.openrouterEmbedModel)
 						.onChange((value) => {
 							s.openrouterEmbedModel = value;
@@ -196,7 +196,7 @@ export class OnboardingModal extends Modal {
 			.setDesc("Comma-separated glob patterns for notes to skip.")
 			.addText((text) =>
 				text
-					.setPlaceholder("templates/**,daily/**")
+					.setPlaceholder("Templates/**,daily/**")
 					.setValue(s.excludeGlobs)
 					.onChange((value) => {
 						s.excludeGlobs = value;
@@ -399,11 +399,11 @@ export class OnboardingModal extends Modal {
 		const s = this.plugin.settings;
 		if (this.currentStep === 0) {
 			if (s.embeddingProvider === "openai" && !s.openaiApiKey.trim()) {
-				new Notice("Please enter your OpenAI API key.");
+				new Notice("Please enter your API key.");
 				return false;
 			}
 			if (s.embeddingProvider === "openrouter" && !s.openrouterApiKey.trim()) {
-				new Notice("Please enter your OpenRouter API key.");
+				new Notice("Please enter your API key.");
 				return false;
 			}
 		}

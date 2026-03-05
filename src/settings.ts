@@ -245,7 +245,7 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 				.setDesc("Base URL for the local embedding server.")
 				.addText((text) =>
 					text
-						.setPlaceholder("http://localhost:11434")
+						.setPlaceholder("HTTP://localhost:11434")
 						.setValue(this.plugin.settings.ollamaUrl)
 						.onChange((value) => {
 							this.plugin.settings.ollamaUrl = value;
@@ -255,10 +255,10 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 				);
 
 			new Setting(sec)
-				.setName("OpenAI API key")
+				.setName("API key")
 				.addText((text) =>
 					text
-						.setPlaceholder("sk-...")
+						.setPlaceholder("Sk-...")
 						.setValue(this.plugin.settings.openaiApiKey)
 						.onChange((value) => {
 							this.plugin.settings.openaiApiKey = value;
@@ -271,11 +271,11 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 				);
 
 			new Setting(sec)
-				.setName("OpenRouter API key")
+				.setName("API key")
 				.setDesc("Get one at openrouter.ai/keys")
 				.addText((text) =>
 					text
-						.setPlaceholder("sk-or-...")
+						.setPlaceholder("Sk-or-...")
 						.setValue(this.plugin.settings.openrouterApiKey)
 						.onChange((value) => {
 							this.plugin.settings.openrouterApiKey = value;
@@ -310,7 +310,7 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 			if (this.plugin.settings.embeddingProvider === "ollama") {
 				new Setting(sec)
 					.setName("Embedding model")
-					.setDesc("Model name for local embeddings (e.g. qwen3-embedding).")
+					.setDesc("Model name for local embeddings, such as qwen3-embedding.")
 					.addText((text) =>
 						text
 							.setValue(this.plugin.settings.ollamaEmbedModel)
@@ -329,7 +329,7 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 			} else if (this.plugin.settings.embeddingProvider === "openai") {
 				new Setting(sec)
 					.setName("Embedding model")
-					.setDesc("Model name (e.g. text-embedding-3-large).")
+					.setDesc("Model name, such as text-embedding-3-large.")
 					.addText((text) =>
 						text
 							.setValue(this.plugin.settings.embeddingModel)
@@ -348,7 +348,7 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 			} else if (this.plugin.settings.embeddingProvider === "openrouter") {
 				new Setting(sec)
 					.setName("Embedding model")
-					.setDesc("Model ID (e.g. openai/text-embedding-3-small).")
+					.setDesc("Model ID, such as OpenAI/text-embedding-3-small.")
 					.addText((text) =>
 						text
 							.setValue(this.plugin.settings.openrouterEmbedModel)
@@ -390,7 +390,7 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 				.setDesc("Comma-separated glob patterns for notes to skip.")
 				.addText((text) =>
 					text
-						.setPlaceholder("templates/**,daily/**")
+						.setPlaceholder("Templates/**,daily/**")
 						.setValue(this.plugin.settings.excludeGlobs)
 						.onChange((value) => {
 							this.plugin.settings.excludeGlobs = value;
@@ -404,7 +404,7 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 				.setDesc("Only include notes from these top-level folders (comma-separated). Leave empty for all.")
 				.addText((text) =>
 					text
-						.setPlaceholder("projects, references")
+						.setPlaceholder("Projects, references")
 						.setValue(this.plugin.settings.filterIncludeFolders)
 						.onChange((value) => {
 							this.plugin.settings.filterIncludeFolders = value;
@@ -418,7 +418,7 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 				.setDesc("Skip notes from these top-level folders (comma-separated).")
 				.addText((text) =>
 					text
-						.setPlaceholder("archive, drafts")
+						.setPlaceholder("Archive, drafts")
 						.setValue(this.plugin.settings.filterExcludeFolders)
 						.onChange((value) => {
 							this.plugin.settings.filterExcludeFolders = value;
@@ -432,7 +432,7 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 				.setDesc("Only include notes with at least one of these tags (comma-separated). Leave empty for all.")
 				.addText((text) =>
 					text
-						.setPlaceholder("project, evergreen")
+						.setPlaceholder("Project, evergreen")
 						.setValue(this.plugin.settings.filterIncludeTags)
 						.onChange((value) => {
 							this.plugin.settings.filterIncludeTags = value;
@@ -446,7 +446,7 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 				.setDesc("Skip notes with any of these tags (comma-separated).")
 				.addText((text) =>
 					text
-						.setPlaceholder("draft, private")
+						.setPlaceholder("Draft, private")
 						.setValue(this.plugin.settings.filterExcludeTags)
 						.onChange((value) => {
 							this.plugin.settings.filterExcludeTags = value;
@@ -460,7 +460,7 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 				.setDesc("Only include notes that have this frontmatter property. Use \"key\" or \"key:value\".")
 				.addText((text) =>
 					text
-						.setPlaceholder("status:published")
+						.setPlaceholder("Status:published")
 						.setValue(this.plugin.settings.filterRequireProperty)
 						.onChange((value) => {
 							this.plugin.settings.filterRequireProperty = value;
@@ -495,7 +495,7 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 				.setDesc("Comma-separated list of frontmatter fields to include in the embedding text. The note body is always appended.")
 				.addText((text) =>
 					text
-						.setPlaceholder("title, type, cat, topics")
+						.setPlaceholder("Title, type, cat, topics")
 						.setValue(this.plugin.settings.embedFields)
 						.onChange((value) => {
 							this.plugin.settings.embedFields = value;
@@ -645,7 +645,7 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 					if (this.plugin.settings.llmProvider === "ollama") {
 						new Setting(sec)
 							.setName("Language model")
-							.setDesc("Model for zone naming (e.g. qwen3:8b).")
+							.setDesc("Model for zone naming, such as qwen3:8b.")
 							.addText((text) =>
 								text
 									.setValue(this.plugin.settings.ollamaLlmModel)
@@ -657,7 +657,7 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 					} else if (this.plugin.settings.llmProvider === "openai") {
 						new Setting(sec)
 							.setName("Language model")
-							.setDesc("Model for zone naming (e.g. gpt-5-mini).")
+							.setDesc("Model for zone naming, such as gpt-5-mini.")
 							.addText((text) =>
 								text
 									.setValue(this.plugin.settings.openaiLlmModel)
@@ -669,7 +669,7 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 					} else if (this.plugin.settings.llmProvider === "openrouter") {
 						new Setting(sec)
 							.setName("Language model")
-							.setDesc("Model ID for zone naming (e.g. google/gemini-2.0-flash-001).")
+							.setDesc("Model ID for zone naming, such as google/gemini-2.0-flash-001.")
 							.addText((text) =>
 								text
 									.setValue(this.plugin.settings.openrouterLlmModel)
@@ -736,7 +736,7 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 					.setDesc("Frontmatter field to use for property-based coloring.")
 					.addText((text) =>
 						text
-							.setPlaceholder("type")
+							.setPlaceholder("Type")
 							.setValue(this.plugin.settings.colorPropertyField)
 							.onChange((value) => {
 								this.plugin.settings.colorPropertyField = value;
@@ -970,7 +970,7 @@ export class ChorographiaSettingTab extends PluginSettingTab {
 
 			new Setting(sec)
 				.setName("Recompute layout")
-				.setDesc("Reproject cached embeddings into a new 2D layout.")
+				.setDesc("Reproject cached embeddings into a new two-dimensional layout.")
 				.addButton((btn) =>
 					btn.setButtonText("Run").onClick(() => {
 						void (async () => {

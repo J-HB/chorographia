@@ -210,11 +210,11 @@ export default class ChorographiaPlugin extends Plugin {
 
 		// Validate per-provider requirements
 		if (provider === "openai" && !this.settings.openaiApiKey) {
-			new Notice("Set your OpenAI API key in settings first.");
+			new Notice("Set your API key in settings first.");
 			return;
 		}
 		if (provider === "openrouter" && !this.settings.openrouterApiKey) {
-			new Notice("Set your OpenRouter API key in settings first.");
+			new Notice("Set your API key in settings first.");
 			return;
 		}
 
@@ -287,8 +287,6 @@ export default class ChorographiaPlugin extends Plugin {
 
 		const onProgress = (done: number, total: number) => {
 			const pct = Math.round((done / total) * 100);
-			const elapsedSec = (performance.now() - pipelineStart) / 1000;
-			const safeElapsed = Math.max(elapsedSec, 0.001);
 			new Notice(`Embedded ${done}/${total} (${pct}%)`);
 		};
 
